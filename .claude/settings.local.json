@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/xampp/htdocs/centro_informatico config --list)",
+      "Bash(git *)",
+      "WebFetch(domain:mirgor.com)"
+    ]
+  }
+}
