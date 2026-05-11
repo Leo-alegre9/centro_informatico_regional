@@ -6,3 +6,37 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+
+$routes->get('nosotros', 'Nosotros::index');
+
+// Admin Auth (sin filtro)
+$routes->get('admin/login',  'Admin\Auth::login');
+$routes->post('admin/login', 'Admin\Auth::doLogin');
+$routes->get('admin/logout', 'Admin\Auth::logout');
+
+// Admin Panel (protegido)
+$routes->group('admin', ['filter' => 'admin'], function ($routes) {
+    $routes->get('/',                          'Admin\Dashboard::index');
+    $routes->get('dashboard',                  'Admin\Dashboard::index');
+    $routes->get('productos',                  'Admin\Productos::index');
+    $routes->get('productos/crear',            'Admin\Productos::crear');
+    $routes->post('productos/crear',           'Admin\Productos::guardar');
+    $routes->get('productos/(:num)/editar',    'Admin\Productos::editar/$1');
+    $routes->post('productos/(:num)/editar',   'Admin\Productos::actualizar/$1');
+    $routes->post('productos/(:num)/eliminar', 'Admin\Productos::eliminar/$1');
+
+    $routes->get('consultas',                          'Admin\Consultas::index');
+    $routes->post('consultas/(:num)/vista',            'Admin\Consultas::marcarVista/$1');
+    $routes->post('consultas/(:num)/resuelta',         'Admin\Consultas::marcarResuelta/$1');
+});
+
+$routes->get('servicio-tecnico', 'ServicioTecnico::index');
+$routes->post('consultas/guardar', 'ConsultaServicio::guardar');
+
+$routes->get('contacto', 'Contacto::index');
+$routes->post('contacto', 'Contacto::enviar');
+
+$routes->get('catalogo/(:segment)/(:segment)/(:segment)', 'Catalogo::browse/$1/$2/$3');
+$routes->get('catalogo/(:segment)/(:segment)', 'Catalogo::browse/$1/$2');
+$routes->get('catalogo/(:segment)', 'Catalogo::browse/$1');
+$routes->get('catalogo', 'Catalogo::index');

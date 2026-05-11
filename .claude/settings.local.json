@@ -3,7 +3,31 @@
     "allow": [
       "Bash(git -C /c/xampp/htdocs/centro_informatico config --list)",
       "Bash(git *)",
-      "WebFetch(domain:mirgor.com)"
+      "WebFetch(domain:mirgor.com)",
+      "Bash(Get-ChildItem -Recurse -Path .)",
+      "Bash(Select-Object FullName)",
+      "Bash(Remove-Item *)",
+      "Bash(mkdir -p \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\\\\public\\\\assets\\\\img\\\\productos\")",
+      "Bash(echo \"\")",
+      "Bash(php spark *)",
+      "Bash(findstr -i \"servicio\")",
+      "Bash(php -l app/Controllers/ServicioTecnico.php)",
+      "Bash(php -l app/Controllers/Admin/Productos.php)",
+      "Bash(php -l app/Views/contenido/servicio_tecnico_detalle.php)",
+      "Bash(php -l app/Controllers/ConsultaServicio.php)",
+      "Bash(php -l app/Controllers/Admin/Consultas.php)",
+      "Bash(php -l app/Models/ConsultaServicioModel.php)",
+      "Bash(findstr -i \"consulta\")",
+      "Bash(group)",
+      "Bash(php -r ' *)",
+      "Bash(mysql -u root cir2 -e \"INSERT IGNORE INTO migrations \\(version, class, \\\\`group\\\\`, namespace, time, batch\\) VALUES \\('2025-05-10-000001','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateAdminUsersTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000002','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateCategoriasTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000003','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateMarcasTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000004','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateProductosTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000005','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateProductoImagenesTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000006','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateContactoMensajesTable','default','App',UNIX_TIMESTAMP\\(\\),1\\);\")",
+      "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 -e \"INSERT IGNORE INTO migrations \\(version, class, \\\\`group\\\\`, namespace, time, batch\\) VALUES \\('2025-05-10-000001','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateAdminUsersTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000002','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateCategoriasTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000003','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateMarcasTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000004','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateProductosTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000005','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateProductoImagenesTable','default','App',UNIX_TIMESTAMP\\(\\),1\\), \\('2025-05-10-000006','App\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Migrations\\\\\\\\\\\\\\\\CreateContactoMensajesTable','default','App',UNIX_TIMESTAMP\\(\\),1\\);\")",
+      "Bash(C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe *)",
+      "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 -e \"CREATE TABLE IF NOT EXISTS consultas_servicio \\(id INT UNSIGNED NOT NULL AUTO_INCREMENT, nombre_cliente VARCHAR\\(200\\) NOT NULL, tipo_equipo VARCHAR\\(100\\) NOT NULL, marca_modelo VARCHAR\\(200\\) NULL, descripcion_problema TEXT NOT NULL, urgencia VARCHAR\\(100\\) NOT NULL DEFAULT 'Sin urgencia particular', tecnico_contactado VARCHAR\\(100\\) NOT NULL, numero_tecnico VARCHAR\\(30\\) NOT NULL, ip_cliente VARCHAR\\(45\\) NULL, estado ENUM\\('nueva','vista','resuelta'\\) NOT NULL DEFAULT 'nueva', created_at DATETIME NULL, updated_at DATETIME NULL, PRIMARY KEY \\(id\\), KEY idx_estado_fecha \\(estado, created_at\\)\\) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\")",
+      "Bash(php -l app/Views/contenido/marcas.php)",
+      "Bash(php -l app/Views/contenido/rubros.php)",
+      "Bash(php -l app/Views/admin/consultas/index.php)",
+      "Bash(curl *)"
     ]
   }
 }

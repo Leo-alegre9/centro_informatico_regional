@@ -56,9 +56,9 @@
     .hero-img-wrap img {
         width: 100%;
         max-width: 480px;
-        border-radius: 20px;
-        border: 3px solid rgba(255,0,51,0.35);
-        box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(255,0,51,0.08);
+        display: block;
+        mask-image: radial-gradient(ellipse 82% 82% at center, black 30%, rgba(0,0,0,0.65) 55%, transparent 100%);
+        -webkit-mask-image: radial-gradient(ellipse 82% 82% at center, black 30%, rgba(0,0,0,0.65) 55%, transparent 100%);
     }
 
     @media (max-width: 991px) { .hero-img-wrap { display: none; } }
@@ -98,7 +98,7 @@
             </div>
 
             <div class="col-lg-6 text-center hero-img-wrap">
-                <img src="<?= base_url('public/assets/img/logofinal.jpeg') ?>"
+                <img src="<?= base_url('assets/img/logo_negrorojo.jpg') ?>"
                      alt="Centro Informático Regional">
             </div>
 

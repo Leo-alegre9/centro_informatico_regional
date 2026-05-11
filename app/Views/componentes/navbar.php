@@ -30,6 +30,7 @@
         padding: 0.45rem 1rem !important;
         border-radius: 6px;
         transition: color 0.2s, background 0.2s;
+        text-decoration: none;
     }
     .nav-link-cir:hover { color: #fff !important; background: rgba(255,255,255,0.07); }
     .nav-cta {
@@ -48,13 +49,79 @@
         border-radius: 7px;
         cursor: pointer;
     }
+
+    /* ── Admin area ── */
+    .nav-admin-sep {
+        width: 1px;
+        height: 22px;
+        background: rgba(255,255,255,0.12);
+        margin: 0 0.4rem;
+        flex-shrink: 0;
+    }
+    .nav-admin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,0,51,0.12);
+        border: 1px solid rgba(255,0,51,0.3);
+        color: var(--rojo) !important;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.38rem 0.9rem !important;
+        border-radius: 50px !important;
+        transition: background 0.2s, border-color 0.2s !important;
+    }
+    .nav-admin-badge:hover {
+        background: rgba(255,0,51,0.22) !important;
+        border-color: rgba(255,0,51,0.55) !important;
+        color: var(--rojo) !important;
+    }
+    .nav-admin-logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.5) !important;
+        font-size: 0.85rem;
+        transition: background 0.2s, color 0.2s, border-color 0.2s !important;
+        text-decoration: none;
+    }
+    .nav-admin-logout:hover {
+        background: rgba(255,0,51,0.15) !important;
+        border-color: rgba(255,0,51,0.4) !important;
+        color: var(--rojo) !important;
+    }
+    .nav-lock-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.35) !important;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .nav-lock-btn:hover {
+        background: rgba(255,0,51,0.12);
+        border-color: rgba(255,0,51,0.35);
+        color: var(--rojo) !important;
+    }
 </style>
+
+<?php $adminLoggedIn = session()->get('admin_logged_in'); ?>
+<?php $adminNombre   = session()->get('admin_nombre'); ?>
 
 <nav class="navbar-cir">
     <div class="container d-flex align-items-center justify-content-between gap-3">
 
         <a href="<?= base_url('/') ?>" class="navbar-brand-cir">
-            <img src="<?= base_url('public/assets/img/logofinal.jpeg') ?>" alt="Logo CIR">
+            <img src="<?= base_url('assets/img/logo_negrorojo.jpg') ?>" alt="Logo CIR">
             Centro <span class="brand-accent ms-1">Informático</span>
         </a>
 
@@ -64,10 +131,33 @@
         </button>
 
         <div class="collapse navbar-collapse d-lg-flex align-items-center gap-1" id="navMenu">
-            <a href="#rubros"           class="nav-link-cir">Rubros</a>
-            <a href="#servicio-tecnico" class="nav-link-cir">Servicio Técnico</a>
-            <a href="#ubicacion"        class="nav-link-cir">Ubicación</a>
-            <a href="<?= base_url('contacto') ?>" class="nav-link-cir nav-cta ms-2">Contacto</a>
+            <a href="<?= base_url() ?>#rubros"           class="nav-link-cir">Rubros</a>
+            <a href="<?= base_url('servicio-tecnico') ?>" class="nav-link-cir">Servicio Técnico</a>
+            <a href="<?= base_url('nosotros') ?>"        class="nav-link-cir">Nosotros</a>
+            <a href="<?= base_url('contacto') ?>"        class="nav-link-cir nav-cta ms-2">Contacto</a>
+
+            <!-- Separador + zona admin -->
+            <span class="nav-admin-sep d-none d-lg-block"></span>
+
+            <?php if ($adminLoggedIn): ?>
+                <a href="<?= base_url('admin/dashboard') ?>"
+                   class="nav-link-cir nav-admin-badge"
+                   title="Ir al panel de administración">
+                    <i class="fas fa-shield-halved"></i>
+                    <span class="d-none d-xl-inline">Panel</span>
+                </a>
+                <a href="<?= base_url('admin/logout') ?>"
+                   class="nav-admin-logout ms-1"
+                   title="Cerrar sesión (<?= esc($adminNombre) ?>)">
+                    <i class="fas fa-right-from-bracket"></i>
+                </a>
+            <?php else: ?>
+                <a href="<?= base_url('admin/login') ?>"
+                   class="nav-lock-btn ms-1"
+                   title="Acceso administrador">
+                    <i class="fas fa-lock"></i>
+                </a>
+            <?php endif; ?>
         </div>
 
     </div>

@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-6">
         <h5 class="mb-3">Centro Informático Regional</h5>
-        <p class="mb-0">&copy; <script>document.write(new Date().getFullYear());</script> Centro Informático Regional. Todos los derechos reservados.</p>
+        <p class="mb-0">&copy; <?= date('Y') ?> Centro Informático Regional. Todos los derechos reservados.</p>
       </div>
       <div class="col-md-6 text-md-end">
         <h5 class="mb-3">Síguenos en redes sociales</h5>

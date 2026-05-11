@@ -42,13 +42,13 @@
                     <li><i class="fas fa-check-circle"></i> Instalación de redes y sistemas</li>
                     <li><i class="fas fa-check-circle"></i> Garantía en todos nuestros trabajos</li>
                 </ul>
-                <a href="<?= base_url('contacto') ?>" class="btn-rojo">
+                <a href="<?= base_url('servicio-tecnico') ?>" class="btn-rojo">
                     Solicitar servicio <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
 
             <div class="col-lg-6 text-center">
-                <img src="<?= base_url('public/assets/img/serviciotecnico.webp') ?>"
+                <img src="<?= base_url('assets/img/serviciotecnico.webp') ?>"
                      alt="Servicio Técnico Especializado"
                      class="tech-img">
             </div>
