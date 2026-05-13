@@ -17,6 +17,9 @@ class ProductoImagenModel extends Model
 
     public function getByProducto(int $productoId): array
     {
-        return $this->where('producto_id', $productoId)->orderBy('orden', 'ASC')->findAll();
+        return $this->where('producto_id', $productoId)
+                    ->orderBy('es_principal', 'DESC')
+                    ->orderBy('orden', 'ASC')
+                    ->findAll();
     }
 }

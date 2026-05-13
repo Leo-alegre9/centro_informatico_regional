@@ -23,18 +23,73 @@
     textarea.form-control { min-height: 95px; resize: vertical; }
     .field-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 0.2rem; }
 
-    .img-upload-box {
+    /* ── imágenes actuales ── */
+    .img-grid-actual {
+        display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 0.5rem;
+    }
+    .img-card-actual {
+        width: 140px; border: 1.5px solid #e5e7eb; border-radius: 12px; overflow: hidden;
+        background: #f9fafb; display: flex; flex-direction: column;
+        transition: border-color 0.2s, opacity 0.2s; position: relative;
+    }
+    .img-card-actual.para-eliminar { opacity: 0.35; border-color: #fca5a5; }
+    .img-card-actual .img-thumb {
+        width: 100%; height: 110px; object-fit: cover; display: block;
+    }
+    .img-card-actual .img-thumb-placeholder {
+        width: 100%; height: 110px; display: flex; align-items: center; justify-content: center;
+        color: #d1d5db; font-size: 2rem; background: #f3f4f6;
+    }
+    .img-card-actual .img-card-body {
+        padding: 0.45rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 5px;
+    }
+    .img-badge-principal {
+        display: inline-block; background: rgba(255,0,51,0.1); color: #FF0033;
+        font-size: 0.67rem; font-weight: 700; padding: 2px 7px; border-radius: 50px;
+        text-transform: uppercase; letter-spacing: 0.4px; width: fit-content;
+    }
+    .btn-set-principal {
+        font-size: 0.72rem; font-weight: 600; color: #374151; background: #fff;
+        border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 3px 7px;
+        cursor: pointer; transition: border-color 0.2s, color 0.2s; text-align: center;
+        width: 100%;
+    }
+    .btn-set-principal:hover { border-color: #FF0033; color: #FF0033; }
+    .btn-del-img {
+        font-size: 0.72rem; font-weight: 600; color: #9CA3AF; background: #fff;
+        border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 3px 7px;
+        cursor: pointer; transition: border-color 0.2s, color 0.2s; text-align: center;
+        width: 100%;
+    }
+    .btn-del-img:hover { border-color: #fca5a5; color: #DC2626; }
+    .btn-del-img.activo { color: #DC2626; border-color: #fca5a5; background: #fef2f2; }
+
+    /* ── upload área ── */
+    .img-upload-area {
         border: 2px dashed #e5e7eb; border-radius: 12px; background: #f9fafb;
-        display: flex; align-items: center; justify-content: center;
-        min-height: 170px; overflow: hidden; transition: border-color 0.2s;
+        padding: 1.5rem; text-align: center; cursor: pointer;
+        transition: border-color 0.2s, background 0.2s;
     }
-    .img-upload-box:hover { border-color: #FF0033; }
-    .img-upload-box img { max-width: 100%; max-height: 200px; object-fit: contain; display: block; }
-    .img-upload-placeholder {
-        display: flex; flex-direction: column; align-items: center; gap: 8px;
-        color: #9CA3AF; font-size: 0.85rem;
+    .img-upload-area:hover, .img-upload-area.drag-over { border-color: #FF0033; background: #fff5f5; }
+    .img-upload-area i { font-size: 2rem; color: #d1d5db; display: block; margin-bottom: 0.5rem; }
+    .img-upload-area span { font-size: 0.84rem; color: #9CA3AF; }
+    .img-upload-area strong { color: #374151; }
+
+    /* ── previews nuevas ── */
+    .img-previews-nuevas {
+        display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.9rem;
     }
-    .img-upload-placeholder i { font-size: 2rem; color: #d1d5db; }
+    .img-preview-nueva {
+        width: 100px; height: 100px; border-radius: 10px; overflow: hidden;
+        border: 1.5px solid #e5e7eb; position: relative;
+    }
+    .img-preview-nueva img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-preview-nueva .rm-preview {
+        position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.55);
+        color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px;
+        font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        line-height: 1;
+    }
     .img-delete-check { font-size: 0.82rem; color: #DC2626; }
 
     .cat-confirmacion {
@@ -228,56 +283,78 @@
                     Si está desactivado, el producto no aparece para los visitantes del sitio.
                 </div>
             </div>
-        </div>
 
-        <!-- ── SECCIÓN 4: IMAGEN ── -->
-        <div class="form-section-title"><i class="fas fa-image me-1"></i>Imagen del producto</div>
-
-        <div class="row g-3 mb-4">
-            <?php if (!empty($imagenActual)): ?>
-            <div class="col-12 col-md-5">
-                <label class="form-label">Imagen actual</label>
-                <div class="img-upload-box">
-                    <img src="<?= base_url(esc($imagenActual['ruta'])) ?>"
-                         alt="<?= esc($imagenActual['alt_text'] ?? 'Imagen del producto') ?>">
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" id="eliminar_imagen"
-                           name="eliminar_imagen" value="1">
-                    <label class="form-check-label img-delete-check" for="eliminar_imagen">
-                        Eliminar imagen actual
+            <div class="col-12">
+                <div class="form-check form-switch" style="margin:0.25rem 0 0;">
+                    <input class="form-check-input" type="checkbox" id="destacado" name="destacado" value="1"
+                           <?= old('destacado', $producto['destacado'] ?? 0) ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="destacado"
+                           style="font-size:0.9rem;font-weight:600;color:#374151;cursor:pointer;">
+                        <i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.85rem;"></i>
+                        Mostrar en Productos Destacados (página de inicio)
                     </label>
                 </div>
-            </div>
-            <div class="col-12 col-md-7">
-            <?php else: ?>
-            <div class="col-12 col-md-6">
-            <?php endif; ?>
-                <label for="imagen" class="form-label">
-                    <?= !empty($imagenActual) ? 'Reemplazar imagen' : 'Subir imagen' ?>
-                </label>
-                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*">
-                <div class="field-hint">JPG, PNG o WebP · Máx. 3 MB. Se mostrará en el catálogo.</div>
-
-                <div class="mt-3" id="preview-wrap" style="display:none;">
-                    <label class="form-label">Vista previa</label>
-                    <div class="img-upload-box">
-                        <img id="preview-img" src="" alt="Vista previa">
-                    </div>
+                <div class="field-hint" style="margin-left:2.5rem;">
+                    Los productos destacados aparecen en un carrusel en la página principal del sitio.
                 </div>
             </div>
-
-            <?php if (empty($imagenActual)): ?>
-            <div class="col-12 col-md-6 d-none d-md-flex align-items-center justify-content-center">
-                <div class="img-upload-box w-100" id="drop-hint">
-                    <div class="img-upload-placeholder">
-                        <i class="fas fa-cloud-arrow-up"></i>
-                        <span>Sin imagen cargada</span>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
         </div>
+
+        <!-- ── SECCIÓN 4: IMÁGENES ── -->
+        <div class="form-section-title"><i class="fas fa-images me-1"></i>Imágenes del producto</div>
+
+        <?php if (!empty($imagenesActuales)): ?>
+        <label class="form-label mb-2">Imágenes actuales</label>
+        <div class="img-grid-actual mb-3" id="img-grid-actual">
+            <?php foreach ($imagenesActuales as $img): ?>
+            <div class="img-card-actual" id="imgcard-<?= $img['id'] ?>">
+                <img src="<?= base_url(esc($img['ruta'])) ?>"
+                     alt="<?= esc($img['alt_text'] ?? '') ?>"
+                     class="img-thumb">
+                <div class="img-card-body">
+                    <?php if ($img['es_principal']): ?>
+                    <span class="img-badge-principal">Principal</span>
+                    <?php endif; ?>
+
+                    <?php if (!$img['es_principal']): ?>
+                    <button type="button" class="btn-set-principal"
+                            onclick="setPrincipal(<?= $img['id'] ?>)">
+                        <i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.65rem;"></i>Principal
+                    </button>
+                    <?php endif; ?>
+
+                    <button type="button"
+                            class="btn-del-img"
+                            id="btn-del-<?= $img['id'] ?>"
+                            onclick="toggleEliminar(<?= $img['id'] ?>)">
+                        <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+
+                    <!-- se activa al marcar eliminar -->
+                    <input type="hidden" name="eliminar_imagenes[]"
+                           id="del-input-<?= $img['id'] ?>"
+                           value="<?= $img['id'] ?>"
+                           disabled>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <!-- hidden para imagen principal -->
+        <input type="hidden" id="imagen_principal_id" name="imagen_principal_id" value="">
+        <?php endif; ?>
+
+        <label class="form-label">Agregar imágenes</label>
+        <div class="img-upload-area" id="upload-area" onclick="document.getElementById('imagenesInput').click()">
+            <i class="fas fa-cloud-arrow-up"></i>
+            <span><strong>Hacé clic</strong> o arrastrá las imágenes aquí</span>
+            <div class="field-hint mt-1">JPG, PNG o WebP · Máx. 3 MB por imagen · Podés subir varias a la vez</div>
+        </div>
+        <input type="file" id="imagenesInput" name="imagenes[]" multiple accept="image/*"
+               style="display:none;">
+
+        <div class="img-previews-nuevas" id="img-previews-nuevas"></div>
+
+        <div class="mb-4"></div>
 
         <!-- ── BOTONES ── -->
         <div class="d-flex align-items-center gap-3 flex-wrap pt-2">
@@ -432,25 +509,107 @@ document.getElementById('badge_custom').addEventListener('input', function () {
     }
 })();
 
-/* ─── Preview de imagen ─── */
-document.getElementById('imagen').addEventListener('change', function () {
-    const file = this.files[0];
-    const wrap = document.getElementById('preview-wrap');
-    const img  = document.getElementById('preview-img');
-    const hint = document.getElementById('drop-hint');
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            img.src = e.target.result;
-            wrap.style.display = '';
-            if (hint) hint.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    } else {
-        wrap.style.display = 'none';
-        if (hint) hint.style.display = '';
-    }
+/* ─── Imágenes: eliminar / principal / preview nuevas ─── */
+function toggleEliminar(id) {
+    const card  = document.getElementById('imgcard-' + id);
+    const input = document.getElementById('del-input-' + id);
+    const btn   = document.getElementById('btn-del-' + id);
+    const marked = card.classList.toggle('para-eliminar');
+    input.disabled = !marked;
+    btn.classList.toggle('activo', marked);
+    btn.innerHTML = marked
+        ? '<i class="fas fa-undo me-1"></i>Deshacer'
+        : '<i class="fas fa-trash me-1"></i>Eliminar';
+}
+
+function setPrincipal(id) {
+    document.getElementById('imagen_principal_id').value = id;
+    document.querySelectorAll('.img-card-actual').forEach(function (card) {
+        const badge  = card.querySelector('.img-badge-principal');
+        const btnSet = card.querySelector('.btn-set-principal');
+        const cardId = parseInt(card.id.replace('imgcard-', ''));
+        if (cardId === id) {
+            if (!badge) {
+                const b = document.createElement('span');
+                b.className   = 'img-badge-principal';
+                b.textContent = 'Principal';
+                card.querySelector('.img-card-body').prepend(b);
+            }
+            if (btnSet) btnSet.remove();
+        } else {
+            if (badge) badge.remove();
+            if (!btnSet) {
+                const b       = document.createElement('button');
+                b.type        = 'button';
+                b.className   = 'btn-set-principal';
+                b.innerHTML   = '<i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.65rem;"></i>Principal';
+                b.onclick     = function () { setPrincipal(cardId); };
+                const delBtn  = card.querySelector('.btn-del-img');
+                card.querySelector('.img-card-body').insertBefore(b, delBtn);
+            }
+        }
+    });
+}
+
+/* Drag-over visual */
+(function () {
+    const area = document.getElementById('upload-area');
+    if (!area) return;
+    area.addEventListener('dragover', function (e) { e.preventDefault(); area.classList.add('drag-over'); });
+    area.addEventListener('dragleave', function () { area.classList.remove('drag-over'); });
+    area.addEventListener('drop', function (e) {
+        e.preventDefault();
+        area.classList.remove('drag-over');
+        agregarArchivos(e.dataTransfer.files);
+    });
+})();
+
+/* Acumular archivos manualmente porque <input multiple> reemplaza al elegir de nuevo */
+let archivosNuevos = [];
+
+document.getElementById('imagenesInput').addEventListener('change', function () {
+    const files = Array.from(this.files); // capture before clearing
+    this.value = '';                       // reset so same file can be re-selected
+    agregarArchivos(files);
 });
+
+function agregarArchivos(fileList) {
+    Array.from(fileList).forEach(function (file) {
+        if (!file.type.startsWith('image/')) return;
+        archivosNuevos.push(file);
+        renderPreviewNueva(file, archivosNuevos.length - 1);
+    });
+    sincronizarInput();
+}
+
+function renderPreviewNueva(file, idx) {
+    const wrap = document.getElementById('img-previews-nuevas');
+    const div  = document.createElement('div');
+    div.className   = 'img-preview-nueva';
+    div.id          = 'prev-nueva-' + idx;
+    const reader    = new FileReader();
+    reader.onload   = function (e) {
+        div.innerHTML = '<img src="' + e.target.result + '" alt="">'
+            + '<button type="button" class="rm-preview" onclick="quitarPreview(' + idx + ')">'
+            + '<i class="fas fa-times"></i></button>';
+    };
+    reader.readAsDataURL(file);
+    wrap.appendChild(div);
+}
+
+function quitarPreview(idx) {
+    archivosNuevos[idx] = null;
+    const el = document.getElementById('prev-nueva-' + idx);
+    if (el) el.remove();
+    sincronizarInput();
+}
+
+function sincronizarInput() {
+    const input = document.getElementById('imagenesInput');
+    const dt    = new DataTransfer();
+    archivosNuevos.forEach(function (f) { if (f) dt.items.add(f); });
+    input.files = dt.files;
+}
 </script>
 
 <?= $this->endSection() ?>

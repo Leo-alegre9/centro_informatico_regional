@@ -50,6 +50,10 @@
     .table tbody tr:hover { background: #fafafa; }
     .badge-activo   { background: rgba(16,185,129,0.12); color: #059669; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
     .badge-inactivo { background: rgba(239,68,68,0.1);  color: #DC2626;  padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+    .btn-star { background: none; border: none; cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 6px; transition: background 0.15s; font-size: 1rem; line-height: 1; }
+    .btn-star:hover { background: rgba(245,158,11,0.12); }
+    .btn-star .fa-star { color: #f59e0b; }
+    .btn-star .fa-star-o, .btn-star .empty-star { color: #D1D5DB; }
     .cat-path { background: #f3f4f6; color: #6B7280; padding: 0.15rem 0.55rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
     .btn-accion { padding: 0.3rem 0.7rem; font-size: 0.78rem; border-radius: 7px; font-weight: 600; }
     .empty-state { text-align: center; padding: 4rem 2rem; color: #9CA3AF; }
@@ -83,6 +87,7 @@
                     <th>Precio</th>
                     <th>Badge</th>
                     <th>Activo</th>
+                    <th title="Producto Destacado"><i class="fas fa-star" style="color:#f59e0b;"></i></th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -117,6 +122,18 @@
                         <?php else: ?>
                             <span class="badge-inactivo"><i class="fas fa-times me-1"></i>No</span>
                         <?php endif; ?>
+                    </td>
+                    <td>
+                        <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/destacado") ?>" style="display:inline;">
+                            <button type="submit" class="btn-star"
+                                    title="<?= $p['destacado'] ? 'Quitar de destacados' : 'Marcar como destacado' ?>">
+                                <?php if ($p['destacado']): ?>
+                                    <i class="fas fa-star"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-star empty-star"></i>
+                                <?php endif; ?>
+                            </button>
+                        </form>
                     </td>
                     <td>
                         <div class="d-flex gap-1 flex-wrap">

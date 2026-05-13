@@ -39,12 +39,12 @@ class Productos extends BaseController
     public function crear()
     {
         return view('admin/productos/form', [
-            'titulo'       => 'Nuevo producto | CIR Admin',
-            'producto'     => null,
-            'catPath'      => null,
-            'accion'       => base_url('admin/productos/crear'),
-            'jerarquia'    => $this->catModel->buildJerarquia(),
-            'imagenActual' => null,
+            'titulo'           => 'Nuevo producto | CIR Admin',
+            'producto'         => null,
+            'catPath'          => null,
+            'accion'           => base_url('admin/productos/crear'),
+            'jerarquia'        => $this->catModel->buildJerarquia(),
+            'imagenesActuales' => [],
         ]);
     }
 
@@ -55,29 +55,29 @@ class Productos extends BaseController
             'nombre'       => 'required|max_length[200]',
         ];
 
-        $file = $this->request->getFile('imagen');
-        if ($file && $file->isValid()) {
-            $rules['imagen'] = 'max_size[imagen,3072]|is_image[imagen]|mime_in[imagen,image/jpeg,image/png,image/webp,image/gif]';
-        }
-
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $nombre = $this->request->getPost('nombre');
+
         $id = $this->model->insert([
             'categoria_id'      => (int) $this->request->getPost('categoria_id'),
-            'nombre'            => $this->request->getPost('nombre'),
+            'nombre'            => $nombre,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'precio_texto'      => $this->request->getPost('precio_texto') ?: 'Consultar precio',
             'badge'             => $this->request->getPost('badge') ?? '',
             'icono'             => 'fas fa-box',
             'activo'            => $this->request->getPost('activo') ? 1 : 0,
+            'destacado'         => $this->request->getPost('destacado') ? 1 : 0,
             'orden'             => 0,
         ]);
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $this->subirImagen($file, (int) $id, $this->request->getPost('nombre'));
+        $esPrincipal = true;
+        foreach ($this->getArchivosSubidos() as $archivo) {
+            $this->subirImagen($archivo, (int) $id, $nombre, $esPrincipal);
+            $esPrincipal = false;
         }
 
         return redirect()->to(base_url('admin/productos'))->with('success', 'Producto creado correctamente.');
@@ -92,12 +92,12 @@ class Productos extends BaseController
         }
 
         return view('admin/productos/form', [
-            'titulo'       => 'Editar producto | CIR Admin',
-            'producto'     => $producto,
-            'catPath'      => $this->catModel->getSlugPath((int) $producto['categoria_id']),
-            'accion'       => base_url("admin/productos/{$id}/editar"),
-            'jerarquia'    => $this->catModel->buildJerarquia(),
-            'imagenActual' => $this->imgModel->getPrincipal($id),
+            'titulo'           => 'Editar producto | CIR Admin',
+            'producto'         => $producto,
+            'catPath'          => $this->catModel->getSlugPath((int) $producto['categoria_id']),
+            'accion'           => base_url("admin/productos/{$id}/editar"),
+            'jerarquia'        => $this->catModel->buildJerarquia(),
+            'imagenesActuales' => $this->imgModel->getByProducto($id),
         ]);
     }
 
@@ -114,34 +114,43 @@ class Productos extends BaseController
             'nombre'       => 'required|max_length[200]',
         ];
 
-        $file = $this->request->getFile('imagen');
-        if ($file && $file->isValid()) {
-            $rules['imagen'] = 'max_size[imagen,3072]|is_image[imagen]|mime_in[imagen,image/jpeg,image/png,image/webp,image/gif]';
-        }
-
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $nombre = $this->request->getPost('nombre');
+
         $this->model->update($id, [
             'categoria_id'      => (int) $this->request->getPost('categoria_id'),
-            'nombre'            => $this->request->getPost('nombre'),
+            'nombre'            => $nombre,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'precio_texto'      => $this->request->getPost('precio_texto') ?: 'Consultar precio',
             'badge'             => $this->request->getPost('badge') ?? '',
             'activo'            => $this->request->getPost('activo') ? 1 : 0,
+            'destacado'         => $this->request->getPost('destacado') ? 1 : 0,
         ]);
 
-        // Eliminar imagen si se solicitó
-        if ($this->request->getPost('eliminar_imagen')) {
-            $this->eliminarImagenPrincipal($id);
+        // Eliminar imágenes marcadas
+        foreach ($this->request->getPost('eliminar_imagenes') ?? [] as $imgId) {
+            $this->eliminarImagenPorId((int) $imgId);
         }
 
-        // Subir nueva imagen (reemplaza la actual si existe)
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $this->eliminarImagenPrincipal($id);
-            $this->subirImagen($file, $id, $this->request->getPost('nombre'));
+        // Cambiar imagen principal
+        $principalId = (int) $this->request->getPost('imagen_principal_id');
+        if ($principalId > 0) {
+            $this->imgModel->where('producto_id', $id)->update(null, ['es_principal' => 0]);
+            $this->imgModel->update($principalId, ['es_principal' => 1]);
+        }
+
+        // Subir nuevas imágenes
+        $hayPrincipal = $principalId > 0
+            || $this->imgModel->where('producto_id', $id)->where('es_principal', 1)->countAllResults() > 0;
+
+        $esPrincipal = !$hayPrincipal;
+        foreach ($this->getArchivosSubidos() as $archivo) {
+            $this->subirImagen($archivo, $id, $nombre, $esPrincipal);
+            $esPrincipal = false;
         }
 
         return redirect()->to(base_url('admin/productos'))->with('success', 'Producto actualizado correctamente.');
@@ -161,32 +170,79 @@ class Productos extends BaseController
         return redirect()->to(base_url('admin/productos'))->with('success', 'Producto eliminado correctamente.');
     }
 
+    public function toggleDestacado(int $id)
+    {
+        $producto = $this->model->find($id);
+
+        if (!$producto) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $nuevoEstado = $producto['destacado'] ? 0 : 1;
+        $this->model->update($id, ['destacado' => $nuevoEstado]);
+
+        $msg = $nuevoEstado
+            ? "«{$producto['nombre']}» ahora aparece en Productos Destacados."
+            : "«{$producto['nombre']}» fue quitado de Productos Destacados.";
+
+        return redirect()->to(base_url('admin/productos'))->with('success', $msg);
+    }
+
     // ─── helpers privados ─────────────────────────────────────────────────────
 
-    private function subirImagen($file, int $productoId, string $altText): void
+    /** Devuelve los UploadedFile válidos del campo imagenes[]. */
+    private function getArchivosSubidos(): array
+    {
+        $validos = [];
+        $archivos = $this->request->getFiles()['imagenes'] ?? [];
+        if (!is_array($archivos)) {
+            $archivos = [$archivos];
+        }
+        foreach ($archivos as $archivo) {
+            if ($archivo instanceof \CodeIgniter\HTTP\Files\UploadedFile
+                && $archivo->isValid()
+                && !$archivo->hasMoved()
+                && $archivo->getSize() > 0
+                && strpos($archivo->getClientMimeType(), 'image/') === 0
+            ) {
+                $validos[] = $archivo;
+            }
+        }
+        return $validos;
+    }
+
+    private function subirImagen($file, int $productoId, string $altText, bool $esPrincipal = false): void
     {
         $uploadPath = FCPATH . 'assets/img/productos/';
-        $newName    = 'producto_' . $productoId . '_' . time() . '.' . $file->getExtension();
+        $newName    = 'producto_' . $productoId . '_' . time() . '_' . mt_rand(100, 999) . '.' . $file->getExtension();
         $file->move($uploadPath, $newName);
 
         $this->imgModel->insert([
             'producto_id'  => $productoId,
             'ruta'         => 'assets/img/productos/' . $newName,
             'alt_text'     => $altText,
-            'es_principal' => 1,
+            'es_principal' => $esPrincipal ? 1 : 0,
             'orden'        => 0,
         ]);
+    }
+
+    private function eliminarImagenPorId(int $imagenId): void
+    {
+        $img = $this->imgModel->find($imagenId);
+        if ($img) {
+            $filePath = FCPATH . $img['ruta'];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $this->imgModel->delete($imagenId);
+        }
     }
 
     private function eliminarImagenPrincipal(int $productoId): void
     {
         $imgActual = $this->imgModel->getPrincipal($productoId);
         if ($imgActual) {
-            $filePath = FCPATH . $imgActual['ruta'];
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
-            $this->imgModel->delete($imgActual['id']);
+            $this->eliminarImagenPorId($imgActual['id']);
         }
     }
 }

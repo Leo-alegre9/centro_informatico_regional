@@ -573,20 +573,30 @@ class Catalogo extends BaseController
                 $imgModel      = new \App\Models\ProductoImagenModel();
                 $dbProductos   = $productoModel->getByCategoriaId($categoria['id']);
                 if (!empty($dbProductos)) {
-                    $prodIds     = array_column($dbProductos, 'id');
-                    $imagenes    = $imgModel->whereIn('producto_id', $prodIds)
-                                           ->where('es_principal', 1)
-                                           ->findAll();
-                    $imgByProdId = array_column($imagenes, null, 'producto_id');
+                    $prodIds    = array_column($dbProductos, 'id');
+                    $todasImgs  = $imgModel->whereIn('producto_id', $prodIds)
+                                          ->orderBy('es_principal', 'DESC')
+                                          ->orderBy('orden', 'ASC')
+                                          ->findAll();
+                    $imgsByProd = [];
+                    foreach ($todasImgs as $img) {
+                        $imgsByProd[$img['producto_id']][] = $img;
+                    }
 
-                    $node['productos'] = array_map(fn($p) => [
-                        'nombre'      => $p['nombre'],
-                        'descripcion' => $p['descripcion_corta'] ?? $p['descripcion'] ?? '',
-                        'precio'      => $p['precio_texto'],
-                        'badge'       => $p['badge'],
-                        'icono'       => $p['icono'],
-                        'imagen_url'  => isset($imgByProdId[$p['id']]) ? $imgByProdId[$p['id']]['ruta'] : null,
-                    ], $dbProductos);
+                    $node['productos'] = array_map(function ($p) use ($imgsByProd) {
+                        $imgs = $imgsByProd[$p['id']] ?? [];
+                        return [
+                            'id'              => $p['id'],
+                            'nombre'          => $p['nombre'],
+                            'descripcion'     => $p['descripcion_corta'] ?? '',
+                            'descripcion_full' => $p['descripcion'] ?? $p['descripcion_corta'] ?? '',
+                            'precio'          => $p['precio_texto'],
+                            'badge'           => $p['badge'],
+                            'icono'           => $p['icono'],
+                            'imagen_url'      => !empty($imgs) ? $imgs[0]['ruta'] : null,
+                            'imagenes'        => $imgs,
+                        ];
+                    }, $dbProductos);
                 }
             }
         }

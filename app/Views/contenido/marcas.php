@@ -1,10 +1,9 @@
 <style>
     .marcas-section {
-        background: #fff;
+        background: #111827;
         padding: 3.5rem 0;
-        border-top: 1px solid #f0f0f0;
-        border-bottom: 1px solid #f0f0f0;
     }
+    .marcas-section .section-heading { color: #fff; }
     .marcas-header {
         display: flex;
         align-items: flex-end;
@@ -40,8 +39,8 @@
         z-index: 2;
         pointer-events: none;
     }
-    .marcas-track-outer::before { left: 0; background: linear-gradient(to right, #fff 0%, transparent 100%); }
-    .marcas-track-outer::after  { right: 0; background: linear-gradient(to left,  #fff 0%, transparent 100%); }
+    .marcas-track-outer::before { left: 0; background: linear-gradient(to right, #111827 0%, transparent 100%); }
+    .marcas-track-outer::after  { right: 0; background: linear-gradient(to left,  #111827 0%, transparent 100%); }
 
     .marcas-track {
         display: flex;
@@ -60,8 +59,8 @@
 
     /* ── Brand card ── */
     .marca-card {
-        background: #fff;
-        border: 1.5px solid #e8e8e8;
+        background: #1a2233;
+        border: 1.5px solid rgba(255,255,255,0.07);
         border-radius: 14px;
         min-width: 165px;
         height: 88px;
@@ -77,8 +76,8 @@
         padding: 1rem 1.5rem;
     }
     .marca-card:hover {
-        border-color: #cbd5e1;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.09);
+        border-color: rgba(255,0,51,0.35);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         transform: translateY(-4px);
     }
     .marca-logo-img {
@@ -87,19 +86,19 @@
         width: auto;
         object-fit: contain;
         display: block;
-        filter: grayscale(100%) contrast(0.75);
-        opacity: 0.7;
+        filter: grayscale(100%) brightness(2) contrast(0.5);
+        opacity: 0.55;
         transition: filter 0.3s, opacity 0.3s;
     }
     .marca-card:hover .marca-logo-img {
-        filter: grayscale(0%) contrast(1);
+        filter: grayscale(0%) brightness(1) contrast(1);
         opacity: 1;
     }
     /* Text fallback when no image */
     .marca-text-fallback {
         font-size: 1rem;
         font-weight: 800;
-        color: #1F2937;
+        color: rgba(255,255,255,0.7);
         letter-spacing: -0.4px;
         text-align: center;
         line-height: 1;

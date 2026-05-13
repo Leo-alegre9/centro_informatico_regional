@@ -1,23 +1,25 @@
 <style>
-    .ubicacion-section { background: var(--fondo); }
+    .ubicacion-section { background: #111827; }
+    .ubicacion-section .section-heading { color: #fff; }
     .info-circle {
         width: 50px; height: 50px;
-        background: var(--rojo);
+        background: rgba(255,0,51,0.15);
+        border: 1.5px solid rgba(255,0,51,0.4);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
     }
-    .info-circle i { color: #fff; font-size: 1rem; }
-    .info-label { font-weight: 700; color: var(--dark-2); font-size: 0.95rem; }
-    .info-value { color: var(--gris); font-size: 0.95rem; margin: 0; }
+    .info-circle i { color: var(--rojo); font-size: 1rem; }
+    .info-label { font-weight: 700; color: #fff; font-size: 0.95rem; }
+    .info-value { color: rgba(255,255,255,0.55); font-size: 0.95rem; margin: 0; }
     .mapa-iframe {
         width: 100%;
         height: 420px;
         border: 0;
         border-radius: 18px;
-        box-shadow: 0 12px 45px rgba(0,0,0,0.11);
+        box-shadow: 0 12px 45px rgba(0,0,0,0.45);
         display: block;
     }
 </style>

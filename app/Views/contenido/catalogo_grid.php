@@ -23,10 +23,26 @@
         border: 1.5px solid #f0f0f0;
         transition: transform 0.28s ease, box-shadow 0.28s ease;
     }
+    .producto-card {
+        cursor: pointer;
+    }
     .producto-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 16px 45px rgba(0,0,0,0.13);
     }
+    .prod-ver-detalle {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        color: #fff;
+        font-size: 1.6rem;
+    }
+    .producto-card:hover .prod-ver-detalle { opacity: 1; }
     .producto-card.oculto { display: none; }
     .producto-icon-wrap {
         background: var(--dark-2);
@@ -218,8 +234,23 @@
 
         <div class="productos-grid" id="productos-grid">
             <?php foreach ($current['productos'] as $producto): ?>
+            <?php
+                $imgUrl   = $producto['imagen_url'] ?? '';
+                $imgJson  = isset($producto['imagenes'])
+                    ? htmlspecialchars(json_encode($producto['imagenes'], JSON_UNESCAPED_UNICODE), ENT_QUOTES)
+                    : '[]';
+                $descFull = $producto['descripcion_full'] ?? $producto['descripcion'] ?? '';
+            ?>
             <div class="producto-card"
-                 data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'])) ?>">
+                 data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'])) ?>"
+                 data-nombre="<?= esc($producto['nombre']) ?>"
+                 data-precio="<?= esc($producto['precio']) ?>"
+                 data-descripcion="<?= esc($descFull) ?>"
+                 data-badge="<?= esc($producto['badge'] ?? '') ?>"
+                 data-icono="<?= esc($producto['icono'] ?? 'fas fa-box') ?>"
+                 data-imagen="<?= esc($imgUrl) ?>"
+                 data-imagenes="<?= $imgJson ?>"
+                 data-categoria="<?= esc($current['nombre'] ?? '') ?>">
                 <div class="producto-icon-wrap">
                     <?php if (!empty($producto['imagen_url'])): ?>
                     <img src="<?= base_url(esc($producto['imagen_url'])) ?>"
@@ -231,6 +262,7 @@
                     <?php if (!empty($producto['badge'])): ?>
                     <span class="producto-badge"><?= esc($producto['badge']) ?></span>
                     <?php endif; ?>
+                    <div class="prod-ver-detalle"><i class="fas fa-expand-alt"></i></div>
                 </div>
                 <div class="producto-body">
                     <div class="producto-name"><?= esc($producto['nombre']) ?></div>

@@ -1,11 +1,12 @@
 <style>
-    .contacto-section { background: #fff; }
+    .contacto-section { background: #0b1017; }
     .contacto-card {
         background: var(--dark-2);
         border-radius: 22px;
         padding: 3.5rem;
+        border: 1px solid rgba(255,0,51,0.15);
         border-left: 7px solid var(--rojo);
-        box-shadow: 0 10px 45px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 55px rgba(0,0,0,0.35), 0 0 60px rgba(255,0,51,0.05);
     }
     .contacto-card h2 { color: #fff; font-weight: 800; font-size: 2.1rem; }
     .contacto-card p { color: rgba(255,255,255,0.68); font-size: 1.05rem; line-height: 1.75; }

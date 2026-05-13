@@ -27,7 +27,9 @@
       "Bash(php -l app/Views/contenido/marcas.php)",
       "Bash(php -l app/Views/contenido/rubros.php)",
       "Bash(php -l app/Views/admin/consultas/index.php)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(php *)",
+      "Bash(del *)"
     ]
   }
 }

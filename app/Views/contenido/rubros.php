@@ -1,5 +1,6 @@
 <style>
-    .rubros-section { background: #fff; }
+    .rubros-section { background: #0b1017; }
+    .rubros-section .section-heading { color: #fff; }
     .rubros-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

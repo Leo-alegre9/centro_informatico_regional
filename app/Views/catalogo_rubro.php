@@ -6,6 +6,6 @@
         <?= $this->include('contenido/catalogo_subrubros') ?>
     <?php else: ?>
         <?= $this->include('contenido/catalogo_grid') ?>
+        <?= $this->include('componentes/modal_producto') ?>
     <?php endif; ?>
-    <?= $this->include('contenido/contacto_rapido') ?>
 <?= $this->endSection() ?>

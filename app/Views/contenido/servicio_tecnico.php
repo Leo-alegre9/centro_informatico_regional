@@ -1,13 +1,14 @@
 <style>
-    .tech-section { background: var(--fondo); }
+    .tech-section { background: #0b1017; }
+    .tech-section .section-heading { color: #fff; }
     .check-list { list-style: none; padding: 0; margin: 0 0 2rem; }
     .check-list li {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 11px 0;
-        border-bottom: 1px solid #e5e7eb;
-        color: var(--dark-2);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.82);
         font-size: 1rem;
         font-weight: 500;
     }
@@ -17,7 +18,7 @@
         border-radius: 18px;
         border-left: 6px solid var(--rojo);
         border-right: 6px solid var(--rojo);
-        box-shadow: 0 20px 65px rgba(0,0,0,0.13);
+        box-shadow: 0 20px 65px rgba(0,0,0,0.45);
         width: 100%;
     }
 </style>
@@ -32,7 +33,7 @@
             <div class="col-lg-6">
                 <span class="section-eyebrow">Soporte profesional</span>
                 <h2 class="section-heading">Servicio Técnico<br>Especializado</h2>
-                <p style="color: var(--gris); font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.5rem;">
+                <p style="color: rgba(255,255,255,0.62); font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.5rem;">
                     Nuestro equipo de técnicos altamente capacitados está listo para resolver cualquier problema con tu equipo, con rapidez y garantía en cada intervención.
                 </p>
                 <ul class="check-list">

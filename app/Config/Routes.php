@@ -23,7 +23,8 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('productos/crear',           'Admin\Productos::guardar');
     $routes->get('productos/(:num)/editar',    'Admin\Productos::editar/$1');
     $routes->post('productos/(:num)/editar',   'Admin\Productos::actualizar/$1');
-    $routes->post('productos/(:num)/eliminar', 'Admin\Productos::eliminar/$1');
+    $routes->post('productos/(:num)/eliminar',  'Admin\Productos::eliminar/$1');
+    $routes->post('productos/(:num)/destacado', 'Admin\Productos::toggleDestacado/$1');
 
     $routes->get('consultas',                          'Admin\Consultas::index');
     $routes->post('consultas/(:num)/vista',            'Admin\Consultas::marcarVista/$1');
