@@ -1,5 +1,5 @@
 <style>
-    .contacto-section { background: #0b1017; }
+    .contacto-section { background: #0c1117; }
     .contacto-card {
         background: var(--dark-2);
         border-radius: 22px;

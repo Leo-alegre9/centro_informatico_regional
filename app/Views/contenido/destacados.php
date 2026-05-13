@@ -1,7 +1,7 @@
 <?php if (empty($productosDestacados)) return; ?>
 
 <style>
-    .destacados-section { background: #070c1a; position: relative; overflow: hidden; }
+    .destacados-section { background: #0c1117; position: relative; overflow: hidden; }
     .destacados-section .section-heading { color: #fff; }
 
     /* ── Carrusel wrapper ── */

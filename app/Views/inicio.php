@@ -2,7 +2,6 @@
 
 <?= $this->section('contenido') ?>
     <?= $this->include('contenido/hero') ?>
-    <?= $this->include('contenido/stats') ?>
     <?= $this->include('contenido/rubros') ?>
     <?= $this->include('contenido/marcas') ?>
     <?= $this->include('contenido/destacados') ?>

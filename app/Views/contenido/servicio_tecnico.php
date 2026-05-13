@@ -1,5 +1,5 @@
 <style>
-    .tech-section { background: #0b1017; }
+    .tech-section { background: #0c1117; }
     .tech-section .section-heading { color: #fff; }
     .check-list { list-style: none; padding: 0; margin: 0 0 2rem; }
     .check-list li {

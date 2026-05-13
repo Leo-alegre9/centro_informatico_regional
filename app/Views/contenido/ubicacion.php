@@ -1,5 +1,5 @@
 <style>
-    .ubicacion-section { background: #111827; }
+    .ubicacion-section { background: #0c1117; }
     .ubicacion-section .section-heading { color: #fff; }
     .info-circle {
         width: 50px; height: 50px;

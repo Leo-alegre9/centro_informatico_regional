@@ -1,11 +1,21 @@
 <style>
     .hero-section {
         min-height: 90vh;
-        background: linear-gradient(135deg, #070c1a 0%, var(--dark-2) 55%, #180a10 100%);
+        background: linear-gradient(135deg, #070c1a 0%, var(--dark-2) 55%, #0c1117 100%);
         display: flex;
         align-items: center;
         position: relative;
         overflow: hidden;
+    }
+    .hero-bottom-fade {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: linear-gradient(to bottom, transparent 0%, #0c1117 100%);
+        pointer-events: none;
+        z-index: 0;
     }
     .hero-glow-1 {
         position: absolute;
@@ -104,4 +114,5 @@
 
         </div>
     </div>
+    <div class="hero-bottom-fade"></div>
 </section>
