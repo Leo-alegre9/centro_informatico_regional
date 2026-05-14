@@ -34,7 +34,13 @@
       "PowerShell(Get-Content \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\cir2.sql\" -Raw | & \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 2>&1)",
       "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"USE cir2; SHOW TABLES;\" 2>&1)",
       "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\app\\\\Views\" -Recurse -File)",
-      "Bash(Sort-Object FullName)"
+      "Bash(Sort-Object FullName)",
+      "PowerShell(php \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\\\\convert_logo.php\")",
+      "PowerShell(php -l \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\\\\app\\\\Controllers\\\\Catalogo.php\")",
+      "PowerShell(php -l \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\\\\app\\\\Database\\\\Seeds\\\\CategoriasSeeder.php\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(Select-String -Pattern \"servicio\")"
     ]
   }
 }

@@ -251,6 +251,8 @@
         $currentUrl   = current_url();
         $isDashboard  = strpos($currentUrl, 'admin/dashboard') !== false || preg_match('#/admin/?$#', $currentUrl);
         $isProductos  = strpos($currentUrl, 'admin/productos') !== false;
+        $isCategorias = strpos($currentUrl, 'admin/categorias') !== false;
+        $isMarcas     = strpos($currentUrl, 'admin/marcas') !== false;
         $isConsultas  = strpos($currentUrl, 'admin/consultas') !== false;
         $unreadCount  = (new \App\Models\ConsultaServicioModel())->getUnreadCount();
         ?>
@@ -263,6 +265,14 @@
 
         <a href="<?= base_url('admin/productos') ?>" class="<?= $isProductos ? 'activo' : '' ?>">
             <i class="fas fa-box"></i> Productos
+        </a>
+
+        <a href="<?= base_url('admin/categorias') ?>" class="<?= $isCategorias ? 'activo' : '' ?>">
+            <i class="fas fa-sitemap"></i> Categorías
+        </a>
+
+        <a href="<?= base_url('admin/marcas') ?>" class="<?= $isMarcas ? 'activo' : '' ?>">
+            <i class="fas fa-tag"></i> Marcas
         </a>
 
         <div class="nav-section-title">Servicio Técnico</div>

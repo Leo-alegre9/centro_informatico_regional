@@ -198,6 +198,25 @@
 
         <div class="mb-4"></div>
 
+        <!-- ── SECCIÓN 1b: MARCA ── -->
+        <div class="form-section-title"><i class="fas fa-tag me-1"></i>Marca</div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+                <label for="marca_id" class="form-label">Marca del producto</label>
+                <select id="marca_id" name="marca_id" class="form-select">
+                    <option value="">— Sin marca / Genérico —</option>
+                    <?php foreach ($marcas as $m): ?>
+                        <option value="<?= $m['id'] ?>"
+                            <?= old('marca_id', $producto['marca_id'] ?? '') == $m['id'] ? 'selected' : '' ?>>
+                            <?= esc($m['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="field-hint">Seleccioná la marca fabricante del producto.</div>
+            </div>
+        </div>
+
         <!-- ── SECCIÓN 2: DATOS DEL PRODUCTO ── -->
         <div class="form-section-title"><i class="fas fa-box me-1"></i>Información del producto</div>
 
@@ -209,6 +228,14 @@
                 <input type="text" id="nombre" name="nombre" class="form-control"
                        value="<?= esc(old('nombre', $producto['nombre'] ?? '')) ?>"
                        placeholder="Ej: Teclado Mecánico RGB, Heladera No Frost 420L" required>
+            </div>
+
+            <div class="col-12 col-sm-6">
+                <label for="modelo" class="form-label">Modelo / SKU</label>
+                <input type="text" id="modelo" name="modelo" class="form-control"
+                       value="<?= esc(old('modelo', $producto['modelo'] ?? '')) ?>"
+                       placeholder="Ej: MX Keys, G915, GTX-3090-TI" maxlength="200">
+                <div class="field-hint">Número de modelo o código del fabricante (opcional).</div>
             </div>
 
             <div class="col-12">

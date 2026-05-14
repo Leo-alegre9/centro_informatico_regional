@@ -1,5 +1,25 @@
 <style>
     .subrubros-section { background: var(--fondo); }
+    /* ── Tema Gaming ── */
+    .subrubros-section.tema-gaming { background: #070710; }
+    .tema-gaming .subrubro-card {
+        background: #0d0d1c;
+        border: 1px solid rgba(255,0,51,0.06);
+    }
+    .tema-gaming .subrubro-card:hover {
+        box-shadow: 0 22px 55px rgba(255,0,51,0.12), 0 0 0 1px rgba(255,0,51,0.12);
+        border-bottom-color: var(--rojo);
+    }
+    .tema-gaming .subrubro-icon {
+        box-shadow: 0 0 18px rgba(255,0,51,0.08);
+    }
+    .tema-gaming .subrubro-card:hover .subrubro-icon {
+        box-shadow: 0 0 28px rgba(255,0,51,0.35);
+    }
+    .tema-gaming .section-heading { color: #fff; }
+    .tema-gaming .cat-buscador { background: #0d0d1c; border-color: rgba(255,255,255,0.12); color: #fff; }
+    .tema-gaming .cat-buscador::placeholder { color: rgba(255,255,255,0.3); }
+    .tema-gaming .cat-buscador:focus { border-color: var(--rojo); }
     .subrubros-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -124,7 +144,7 @@
 <!-- ═══════════════════════════════════════════════
      SUBRUBROS GRID
 ═══════════════════════════════════════════════ -->
-<section class="subrubros-section py-5">
+<section class="subrubros-section py-5<?= isset($current['tema']) ? ' tema-' . esc($current['tema']) : '' ?>">
     <div class="container">
 
         <div class="text-center mb-2">

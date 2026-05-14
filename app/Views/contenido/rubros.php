@@ -175,7 +175,7 @@
             <!-- Informática -->
             <a href="<?= base_url('catalogo/informatica') ?>" class="rubro-card">
                 <div class="rubro-visual">
-                    <div class="rubro-visual-bg" style="--grad: linear-gradient(135deg, #091628 0%, #0f2240 55%, #070e18 100%);"></div>
+                    <div class="rubro-visual-bg" style="--grad: linear-gradient(135deg, #060d1f 0%, #0a1830 55%, #070e1a 100%);"></div>
                     <img src="<?= base_url('assets/img/rubros/informatica.jpg') ?>"
                          alt="" class="rubro-visual-img" loading="lazy"
                          onerror="this.style.display='none'">
@@ -185,16 +185,16 @@
                 <div class="rubro-body">
                     <div class="rubro-meta">
                         <div class="rubro-name">Informática</div>
-                        <span class="rubro-badge"><i class="fas fa-layer-group"></i> 6 categorías</span>
+                        <span class="rubro-badge"><i class="fas fa-layer-group"></i> 12 categorías</span>
                     </div>
-                    <div class="rubro-desc-text">Todo en tecnología para tu hogar y empresa: equipos, hardware, conectividad y más.</div>
+                    <div class="rubro-desc-text">Todo en tecnología para tu hogar y empresa: computación, gaming, notebooks, redes, seguridad y más.</div>
                     <div class="rubro-subcats">
-                        <span class="rubro-subcat-chip">Accesorios</span>
+                        <span class="rubro-subcat-chip">Computación</span>
+                        <span class="rubro-subcat-chip">Gaming</span>
                         <span class="rubro-subcat-chip">Componentes</span>
-                        <span class="rubro-subcat-chip">Monitores</span>
+                        <span class="rubro-subcat-chip">Notebooks</span>
+                        <span class="rubro-subcat-chip">Redes</span>
                         <span class="rubro-subcat-chip">Seguridad</span>
-                        <span class="rubro-subcat-chip">Conectividad</span>
-                        <span class="rubro-subcat-chip">Impresión</span>
                     </div>
                     <span class="rubro-link">Explorar categoría <i class="fas fa-arrow-right"></i></span>
                 </div>

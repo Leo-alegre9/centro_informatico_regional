@@ -123,6 +123,23 @@ class CategoriaModel extends Model
         return $jerarquia;
     }
 
+    /**
+     * Returns all descendant category IDs (children + grandchildren) plus the given parentId itself.
+     */
+    public function getDescendantIds(int $parentId): array
+    {
+        $ids      = [$parentId];
+        $children = $this->where('parent_id', $parentId)->findAll();
+        foreach ($children as $child) {
+            $ids[] = (int) $child['id'];
+            $grandchildren = $this->where('parent_id', $child['id'])->findAll();
+            foreach ($grandchildren as $gc) {
+                $ids[] = (int) $gc['id'];
+            }
+        }
+        return array_unique($ids);
+    }
+
     /** Returns the rubro/subrubro/sub_subrubro slug path for a given leaf categoria_id. */
     public function getSlugPath(int $categoriaId): array
     {

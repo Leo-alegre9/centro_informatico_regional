@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\ProductoModel;
 use App\Models\CategoriaModel;
 use App\Models\ProductoImagenModel;
+use App\Models\MarcaModel;
 
 class Productos extends BaseController
 {
     private ProductoModel       $model;
     private CategoriaModel      $catModel;
     private ProductoImagenModel $imgModel;
+    private MarcaModel          $marcaModel;
 
     public function __construct()
     {
-        $this->model    = new ProductoModel();
-        $this->catModel = new CategoriaModel();
-        $this->imgModel = new ProductoImagenModel();
+        $this->model      = new ProductoModel();
+        $this->catModel   = new CategoriaModel();
+        $this->imgModel   = new ProductoImagenModel();
+        $this->marcaModel = new MarcaModel();
     }
 
     public function index()
@@ -45,6 +48,7 @@ class Productos extends BaseController
             'accion'           => base_url('admin/productos/crear'),
             'jerarquia'        => $this->catModel->buildJerarquia(),
             'imagenesActuales' => [],
+            'marcas'           => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
         ]);
     }
 
@@ -61,9 +65,13 @@ class Productos extends BaseController
 
         $nombre = $this->request->getPost('nombre');
 
+        $marcaId = (int) $this->request->getPost('marca_id');
+
         $id = $this->model->insert([
             'categoria_id'      => (int) $this->request->getPost('categoria_id'),
+            'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'nombre'            => $nombre,
+            'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'precio_texto'      => $this->request->getPost('precio_texto') ?: 'Consultar precio',
@@ -98,6 +106,7 @@ class Productos extends BaseController
             'accion'           => base_url("admin/productos/{$id}/editar"),
             'jerarquia'        => $this->catModel->buildJerarquia(),
             'imagenesActuales' => $this->imgModel->getByProducto($id),
+            'marcas'           => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
         ]);
     }
 
@@ -118,11 +127,14 @@ class Productos extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $nombre = $this->request->getPost('nombre');
+        $nombre  = $this->request->getPost('nombre');
+        $marcaId = (int) $this->request->getPost('marca_id');
 
         $this->model->update($id, [
             'categoria_id'      => (int) $this->request->getPost('categoria_id'),
+            'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'nombre'            => $nombre,
+            'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'precio_texto'      => $this->request->getPost('precio_texto') ?: 'Consultar precio',

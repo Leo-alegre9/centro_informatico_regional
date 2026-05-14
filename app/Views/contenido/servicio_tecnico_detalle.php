@@ -53,18 +53,28 @@
         box-shadow: 0 14px 40px rgba(0,0,0,0.1);
     }
     .tecnico-avatar {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         background: var(--dark-2);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.1rem;
+        margin-bottom: 1.25rem;
         border: 3px solid var(--rojo);
         flex-shrink: 0;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(255,0,51,0.18);
     }
-    .tecnico-avatar i { color: rgba(255,255,255,0.75); font-size: 2rem; }
+    .tecnico-avatar i { color: rgba(255,255,255,0.75); font-size: 2.2rem; }
+    .tecnico-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+        border-radius: 50%;
+    }
     .tecnico-nombre {
         font-size: 1.15rem;
         font-weight: 800;
@@ -273,7 +283,10 @@
                     <div class="col-12">
                         <div class="tecnico-card">
                             <div class="tecnico-avatar">
-                                <i class="fas fa-user-tie"></i>
+                                <img src="<?= base_url('assets/img/perfiles/perfil_pilito.jpeg') ?>"
+                                     alt="Hugo Díaz"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <i class="fas fa-user-tie" style="display:none;"></i>
                             </div>
                             <div class="tecnico-nombre">Hugo Díaz</div>
                             <div class="tecnico-rol">Técnico en Software &amp; Sistemas</div>

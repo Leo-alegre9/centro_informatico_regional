@@ -8,4 +8,7 @@
         <?= $this->include('contenido/catalogo_grid') ?>
         <?= $this->include('componentes/modal_producto') ?>
     <?php endif; ?>
+    <?php if (!empty($destacados)): ?>
+        <?= $this->include('componentes/carrusel_destacados') ?>
+    <?php endif; ?>
 <?= $this->endSection() ?>
