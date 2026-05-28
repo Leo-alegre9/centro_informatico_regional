@@ -12,7 +12,7 @@ class Home extends BaseController
         $productoModel = new ProductoModel();
         $catModel      = new CategoriaModel();
 
-        $productosDestacados = $productoModel->getDestacados();
+        $productosDestacados = $productoModel->getParaInicio();
 
         foreach ($productosDestacados as &$p) {
             $slugPath = $catModel->getSlugPath((int) $p['categoria_id']);

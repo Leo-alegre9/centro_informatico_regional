@@ -170,7 +170,15 @@
         </div>
         <div class="section-divider"></div>
 
-        <div class="rubros-grid">
+        <?php
+        $_catModelRubros = new \App\Models\CategoriaModel();
+        echo view('componentes/mega_nav_panel', [
+            'megaMenuData' => $_catModelRubros->getMegaMenu(),
+            'mnpTema'      => 'dark',
+        ]);
+        ?>
+
+        <div class="rubros-grid" style="margin-top:2rem;">
 
             <!-- Informática -->
             <a href="<?= base_url('catalogo/informatica') ?>" class="rubro-card">
@@ -285,5 +293,6 @@
             </a>
 
         </div>
+
     </div>
 </section>

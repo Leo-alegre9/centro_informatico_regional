@@ -8,13 +8,13 @@
       <div class="col-md-6 text-md-end">
         <h5 class="mb-3">Síguenos en redes sociales</h5>
         <div class="socials">
-          <a href="https://www.instagram.com/centro_informatico_regional" class="text-white me-3 fs-5">
+          <a href="https://www.instagram.com/centro_informatico_regional" class="text-white me-3 fs-5" style="text-decoration:none;">
             <i class="fab fa-instagram"></i>
           </a>
-          <a href="https://www.facebook.com/profile.php?id=61578451747153" class="text-white me-3 fs-5">
+          <a href="https://www.facebook.com/profile.php?id=61578451747153" class="text-white me-3 fs-5" style="text-decoration:none;">
             <i class="fab fa-facebook"></i>
           </a>
-          <a href="https://wa.me/5493704616482" class="text-white fs-5">
+          <a href="https://wa.me/5493704616482" class="text-white fs-5" style="text-decoration:none;">
             <i class="fab fa-whatsapp"></i>
           </a>
         </div>

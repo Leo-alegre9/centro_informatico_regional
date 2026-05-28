@@ -153,7 +153,17 @@
         </div>
         <div class="section-divider"></div>
 
-        <div class="cat-buscador-wrap">
+        <?php if (($currentPath ?? '') === 'catalogo'): ?>
+        <?php
+        $_catModelCat = new \App\Models\CategoriaModel();
+        echo view('componentes/mega_nav_panel', [
+            'megaMenuData' => $_catModelCat->getMegaMenu(),
+            'mnpTema'      => 'light',
+        ]);
+        ?>
+        <?php endif; ?>
+
+        <div class="cat-buscador-wrap" style="margin-top:1.5rem;">
             <i class="fas fa-search cat-search-icon"></i>
             <input type="text"
                    id="buscador-subrubros"

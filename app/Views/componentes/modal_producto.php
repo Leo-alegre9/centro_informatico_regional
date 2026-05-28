@@ -560,10 +560,10 @@
         if (e.target === lbWrap && lbScale === 1) lbCerrar();
     });
 
-    /* ── Trigger: clicks en .producto-card ── */
-    document.querySelectorAll('.producto-card[data-nombre]').forEach(function(card) {
+    /* ── Trigger: clicks en .producto-card y .sec-prod-card ── */
+    document.querySelectorAll('.producto-card[data-nombre], .sec-prod-card[data-nombre]').forEach(function(card) {
         card.addEventListener('click', function(e) {
-            if (e.target.closest('.btn-consultar')) return;
+            if (e.target.closest('.btn-consultar') || e.target.closest('.sec-prod-btn')) return;
             var imgs = [];
             try { imgs = JSON.parse(this.dataset.imagenes || '[]'); } catch(err) {}
             mpAbrir({
@@ -579,7 +579,8 @@
         });
     });
 
-    /* Exponer baseUrl para construir rutas de imágenes */
+    /* Exponer baseUrl y mpAbrir globalmente */
     window._baseUrl = '<?= base_url() ?>';
+    window.mpAbrir  = mpAbrir;
 })();
 </script>

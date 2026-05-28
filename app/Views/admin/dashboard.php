@@ -59,21 +59,6 @@
     }
     .btn-outline-rojo:hover { background: #FF0033; color: #fff; }
 
-    .info-box {
-        background: #fffbeb;
-        border: 1px solid #fde68a;
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        font-size: 0.88rem;
-        color: #92400e;
-    }
-    .info-box code {
-        background: rgba(0,0,0,0.07);
-        padding: 0.1rem 0.4rem;
-        border-radius: 4px;
-        font-size: 0.85rem;
-    }
-
     .page-header { margin-bottom: 1.75rem; }
     .page-header h2 { font-size: 1.4rem; font-weight: 700; color: #111827; margin-bottom: 0.2rem; }
     .page-header .saludo { color: #6B7280; font-size: 0.95rem; }
@@ -151,13 +136,6 @@
             </a>
         </div>
     </div>
-</div>
-
-<!-- Nota informativa -->
-<div class="info-box">
-    <strong><i class="fas fa-info-circle me-2"></i>Para comenzar:</strong>
-    Ejecutá <code>php spark db:seed AdminSeeder</code> para crear el primer administrador.
-    Credenciales por defecto: <code>admin@cir.com</code> / <code>CIR@admin2025</code>
 </div>
 
 <?= $this->endSection() ?>

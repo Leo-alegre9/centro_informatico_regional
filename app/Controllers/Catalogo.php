@@ -22,24 +22,27 @@ class Catalogo extends BaseController
 
     public function index(): string
     {
-        $rubroMap = $this->mapRubros($this->catModel->getRubros());
+        $rubroMap        = $this->mapRubros($this->catModel->getRubros());
+        $productosSeccion = $this->productoModel->getBySeccion('catalogo');
 
         return view('catalogo_rubro', [
-            'titulo'      => 'Catálogo | Centro Informático Regional',
-            'breadcrumb'  => [
+            'titulo'           => 'Catálogo | Centro Informático Regional',
+            'breadcrumb'       => [
                 ['nombre' => 'Inicio',   'url' => base_url()],
                 ['nombre' => 'Catálogo', 'url' => null],
             ],
-            'current'     => [
+            'current'          => [
                 'nombre'      => 'Catálogo',
                 'icono'       => 'fas fa-th-large',
                 'descripcion' => 'Explorá todos nuestros rubros y encontrá lo que necesitás.',
                 'subrubros'   => $rubroMap,
             ],
-            'currentPath' => 'catalogo',
-            'siblings'    => [],
-            'allRubros'   => $rubroMap,
-            'destacados'  => [],
+            'currentPath'      => 'catalogo',
+            'siblings'         => [],
+            'allRubros'        => $rubroMap,
+            'destacados'       => [],
+            'productosSeccion' => $productosSeccion,
+            'tituloSeccion'    => 'Selección del catálogo',
         ]);
     }
 
@@ -102,11 +105,20 @@ class Catalogo extends BaseController
         // 4. Hijos de la categoría actual
         $children = $this->catModel->getChildren((int) $dbCat['id']);
 
+        $descIds          = $this->catModel->getDescendantIds((int) $dbCat['id']);
+        $productosSeccion = [];
+        $tituloSeccion    = '';
+
         if (!empty($children)) {
             // Tiene hijos → mostrar grilla de subrubros
             $current['subrubros'] = $this->buildSubrubros($children);
+
+            // Destacados del rubro: productos de sección "rubro" en descendientes
+            $todosIds         = array_merge([(int) $dbCat['id']], $descIds);
+            $productosSeccion = $this->productoModel->getPorSeccionEnDescendientes($todosIds, 'rubro', 12);
+            $tituloSeccion    = 'Destacados en ' . $dbCat['nombre'];
         } else {
-            // Hoja → cargar productos de la BD
+            // Hoja → todos los productos activos de esta categoría (activo=1 es el control principal)
             $imgModel    = new ProductoImagenModel();
             $dbProductos = $this->productoModel->getByCategoriaId((int) $dbCat['id']);
             $imgsByProd  = [];
@@ -130,32 +142,43 @@ class Catalogo extends BaseController
                     'descripcion'      => $p['descripcion_corta'] ?? '',
                     'descripcion_full' => $p['descripcion'] ?? $p['descripcion_corta'] ?? '',
                     'precio'           => $p['precio_texto'],
+                    'precio_num'       => $p['precio_numero'] ?? null,
                     'badge'            => $p['badge'],
                     'icono'            => $p['icono'],
+                    'marca'            => $p['marca_nombre'] ?? '',
                     'imagen_url'       => !empty($imgsByProd[$p['id']]) ? $imgsByProd[$p['id']][0]['ruta'] : null,
                     'imagenes'         => $imgsByProd[$p['id']] ?? [],
                 ];
             }, $dbProductos);
+
+            // Destacados del subrubro: productos de sección "subrubro" para mostrar en área especial
+            $productosSeccion = $this->productoModel->getPorSeccionEnDescendientes(
+                [(int) $dbCat['id']],
+                'subrubro',
+                8
+            );
+            $tituloSeccion = 'Productos destacados en ' . $dbCat['nombre'];
         }
 
         // 5. Hermanos (chips de navegación en el header)
         $siblings = $this->buildSiblings($dbCat, $segments);
 
-        // 6. Productos destacados para el carrusel
-        $descIds    = $this->catModel->getDescendantIds((int) $dbCat['id']);
+        // 6. Carrusel de destacados (campo destacado=1, independiente de secciones)
         $destacados = $this->productoModel->getDestacadosByCatIds($descIds, 8);
 
         // 7. Índice de rubros
         $allRubros = $this->mapRubros($this->catModel->getRubros());
 
         return view('catalogo_rubro', [
-            'titulo'      => $dbCat['nombre'] . ' | Centro Informático Regional',
-            'breadcrumb'  => $breadcrumb,
-            'current'     => $current,
-            'currentPath' => $currentPath,
-            'siblings'    => $siblings,
-            'allRubros'   => $allRubros,
-            'destacados'  => $destacados,
+            'titulo'           => $dbCat['nombre'] . ' | Centro Informático Regional',
+            'breadcrumb'       => $breadcrumb,
+            'current'          => $current,
+            'currentPath'      => $currentPath,
+            'siblings'         => $siblings,
+            'allRubros'        => $allRubros,
+            'destacados'       => $destacados,
+            'productosSeccion' => $productosSeccion,
+            'tituloSeccion'    => $tituloSeccion,
         ]);
     }
 
@@ -168,31 +191,41 @@ class Catalogo extends BaseController
         $sub    = trim((string) $this->request->getGet('sub'));
         $subSub = trim((string) $this->request->getGet('subsub'));
 
-        if ($q === '' || $rubro === '') {
+        if ($q === '') {
             return $this->response->setJSON(['resultados' => [], 'total' => 0]);
         }
 
-        $dbCat = $this->catModel->findBySlugPath(
-            $rubro,
-            $sub !== '' ? $sub : null,
-            $subSub !== '' ? $subSub : null
-        );
-
-        if (!$dbCat) {
-            return $this->response->setJSON(['resultados' => [], 'total' => 0]);
+        if ($rubro !== '') {
+            $dbCat = $this->catModel->findBySlugPath(
+                $rubro,
+                $sub !== '' ? $sub : null,
+                $subSub !== '' ? $subSub : null
+            );
+            if (!$dbCat) {
+                return $this->response->setJSON(['resultados' => [], 'total' => 0]);
+            }
+            $catIds = $this->catModel->getDescendantIds((int) $dbCat['id']);
+            if (empty($catIds)) {
+                $catIds = [(int) $dbCat['id']];
+            }
+        } else {
+            // Sin contexto de categoría: buscar en todos los productos
+            $catIds = [];
         }
 
-        $descIds    = $this->catModel->getDescendantIds((int) $dbCat['id']);
-        $resultados = $this->productoModel->buscarEnCategoria($descIds, $q);
+        $resultados = $this->productoModel->buscarEnCategoria($catIds, $q);
 
         $out = array_map(fn($p) => [
-            'id'         => $p['id'],
-            'nombre'     => $p['nombre'],
-            'modelo'     => $p['modelo'] ?? '',
-            'precio'     => $p['precio_texto'],
-            'badge'      => $p['badge'],
-            'imagen_url' => $p['imagen_ruta'] ?? null,
-            'marca'      => $p['marca_nombre'] ?? '',
+            'id'          => $p['id'],
+            'nombre'      => $p['nombre'],
+            'modelo'      => $p['modelo'] ?? '',
+            'precio'      => $p['precio_texto'],
+            'badge'       => $p['badge'],
+            'imagen_url'  => $p['imagen_ruta'] ?? null,
+            'icono'       => $p['icono'] ?? 'fas fa-box',
+            'descripcion' => $p['descripcion_corta'] ?? $p['descripcion'] ?? '',
+            'marca'       => $p['marca_nombre'] ?? '',
+            'categoria'   => $p['categoria_nombre'] ?? '',
         ], $resultados);
 
         return $this->response->setJSON(['resultados' => $out, 'total' => count($out)]);

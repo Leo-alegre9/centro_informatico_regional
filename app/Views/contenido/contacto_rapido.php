@@ -27,7 +27,7 @@
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
                     <span class="section-eyebrow">CONTACTO RÁPIDO</span>
-                    <h2 class="mt-2 mb-3">¿Necesitas ayuda con tu equipo?</h2>
+                    <h2 class="mt-2 mb-3">¿Necesitas ayuda?</h2>
                     <p class="mb-0">
                         Nuestro equipo de expertos está listo para atenderte. Contáctanos ahora mismo y resuelve tus dudas sin compromiso.
                     </p>

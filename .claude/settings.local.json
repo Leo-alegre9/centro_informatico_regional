@@ -40,7 +40,16 @@
       "PowerShell(php -l \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\\\\app\\\\Database\\\\Seeds\\\\CategoriasSeeder.php\")",
       "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\" -Directory)",
       "Bash(Select-Object Name)",
-      "Bash(Select-String -Pattern \"servicio\")"
+      "Bash(Select-String -Pattern \"servicio\")",
+      "Bash(findstr /i \"gd\\\\|imagick\\\\|extension\")",
+      "Bash(findstr /i \"gd imagick\")",
+      "PowerShell(php -m 2>&1)",
+      "Bash(where magick *)",
+      "Bash(where convert *)",
+      "Bash(npm install *)",
+      "Bash(node *)",
+      "Bash(Write-Host \"Limpieza completa\")",
+      "Bash(claude auth *)"
     ]
   }
 }

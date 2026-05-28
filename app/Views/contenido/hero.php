@@ -63,11 +63,33 @@
         max-width: 520px;
         margin-bottom: 2.5rem;
     }
+    .hero-img-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Glow ambiental detrás del logo — separado de la imagen para no difuminarla */
+    .hero-img-wrap::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 55% at 50% 50%,
+            rgba(255,0,51,0.22) 0%,
+            rgba(255,0,51,0.06) 55%,
+            transparent 75%);
+        filter: blur(38px);
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+    }
+    /* La imagen sin ningún filtro encima → máxima nitidez */
     .hero-img-wrap img {
+        position: relative;
+        z-index: 1;
         width: 100%;
-        max-width: 620px;
+        max-width: 600px;
         display: block;
-        filter: drop-shadow(0 0 32px rgba(255,0,51,0.18));
     }
 
     @media (max-width: 991px) { .hero-img-wrap { display: none; } }
@@ -107,7 +129,7 @@
             </div>
 
             <div class="col-lg-6 text-center hero-img-wrap">
-                <img src="<?= base_url('assets/img/logocir_transparent.png') ?>"
+                <img src="<?= base_url('assets/img/logo_cir_mejorado.png') ?>"
                      alt="Centro Informático Regional">
             </div>
 

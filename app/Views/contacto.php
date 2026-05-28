@@ -3,7 +3,6 @@
 <?= $this->section('contenido') ?>
     <?= $this->include('contenido/contacto_hero') ?>
     <?= $this->include('contenido/contacto_form') ?>
-    <?= $this->include('contenido/ubicacion') ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

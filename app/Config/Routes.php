@@ -19,6 +19,7 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('/',                          'Admin\Dashboard::index');
     $routes->get('dashboard',                  'Admin\Dashboard::index');
     $routes->get('productos',                  'Admin\Productos::index');
+    $routes->get('productos/buscar',           'Admin\Productos::buscar');
     $routes->get('productos/crear',            'Admin\Productos::crear');
     $routes->post('productos/crear',           'Admin\Productos::guardar');
     $routes->get('productos/(:num)/editar',    'Admin\Productos::editar/$1');
@@ -39,6 +40,13 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('categorias/(:num)/eliminar',        'Admin\Categorias::eliminar/$1');
     $routes->post('categorias/(:num)/toggle',          'Admin\Categorias::toggleActivo/$1');
 
+    // Inventario / Ubicaciones
+    $routes->get('inventario',                         'Admin\Inventario::index');
+
+    // Stock
+    $routes->get('stock',                              'Admin\Stock::index');
+    $routes->post('stock/(:num)/actualizar',           'Admin\Stock::actualizar/$1');
+
     // Marcas
     $routes->get('marcas',                             'Admin\Marcas::index');
     $routes->get('marcas/crear',                       'Admin\Marcas::crear');
@@ -46,6 +54,10 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('marcas/(:num)/editar',               'Admin\Marcas::editar/$1');
     $routes->post('marcas/(:num)/editar',              'Admin\Marcas::actualizar/$1');
     $routes->post('marcas/(:num)/eliminar',            'Admin\Marcas::eliminar/$1');
+
+    // Configuración de precios
+    $routes->get('configuracion',                      'Admin\Configuracion::index');
+    $routes->post('configuracion/guardar',             'Admin\Configuracion::guardar');
 });
 
 $routes->get('servicio-tecnico', 'ServicioTecnico::index');

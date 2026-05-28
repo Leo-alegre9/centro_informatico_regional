@@ -134,6 +134,58 @@
         width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
         border-top: 5px solid #9CA3AF; pointer-events: none;
     }
+
+    /* ── secciones de visibilidad ── */
+    .secciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.75rem;
+    }
+    .seccion-item {
+        border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 0.9rem 0.85rem;
+        cursor: pointer; user-select: none; position: relative;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        background: #fff;
+    }
+    .seccion-item:hover { border-color: #FF0033; background: #fff8f8; }
+    .seccion-item.activa {
+        border-color: #FF0033; background: rgba(255,0,51,0.04);
+        box-shadow: 0 0 0 3px rgba(255,0,51,0.08);
+    }
+    .seccion-item input[type=checkbox] { display: none; }
+    .seccion-check-box {
+        position: absolute; top: 0.7rem; right: 0.7rem;
+        width: 17px; height: 17px; border: 2px solid #D1D5DB; border-radius: 4px;
+        background: #fff; transition: border-color 0.2s, background 0.2s;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .seccion-item.activa .seccion-check-box {
+        border-color: #FF0033; background: #FF0033;
+    }
+    .seccion-check-box::after {
+        content: ''; display: block; width: 4px; height: 7px;
+        border-right: 2px solid transparent; border-bottom: 2px solid transparent;
+        transform: rotate(45deg) translate(-1px, -1px);
+    }
+    .seccion-item.activa .seccion-check-box::after {
+        border-color: #fff;
+    }
+    .seccion-icon {
+        font-size: 1.4rem; color: #D1D5DB; display: block; margin-bottom: 0.45rem;
+        transition: color 0.2s;
+    }
+    .seccion-item.activa .seccion-icon { color: #FF0033; }
+    .seccion-nombre {
+        font-weight: 600; font-size: 0.84rem; color: #374151; display: block;
+    }
+    .seccion-desc {
+        font-size: 0.72rem; color: #9CA3AF; display: block; margin-top: 0.2rem; line-height: 1.35;
+    }
+    .secciones-hint {
+        font-size: 0.8rem; color: #6B7280; margin-bottom: 0.85rem; line-height: 1.5;
+        background: #f9fafb; border-radius: 8px; padding: 0.6rem 0.9rem;
+        border-left: 3px solid #FF0033;
+    }
 </style>
 
 <div class="page-header-row">
@@ -238,6 +290,23 @@
                 <div class="field-hint">Número de modelo o código del fabricante (opcional).</div>
             </div>
 
+            <div class="col-12 col-sm-6">
+                <label for="codigo" class="form-label">
+                    Código interno
+                    <span style="background:rgba(99,102,241,0.1);color:#4F46E5;font-size:0.68rem;font-weight:700;
+                                 padding:1px 7px;border-radius:50px;margin-left:6px;vertical-align:middle;">
+                        <i class="fas fa-lock" style="font-size:0.6rem;"></i> Solo admin
+                    </span>
+                </label>
+                <input type="text" id="codigo" name="codigo" class="form-control"
+                       value="<?= esc(old('codigo', $producto['codigo'] ?? '')) ?>"
+                       placeholder="Ej: CIR-0042, PROD-2024-001" maxlength="100">
+                <div class="field-hint">
+                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                    Código único para identificar el producto internamente. No aparece en el catálogo.
+                </div>
+            </div>
+
             <div class="col-12">
                 <label for="descripcion_corta" class="form-label">Descripción breve</label>
                 <input type="text" id="descripcion_corta" name="descripcion_corta" class="form-control"
@@ -260,11 +329,38 @@
 
         <div class="row g-3 mb-4">
             <div class="col-12 col-sm-6">
-                <label for="precio_texto" class="form-label">Precio</label>
+                <label for="precio_dolar" class="form-label">
+                    Precio en dólares (USD)
+                    <span style="background:rgba(5,150,105,0.1);color:#059669;font-size:0.68rem;font-weight:700;
+                                 padding:1px 7px;border-radius:50px;margin-left:6px;vertical-align:middle;">
+                        <i class="fas fa-dollar-sign" style="font-size:0.6rem;"></i> Precio base
+                    </span>
+                </label>
+                <div class="input-group">
+                    <span style="background:#f9fafb;border:1.5px solid #e5e7eb;border-right:none;
+                                 border-radius:9px 0 0 9px;padding:0.6rem 0.85rem;font-size:0.9rem;
+                                 font-weight:600;color:#059669;">USD</span>
+                    <input type="number" id="precio_dolar" name="precio_dolar"
+                           class="form-control" style="border-radius:0 9px 9px 0;"
+                           value="<?= esc(old('precio_dolar', $producto['precio_dolar'] ?? '')) ?>"
+                           min="0" step="0.01"
+                           placeholder="Ej: 150.00">
+                </div>
+                <div class="field-hint">
+                    <i class="fas fa-sync-alt me-1" style="color:#059669;"></i>
+                    Al actualizar la cotización en <a href="<?= base_url('admin/configuracion') ?>" style="color:#FF0033;">Configuración</a>,
+                    el precio en pesos se recalcula automáticamente.
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6">
+                <label for="precio_texto" class="form-label">Precio mostrado al público</label>
                 <input type="text" id="precio_texto" name="precio_texto" class="form-control"
                        value="<?= esc(old('precio_texto', $producto['precio_texto'] ?? '')) ?>"
                        placeholder="Ej: $85.000  —  o dejalo vacío para 'Consultar precio'">
-                <div class="field-hint">Si no tiene precio fijo, dejalo vacío.</div>
+                <div class="field-hint">
+                    Se actualiza automáticamente si tiene precio en USD. También podés editarlo manualmente.
+                </div>
             </div>
 
             <div class="col-12 col-sm-6">
@@ -311,20 +407,102 @@
                 </div>
             </div>
 
-            <div class="col-12">
-                <div class="form-check form-switch" style="margin:0.25rem 0 0;">
-                    <input class="form-check-input" type="checkbox" id="destacado" name="destacado" value="1"
-                           <?= old('destacado', $producto['destacado'] ?? 0) ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="destacado"
-                           style="font-size:0.9rem;font-weight:600;color:#374151;cursor:pointer;">
-                        <i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.85rem;"></i>
-                        Mostrar en Productos Destacados (página de inicio)
-                    </label>
-                </div>
-                <div class="field-hint" style="margin-left:2.5rem;">
-                    Los productos destacados aparecen en un carrusel en la página principal del sitio.
+        </div>
+
+        <!-- ── SECCIÓN 3b: UBICACIÓN FÍSICA Y STOCK ── -->
+        <div class="form-section-title"><i class="fas fa-warehouse me-1"></i>Ubicación física y stock</div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+                <label for="ubicacion" class="form-label">¿Dónde está el producto?</label>
+                <?php $ubicacionActual = old('ubicacion', $producto['ubicacion'] ?? ''); ?>
+                <select id="ubicacion" name="ubicacion" class="form-select">
+                    <option value="">— Sin ubicación asignada —</option>
+                    <option value="En el negocio"       <?= $ubicacionActual === 'En el negocio'       ? 'selected' : '' ?>>En el negocio</option>
+                    <option value="Deposito nuevo local" <?= $ubicacionActual === 'Deposito nuevo local' ? 'selected' : '' ?>>Deposito nuevo local</option>
+                    <option value="Deposito quincho"    <?= $ubicacionActual === 'Deposito quincho'    ? 'selected' : '' ?>>Deposito quincho</option>
+                    <option value="Deposito casa"       <?= $ubicacionActual === 'Deposito casa'       ? 'selected' : '' ?>>Deposito casa</option>
+                </select>
+                <div class="field-hint">
+                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                    Solo visible para el administrador. No aparece en el catálogo público.
                 </div>
             </div>
+
+            <div class="col-12 col-md-6">
+                <label for="stock" class="form-label">
+                    Cantidad en stock
+                </label>
+                <input type="number" id="stock" name="stock" class="form-control"
+                       min="0" step="1"
+                       value="<?= esc(old('stock', $producto['stock'] ?? 0)) ?>"
+                       placeholder="0">
+                <div class="field-hint">
+                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                    Solo visible para el administrador. No aparece en el catálogo público.
+                </div>
+            </div>
+        </div>
+
+        <!-- ── SECCIÓN 3c: VISIBILIDAD ── -->
+        <div class="form-section-title"><i class="fas fa-map-marker-alt me-1"></i>¿Dónde destacar este producto?</div>
+
+        <div class="secciones-hint">
+            <i class="fas fa-info-circle me-1" style="color:#FF0033;"></i>
+            <strong>Importante:</strong> la opción "Mostrar en catálogo" de arriba es el interruptor principal — si está desactivado el producto no aparece en ningún lado.
+            Estas opciones permiten elegir en qué secciones del sitio se destacará el producto cuando esté activo.
+        </div>
+
+        <?php
+        // Labels y descripciones personalizadas por slug
+        $seccionInfo = [
+            'inicio'   => [
+                'icono' => 'fas fa-home',
+                'label' => 'Página principal',
+                'desc'  => 'El producto aparece en el carrusel de la página de inicio del sitio.',
+            ],
+            'catalogo' => [
+                'icono' => 'fas fa-th-large',
+                'label' => 'Catálogo',
+                'desc'  => 'El producto aparece en la página del catálogo general, donde se ven todos los rubros (Informática, Muebles, Electrodomésticos, etc.).',
+            ],
+            'rubro'    => [
+                'icono' => 'fas fa-folder-open',
+                'label' => 'Rubro',
+                'desc'  => 'El producto aparece en la página del rubro al que pertenece. Ej: si es de Informática, se muestra al entrar a esa sección.',
+            ],
+            'subrubro' => [
+                'icono' => 'fas fa-tag',
+                'label' => 'Subrubro',
+                'desc'  => 'El producto aparece en la página del subrubro al que pertenece. Ej: si es de Accesorios, se muestra al navegar hasta ahí.',
+            ],
+        ];
+        ?>
+
+        <div class="secciones-grid mb-4">
+            <?php foreach ($secciones as $sec): ?>
+            <?php
+                $estaActiva = in_array((int)$sec['id'], $seccionesActivas);
+                $info = $seccionInfo[$sec['slug']] ?? [
+                    'icono' => $sec['icono'],
+                    'label' => $sec['nombre'],
+                    'desc'  => $sec['descripcion'] ?? '',
+                ];
+            ?>
+            <label class="seccion-item <?= $estaActiva ? 'activa' : '' ?>"
+                   id="seccion-label-<?= $sec['id'] ?>"
+                   onclick="toggleSeccion(<?= $sec['id'] ?>)">
+                <input type="checkbox"
+                       name="secciones[]"
+                       value="<?= $sec['id'] ?>"
+                       id="seccion-check-<?= $sec['id'] ?>"
+                       <?= $estaActiva ? 'checked' : '' ?>>
+                <span class="seccion-check-box"></span>
+                <i class="<?= esc($info['icono']) ?> seccion-icon"></i>
+                <span class="seccion-nombre"><?= esc($info['label']) ?></span>
+                <span class="seccion-desc"><?= esc($info['desc']) ?></span>
+            </label>
+            <?php endforeach; ?>
         </div>
 
         <!-- ── SECCIÓN 4: IMÁGENES ── -->
@@ -398,6 +576,15 @@
 </div>
 
 <script>
+/* ─── Secciones de visibilidad ─── */
+function toggleSeccion(seccionId) {
+    const label    = document.getElementById('seccion-label-' + seccionId);
+    const checkbox = document.getElementById('seccion-check-' + seccionId);
+    if (!label || !checkbox) return;
+    checkbox.checked = !checkbox.checked;
+    label.classList.toggle('activa', checkbox.checked);
+}
+
 /* ─── Datos de jerarquía desde la BD ─── */
 const JERARQUIA = <?= json_encode($jerarquia, JSON_UNESCAPED_UNICODE) ?>;
 

@@ -60,6 +60,19 @@
     .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; color: #D1D5DB; }
     .empty-state h5 { color: #374151; font-weight: 600; margin-bottom: 0.5rem; }
     .empty-state p  { font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    .sec-dot {
+        display: inline-flex; align-items: center; gap: 3px;
+        font-size: 0.68rem; font-weight: 600; padding: 0.12rem 0.45rem;
+        border-radius: 50px; white-space: nowrap;
+    }
+    .sec-dot.inicio      { background: rgba(239,68,68,0.1);   color: #DC2626; }
+    .sec-dot.catalogo    { background: rgba(59,130,246,0.1);  color: #2563EB; }
+    .sec-dot.rubro       { background: rgba(245,158,11,0.1);  color: #D97706; }
+    .sec-dot.subrubro    { background: rgba(16,185,129,0.1);  color: #059669; }
+    .sec-dot.destacado   { background: rgba(139,92,246,0.1);  color: #7C3AED; }
+    .sec-dot.carrusel_promo { background: rgba(236,72,153,0.1); color: #BE185D; }
+    .secciones-cell { display: flex; flex-wrap: wrap; gap: 3px; min-width: 120px; }
 </style>
 
 <div class="page-header-row">
@@ -82,19 +95,40 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Código</th>
                     <th>Categoría</th>
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Badge</th>
                     <th>Activo</th>
-                    <th title="Producto Destacado"><i class="fas fa-star" style="color:#f59e0b;"></i></th>
+                    <th>Secciones</th>
+                    <th title="Carrusel destacado (catálogo)"><i class="fas fa-star" style="color:#f59e0b;"></i></th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tablaBody">
                 <?php foreach ($productos as $i => $p): ?>
-                <tr data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge'])) ?>">
+                <?php
+                    $secIconos = [
+                        'inicio'         => ['icono' => 'fa-home',       'label' => 'Inicio'],
+                        'catalogo'       => ['icono' => 'fa-th-large',   'label' => 'Catálogo'],
+                        'rubro'          => ['icono' => 'fa-folder-open','label' => 'Rubro'],
+                        'subrubro'       => ['icono' => 'fa-tag',        'label' => 'Subrubro'],
+                        'destacado'      => ['icono' => 'fa-star',       'label' => 'Dest.'],
+                        'carrusel_promo' => ['icono' => 'fa-bullhorn',   'label' => 'Promo'],
+                    ];
+                ?>
+                <tr data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge']) . ' ' . esc($p['codigo'] ?? '')) ?>">
                     <td style="color:#9CA3AF;font-size:0.8rem;"><?= $i + 1 ?></td>
+                    <td>
+                        <?php if (!empty($p['codigo'])): ?>
+                            <span style="background:rgba(99,102,241,0.1);color:#4F46E5;padding:0.15rem 0.55rem;border-radius:50px;font-size:0.75rem;font-weight:700;font-family:monospace;">
+                                <?= esc($p['codigo']) ?>
+                            </span>
+                        <?php else: ?>
+                            <span style="color:#D1D5DB;font-size:0.8rem;">—</span>
+                        <?php endif; ?>
+                    </td>
                     <td>
                         <span class="cat-path"><?= esc($p['categoria_path'] ?? '—') ?></span>
                     </td>
@@ -121,6 +155,22 @@
                             <span class="badge-activo"><i class="fas fa-check me-1"></i>Sí</span>
                         <?php else: ?>
                             <span class="badge-inactivo"><i class="fas fa-times me-1"></i>No</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (!empty($p['secciones_slugs'])): ?>
+                        <div class="secciones-cell">
+                            <?php foreach ($p['secciones_slugs'] as $slug): ?>
+                            <?php if (isset($secIconos[$slug])): ?>
+                            <span class="sec-dot <?= $slug ?>" title="<?= $secIconos[$slug]['label'] ?>">
+                                <i class="fas <?= $secIconos[$slug]['icono'] ?>"></i>
+                                <?= $secIconos[$slug]['label'] ?>
+                            </span>
+                            <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php else: ?>
+                            <span style="color:#D1D5DB;font-size:0.8rem;">Sin secciones</span>
                         <?php endif; ?>
                     </td>
                     <td>

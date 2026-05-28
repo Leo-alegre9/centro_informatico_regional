@@ -140,6 +140,55 @@ class CategoriaModel extends Model
         return array_unique($ids);
     }
 
+    /**
+     * Returns the full 3-level category hierarchy for the mega menu.
+     * Structure: [ ['id', 'nombre', 'slug', 'icono', 'hijos' => [ ['id','nombre','slug','icono','hijos'=>[...]] ] ] ]
+     */
+    public function getMegaMenu(): array
+    {
+        $all = $this->where('activo', 1)
+            ->orderBy('nivel', 'ASC')
+            ->orderBy('orden', 'ASC')
+            ->orderBy('nombre', 'ASC')
+            ->findAll();
+
+        $byId   = array_column($all, null, 'id');
+        $rubros = [];
+
+        foreach ($all as $cat) {
+            $nivel = (int) $cat['nivel'];
+            if ($nivel === 1) {
+                $rubros[$cat['id']] = [
+                    'id'    => (int) $cat['id'],
+                    'nombre'=> $cat['nombre'],
+                    'slug'  => $cat['slug'],
+                    'icono' => $cat['icono'] ?: 'fas fa-folder',
+                    'hijos' => [],
+                ];
+            } elseif ($nivel === 2 && $cat['parent_id'] && isset($rubros[$cat['parent_id']])) {
+                $rubros[$cat['parent_id']]['hijos'][$cat['id']] = [
+                    'id'    => (int) $cat['id'],
+                    'nombre'=> $cat['nombre'],
+                    'slug'  => $cat['slug'],
+                    'icono' => $cat['icono'] ?: 'fas fa-folder-open',
+                    'hijos' => [],
+                ];
+            } elseif ($nivel === 3 && $cat['parent_id']) {
+                $parent = $byId[$cat['parent_id']] ?? null;
+                if ($parent && isset($rubros[$parent['parent_id']]['hijos'][$cat['parent_id']])) {
+                    $rubros[$parent['parent_id']]['hijos'][$cat['parent_id']]['hijos'][] = [
+                        'id'    => (int) $cat['id'],
+                        'nombre'=> $cat['nombre'],
+                        'slug'  => $cat['slug'],
+                        'icono' => $cat['icono'] ?: 'fas fa-circle',
+                    ];
+                }
+            }
+        }
+
+        return array_values($rubros);
+    }
+
     /** Returns the rubro/subrubro/sub_subrubro slug path for a given leaf categoria_id. */
     public function getSlugPath(int $categoriaId): array
     {

@@ -85,15 +85,35 @@
         .nosotros-stat:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.07); }
         .nosotros-stat:nth-child(4) { border-right: none; border-top: 1px solid rgba(255,255,255,0.07); }
     }
+    .nosotros-hero-foto {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        opacity: 0.18;
+        pointer-events: none;
+        z-index: 0;
+    }
     @media (max-width: 575px) {
         .nosotros-hero { padding: 3rem 0 0; }
     }
 </style>
 
+<?php
+$imgFrenteRuta = FCPATH . 'assets/img/imagen_frente_cir.jpeg';
+$imgFrenteUrl  = base_url('assets/img/imagen_frente_cir.jpeg');
+$imgFrenteOk   = file_exists($imgFrenteRuta) && filesize($imgFrenteRuta) > 0;
+?>
+
 <!-- ═══════════════════════════════════════════════
      NOSOTROS — HERO
 ═══════════════════════════════════════════════ -->
 <section class="nosotros-hero">
+    <?php if ($imgFrenteOk): ?>
+    <div class="nosotros-hero-foto"
+         style="background-image:url('<?= $imgFrenteUrl ?>')"></div>
+    <?php endif; ?>
     <div class="nosotros-hero-glow-1"></div>
     <div class="nosotros-hero-glow-2"></div>
 
@@ -111,50 +131,6 @@
                 <p class="nosotros-subtitle">
                     Más de 28 años acompañando el crecimiento de Formosa y la región con soluciones tecnológicas, mobiliario y equipamiento comercial de primera calidad.
                 </p>
-            </div>
-
-            <div class="col-lg-5 d-none d-lg-flex justify-content-end">
-                <div style="
-                    background: rgba(255,0,51,0.06);
-                    border: 1.5px solid rgba(255,0,51,0.2);
-                    border-radius: 20px;
-                    padding: 2rem 2.2rem;
-                    max-width: 340px;
-                    width: 100%;
-                ">
-                    <div style="color:rgba(255,255,255,0.35); font-size:0.75rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:1.2rem;">
-                        Presencia regional
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:0.85rem;">
-                        <div style="display:flex; align-items:center; gap:0.9rem;">
-                            <div style="width:36px;height:36px;background:rgba(255,0,51,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <i class="fas fa-map-marker-alt" style="color:var(--rojo);font-size:0.9rem;"></i>
-                            </div>
-                            <div>
-                                <div style="color:#fff;font-weight:700;font-size:0.93rem;">Provincia de Formosa</div>
-                                <div style="color:rgba(255,255,255,0.4);font-size:0.78rem;">Presencia sólida en toda la provincia</div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:0.9rem;">
-                            <div style="width:36px;height:36px;background:rgba(255,0,51,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <i class="fas fa-map-marker-alt" style="color:var(--rojo);font-size:0.9rem;"></i>
-                            </div>
-                            <div>
-                                <div style="color:#fff;font-weight:700;font-size:0.93rem;">Interior del Chaco</div>
-                                <div style="color:rgba(255,255,255,0.4);font-size:0.78rem;">Expansión regional en crecimiento</div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:0.9rem;">
-                            <div style="width:36px;height:36px;background:rgba(255,0,51,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <i class="fas fa-store" style="color:var(--rojo);font-size:0.9rem;"></i>
-                            </div>
-                            <div>
-                                <div style="color:#fff;font-weight:700;font-size:0.93rem;">+50 Marcas Internacionales</div>
-                                <div style="color:rgba(255,255,255,0.4);font-size:0.78rem;">Portafolio de renombre mundial</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>

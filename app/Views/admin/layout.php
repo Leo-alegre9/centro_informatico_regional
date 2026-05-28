@@ -250,11 +250,15 @@
         <?php
         $currentUrl   = current_url();
         $isDashboard  = strpos($currentUrl, 'admin/dashboard') !== false || preg_match('#/admin/?$#', $currentUrl);
-        $isProductos  = strpos($currentUrl, 'admin/productos') !== false;
+        $isBuscar     = strpos($currentUrl, 'admin/productos/buscar') !== false;
+        $isProductos  = !$isBuscar && strpos($currentUrl, 'admin/productos') !== false;
         $isCategorias = strpos($currentUrl, 'admin/categorias') !== false;
         $isMarcas     = strpos($currentUrl, 'admin/marcas') !== false;
         $isConsultas  = strpos($currentUrl, 'admin/consultas') !== false;
-        $unreadCount  = (new \App\Models\ConsultaServicioModel())->getUnreadCount();
+        $isInventario     = strpos($currentUrl, 'admin/inventario') !== false;
+        $isStock          = strpos($currentUrl, 'admin/stock') !== false;
+        $isConfiguracion  = strpos($currentUrl, 'admin/configuracion') !== false;
+        $unreadCount      = (new \App\Models\ConsultaServicioModel())->getUnreadCount();
         ?>
 
         <a href="<?= base_url('admin/dashboard') ?>" class="<?= $isDashboard ? 'activo' : '' ?>">
@@ -267,12 +271,26 @@
             <i class="fas fa-box"></i> Productos
         </a>
 
+        <a href="<?= base_url('admin/productos/buscar') ?>" class="<?= $isBuscar ? 'activo' : '' ?>">
+            <i class="fas fa-search"></i> Buscar producto
+        </a>
+
         <a href="<?= base_url('admin/categorias') ?>" class="<?= $isCategorias ? 'activo' : '' ?>">
             <i class="fas fa-sitemap"></i> Categorías
         </a>
 
         <a href="<?= base_url('admin/marcas') ?>" class="<?= $isMarcas ? 'activo' : '' ?>">
             <i class="fas fa-tag"></i> Marcas
+        </a>
+
+        <div class="nav-section-title">Inventario</div>
+
+        <a href="<?= base_url('admin/inventario') ?>" class="<?= $isInventario ? 'activo' : '' ?>">
+            <i class="fas fa-warehouse"></i> Ubicaciones
+        </a>
+
+        <a href="<?= base_url('admin/stock') ?>" class="<?= $isStock ? 'activo' : '' ?>">
+            <i class="fas fa-boxes"></i> Stock
         </a>
 
         <div class="nav-section-title">Servicio Técnico</div>
@@ -286,6 +304,12 @@
                 <?= $unreadCount ?>
             </span>
             <?php endif; ?>
+        </a>
+
+        <div class="nav-section-title">Configuración</div>
+
+        <a href="<?= base_url('admin/configuracion') ?>" class="<?= $isConfiguracion ? 'activo' : '' ?>">
+            <i class="fas fa-sliders"></i> Precios y cotización
         </a>
 
         <div class="nav-section-title">Sitio</div>
