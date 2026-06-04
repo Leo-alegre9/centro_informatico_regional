@@ -1,139 +1,245 @@
 <style>
+    /* ══════════════════════════════════════════════════════════
+       HERO — White Premium 2026
+    ══════════════════════════════════════════════════════════ */
     .hero-section {
         min-height: 90vh;
-        background: linear-gradient(135deg, #070c1a 0%, var(--dark-2) 55%, #0c1117 100%);
+        background: #fff;
         display: flex;
         align-items: center;
         position: relative;
         overflow: hidden;
+        border-bottom: 1px solid #EEF0F3;
     }
-    .hero-bottom-fade {
+
+    /* Fondo decorativo: dot grid sutil */
+    .hero-section::before {
+        content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100px;
-        background: linear-gradient(to bottom, transparent 0%, #0c1117 100%);
-        pointer-events: none;
-        z-index: 0;
-    }
-    .hero-glow-1 {
-        position: absolute;
-        width: 650px; height: 650px;
-        background: radial-gradient(circle, rgba(255,0,51,0.14) 0%, transparent 70%);
-        top: -150px; right: -150px;
-        border-radius: 50%;
+        inset: 0;
+        background-image: radial-gradient(circle, #E5E7EB 1px, transparent 1px);
+        background-size: 28px 28px;
+        opacity: 0.45;
         pointer-events: none;
     }
-    .hero-glow-2 {
+    /* Fade blanco que apaga el grid cerca del contenido */
+    .hero-section::after {
+        content: '';
         position: absolute;
-        width: 400px; height: 400px;
-        background: radial-gradient(circle, rgba(255,0,51,0.07) 0%, transparent 70%);
-        bottom: -100px; left: -100px;
-        border-radius: 50%;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 65% 80% at 30% 50%, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.6) 55%, transparent 75%),
+            radial-gradient(ellipse 50% 70% at 80% 50%, rgba(255,255,255,0.85) 0%, transparent 70%);
         pointer-events: none;
     }
-    .hero-badge {
+
+    .hero-inner {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 5rem 0 4.5rem;
+    }
+
+    /* ── LEFT: Text ── */
+    .hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #9CA3AF;
+        margin-bottom: 1.3rem;
+        animation: heroFadeUp 0.55s ease both;
+    }
+    .hero-eyebrow-line {
+        display: inline-block;
+        width: 22px; height: 2px;
+        background: #FF0033;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    .hero-title {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: clamp(2rem, 3.8vw, 3.1rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: #0F172A;
+        letter-spacing: -0.025em;
+        margin-bottom: 1.3rem;
+        animation: heroFadeUp 0.55s ease 0.1s both;
+    }
+    .hero-title .ha { color: #FF0033; }
+
+    .hero-desc {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 1rem;
+        color: #6B7280;
+        line-height: 1.85;
+        max-width: 480px;
+        margin-bottom: 2rem;
+        animation: heroFadeUp 0.55s ease 0.18s both;
+    }
+
+    /* CTAs */
+    .hero-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        animation: heroFadeUp 0.55s ease 0.26s both;
+    }
+    .hero-btn-primary {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(255,0,51,0.12);
-        border: 1px solid rgba(255,0,51,0.4);
-        color: var(--rojo);
-        font-size: 0.75rem;
+        background: #FF0033;
+        color: #fff !important;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 0.88rem;
         font-weight: 700;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-        padding: 7px 18px;
+        padding: 0.78rem 1.65rem;
         border-radius: 50px;
-        margin-bottom: 1.6rem;
+        text-decoration: none;
+        box-shadow: 0 4px 18px rgba(255,0,51,0.28);
+        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
     }
-    .hero-title {
-        font-size: clamp(2.2rem, 5vw, 4rem);
-        font-weight: 900;
-        line-height: 1.12;
-        color: #fff;
-        margin-bottom: 1.5rem;
+    .hero-btn-primary:hover {
+        background: #cc0029;
+        box-shadow: 0 7px 24px rgba(255,0,51,0.38);
+        transform: translateY(-2px);
+        color: #fff !important;
     }
-    .hero-title .accent { color: var(--rojo); }
-    .hero-desc {
-        font-size: 1.1rem;
-        color: rgba(255,255,255,0.68);
-        line-height: 1.85;
-        max-width: 520px;
-        margin-bottom: 2.5rem;
+    .hero-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        color: #374151 !important;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 0.78rem 1.65rem;
+        border-radius: 50px;
+        text-decoration: none;
+        border: 1.5px solid #E5E7EB;
+        transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
     }
-    .hero-img-wrap {
-        position: relative;
+    .hero-btn-secondary:hover {
+        border-color: #25D366;
+        color: #1a9e4e !important;
+        background: #F0FDF4;
+        transform: translateY(-2px);
+    }
+    .hero-btn-secondary .wa-icon { color: #25D366; }
+
+    /* ── RIGHT: Logo ── */
+    .hero-logo-wrap {
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        animation: heroFadeIn 0.7s ease 0.3s both;
     }
-    /* Glow ambiental detrás del logo — separado de la imagen para no difuminarla */
-    .hero-img-wrap::before {
+    /* Glow ambiental detrás del logo */
+    .hero-logo-wrap::before {
         content: '';
         position: absolute;
         inset: 0;
         background: radial-gradient(ellipse 70% 55% at 50% 50%,
-            rgba(255,0,51,0.22) 0%,
-            rgba(255,0,51,0.06) 55%,
+            rgba(255,0,51,0.08) 0%,
+            rgba(255,0,51,0.03) 55%,
             transparent 75%);
-        filter: blur(38px);
+        filter: blur(30px);
         border-radius: 50%;
-        z-index: 0;
         pointer-events: none;
     }
-    /* La imagen sin ningún filtro encima → máxima nitidez */
-    .hero-img-wrap img {
+    .hero-logo-img {
         position: relative;
         z-index: 1;
         width: 100%;
-        max-width: 600px;
+        max-width: 520px;
+        height: auto;
         display: block;
+        object-fit: contain;
     }
 
-    @media (max-width: 991px) { .hero-img-wrap { display: none; } }
-    @media (max-width: 575px) { .hero-title { font-size: 2rem; } }
+    /* ── Keyframes ── */
+    @keyframes heroFadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 991px) {
+        .hero-inner { padding: 3.5rem 0 3rem; }
+        .hero-desc { max-width: 100%; }
+        .hero-logo-img { max-width: 380px; }
+    }
+    @media (max-width: 767px) {
+        .hero-inner { padding: 3rem 0 2.5rem; }
+        .hero-logo-wrap { margin-top: 2rem; }
+        .hero-logo-img { max-width: 280px; }
+    }
+    @media (max-width: 575px) {
+        .hero-title { font-size: 1.85rem; letter-spacing: -0.02em; }
+    }
 </style>
 
-<!-- ═══════════════════════════════════════════════
-     HERO
-═══════════════════════════════════════════════ -->
-<section class="hero-section">
-    <div class="hero-glow-1"></div>
-    <div class="hero-glow-2"></div>
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="hero-section" aria-label="Presentación de Centro Informático Regional">
+    <div class="hero-inner">
+        <div class="container">
+            <div class="row align-items-center g-5">
 
-    <div class="container position-relative" style="z-index:1;">
-        <div class="row align-items-center g-5 py-5">
+                <!-- ── LEFT: Contenido principal ── -->
+                <div class="col-lg-6">
 
-            <div class="col-lg-6">
-                <div class="hero-badge">
-                    <i class="fas fa-map-marker-alt"></i>
-                    El Colorado, Formosa
+                    <p class="hero-eyebrow">
+                        <span class="hero-eyebrow-line"></span>
+                        Centro Informático Regional
+                    </p>
+
+                    <h1 class="hero-title">
+                        Tecnología, hogar y<br>
+                        equipamiento para<br>
+                        <span class="ha">cada necesidad.</span>
+                    </h1>
+
+                    <p class="hero-desc">
+                        Encontrá informática, muebles, electrodomésticos y soluciones
+                        comerciales en un solo lugar. Calidad y asesoramiento real.
+                    </p>
+
+                    <div class="hero-ctas">
+                        <a href="<?= base_url('catalogo') ?>" class="hero-btn-primary">
+                            <i class="fas fa-th-large"></i> Ver Catálogo
+                        </a>
+                        <a href="https://wa.me/5493704616482?text=Hola%2C%20quiero%20consultar%20sobre%20sus%20productos"
+                           target="_blank" rel="noopener noreferrer"
+                           class="hero-btn-secondary">
+                            <i class="fab fa-whatsapp wa-icon"></i> Consultar por WhatsApp
+                        </a>
+                    </div>
+
                 </div>
-                <h1 class="hero-title">
-                    Tu aliado en<br>
-                    <span class="accent">Tecnología</span>
-                </h1>
-                <p class="hero-desc">
-                    Soluciones completas de informática para tu hogar y empresa. Venta de equipos, componentes y servicio técnico especializado con garantía en cada trabajo.
-                </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#rubros" class="btn-rojo">
-                        <i class="fas fa-th-large"></i> Ver Rubros
-                    </a>
-                    <a href="#servicio-tecnico" class="btn-outline-claro">
-                        <i class="fas fa-tools"></i> Servicio Técnico
-                    </a>
+
+                <!-- ── RIGHT: Logo ── -->
+                <div class="col-lg-6 hero-logo-wrap">
+                    <img src="<?= base_url('assets/img/CIR_sinfondo.png') ?>"
+                         alt="Centro Informático Regional"
+                         class="hero-logo-img">
                 </div>
-            </div>
 
-            <div class="col-lg-6 text-center hero-img-wrap">
-                <img src="<?= base_url('assets/img/logo_cir_mejorado.png') ?>"
-                     alt="Centro Informático Regional">
             </div>
-
         </div>
     </div>
-    <div class="hero-bottom-fade"></div>
 </section>

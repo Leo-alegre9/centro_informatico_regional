@@ -49,7 +49,10 @@
       "Bash(npm install *)",
       "Bash(node *)",
       "Bash(Write-Host \"Limpieza completa\")",
-      "Bash(claude auth *)"
+      "Bash(claude auth *)",
+      "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SHOW TABLES FROM cir2;\")",
+      "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"DESCRIBE cir2.productos;\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\" -Recurse -Directory)"
     ]
   }
 }
