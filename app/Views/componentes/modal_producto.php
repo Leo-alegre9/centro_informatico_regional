@@ -1,335 +1,55 @@
 <style>
-    /* ── Modal overlay ── */
-    .mp-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.78);
-        z-index: 8000;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-    }
-    .mp-overlay.open { display: flex; }
+    /* ── Excepciones que Tailwind no puede expresar como utilidad ── */
 
-    .mp-box {
-        background: #0f1520;
-        border-radius: 22px;
-        border: 1px solid rgba(255,255,255,0.09);
-        max-width: 900px;
-        width: 100%;
-        max-height: 92vh;
-        overflow-y: auto;
-        position: relative;
-        animation: mpIn 0.28s cubic-bezier(0.34, 1.26, 0.64, 1);
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255,0,51,0.3) transparent;
-    }
+    /* Animación de entrada del modal: no está en tailwind.config (no debía tocarse).
+       Si se agrega a la config, sería un keyframe "modal-in" + animate-modal-in. */
     @keyframes mpIn {
         from { opacity: 0; transform: scale(0.94) translateY(12px); }
         to   { opacity: 1; transform: scale(1) translateY(0); }
     }
+    #mpBox { animation: mpIn 0.28s cubic-bezier(0.34, 1.26, 0.64, 1); }
 
-    .mp-close {
-        position: absolute;
-        top: 1rem; right: 1rem;
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.07);
-        border: 1px solid rgba(255,255,255,0.12);
-        color: rgba(255,255,255,0.65);
-        font-size: 0.88rem;
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer;
-        z-index: 2;
-        transition: background 0.2s, color 0.2s, border-color 0.2s;
-    }
-    .mp-close:hover { background: #FF0033; color: #fff; border-color: #FF0033; }
-
-    /* ── Grid ── */
-    .mp-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        min-height: 460px;
-    }
-
-    /* ── Image panel ── */
-    .mp-img-panel {
-        padding: 2.2rem 2rem 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-right: 1px solid rgba(255,255,255,0.07);
-    }
-    .mp-main-img-wrap {
-        position: relative;
-        width: 100%;
-        max-width: 300px;
-        aspect-ratio: 1 / 1;
-        background: #131b27;
-        border-radius: 16px;
-        overflow: hidden;
-        cursor: zoom-in;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255,255,255,0.07);
-    }
-    .mp-main-img-wrap:hover::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: rgba(0,0,0,0.18);
-    }
-    .mp-main-img {
-        width: 100%; height: 100%;
-        object-fit: contain;
-        display: block;
-        transition: transform 0.35s ease;
-    }
-    .mp-main-img-wrap:hover .mp-main-img { transform: scale(1.04); }
-    .mp-icon-fallback {
-        font-size: 4rem;
-        color: rgba(255,255,255,0.18);
-    }
-    .mp-zoom-badge {
-        position: absolute;
-        bottom: 10px; right: 10px;
-        background: rgba(0,0,0,0.55);
-        border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.75);
-        border-radius: 8px;
-        padding: 4px 9px;
-        font-size: 0.72rem;
-        font-weight: 600;
-        display: flex; align-items: center; gap: 4px;
-        pointer-events: none;
-    }
-
-    .mp-thumbs {
-        display: flex;
-        gap: 8px;
-        margin-top: 1.1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .mp-thumb {
-        width: 58px; height: 58px;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 2px solid rgba(255,255,255,0.08);
-        cursor: pointer;
-        transition: border-color 0.2s, transform 0.2s;
-        background: #131b27;
-        flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .mp-thumb:hover { border-color: rgba(255,0,51,0.5); transform: translateY(-2px); }
-    .mp-thumb.active { border-color: #FF0033; }
-    .mp-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .mp-thumb-icon { color: rgba(255,255,255,0.3); font-size: 1.2rem; }
-
-    /* ── Info panel ── */
-    .mp-info-panel {
-        padding: 2.2rem 2rem 2rem;
-        display: flex;
-        flex-direction: column;
-    }
-    .mp-badge-row { margin-bottom: 0.9rem; min-height: 1.6rem; }
-    .mp-badge {
-        display: inline-block;
-        background: #FF0033;
-        color: #fff;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-        padding: 3px 12px;
-        border-radius: 50px;
-        text-transform: uppercase;
-    }
-    .mp-nombre {
-        font-size: 1.42rem;
-        font-weight: 800;
-        color: #fff;
-        line-height: 1.3;
-        margin-bottom: 0.35rem;
-    }
-    .mp-cat {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #FF0033;
-        text-transform: uppercase;
-        letter-spacing: 1.8px;
-        margin-bottom: 1rem;
-    }
-    .mp-divider {
-        width: 38px; height: 3px;
-        background: #FF0033;
-        border-radius: 2px;
-        margin-bottom: 1.1rem;
-    }
-    .mp-desc {
-        color: rgba(255,255,255,0.62);
-        font-size: 0.91rem;
-        line-height: 1.8;
-        flex: 1;
-        margin-bottom: 1.4rem;
-        white-space: pre-line;
-    }
-    .mp-desc.vacia { color: rgba(255,255,255,0.3); font-style: italic; }
-    .mp-precio-block { margin-bottom: 1.6rem; }
-    .mp-precio-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        color: rgba(255,255,255,0.38);
-        display: block;
-        margin-bottom: 0.2rem;
-    }
-    .mp-precio {
-        font-size: 1.55rem;
-        font-weight: 800;
-        color: #fff;
-        line-height: 1.2;
-    }
-    .mp-precio.consultar {
-        font-size: 0.95rem;
-        color: rgba(255,255,255,0.45);
-        font-style: italic;
-        font-weight: 600;
-    }
-    .mp-btn-wa {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: #25D366;
-        color: #fff;
-        padding: 0.8rem 1.5rem;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        text-decoration: none;
-        transition: background 0.2s;
-    }
-    .mp-btn-wa:hover { background: #1ebe5a; color: #fff; }
-
-    /* ── Zoom lightbox ── */
-    .mp-lightbox {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.96);
-        z-index: 9000;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-    }
-    .mp-lightbox.open { display: flex; }
-    .mp-lb-img-wrap {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        cursor: grab;
-    }
-    .mp-lb-img-wrap.grabbing { cursor: grabbing; }
-    .mp-lb-img {
-        max-width: 90vw;
-        max-height: 90vh;
-        object-fit: contain;
-        pointer-events: none;
-        transform-origin: center;
-        transition: transform 0.18s ease;
-        will-change: transform;
-    }
-    .mp-lb-close {
-        position: fixed;
-        top: 1.1rem; right: 1.1rem;
-        width: 46px; height: 46px;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 50%;
-        color: #fff;
-        font-size: 1rem;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        z-index: 9001;
-        transition: background 0.2s;
-    }
-    .mp-lb-close:hover { background: #FF0033; border-color: #FF0033; }
-    .mp-lb-controls {
-        position: fixed;
-        bottom: 1.5rem; left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
-        z-index: 9001;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 50px;
-        padding: 6px 10px;
-    }
-    .mp-lb-controls button {
-        width: 38px; height: 38px;
-        background: transparent;
-        border: none;
-        border-radius: 8px;
-        color: rgba(255,255,255,0.8);
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        transition: background 0.15s, color 0.15s;
-    }
-    .mp-lb-controls button:hover { background: rgba(255,255,255,0.12); color: #fff; }
-
-    @media (max-width: 767px) {
-        .mp-grid { grid-template-columns: 1fr; min-height: unset; }
-        .mp-img-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 1.5rem; }
-        .mp-info-panel { padding: 1.5rem; }
-        .mp-nombre { font-size: 1.2rem; }
-        .mp-main-img-wrap { max-width: 240px; }
-        .mp-box { border-radius: 16px; }
+    /* Scrollbar custom de Firefox: no existe utilidad Tailwind para scrollbar-color */
+    #mpBox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,0,51,0.3) transparent;
     }
 </style>
 
 <!-- ══ MODAL PRODUCTO ══ -->
-<div id="mpOverlay" class="mp-overlay" role="dialog" aria-modal="true" aria-labelledby="mpNombre">
-    <div class="mp-box" id="mpBox">
-        <button class="mp-close" id="mpClose" aria-label="Cerrar">
+<div id="mpOverlay" class="hidden fixed inset-0 bg-black/[0.78] z-[8000] items-center justify-center p-4 backdrop-blur-[5px]" role="dialog" aria-modal="true" aria-labelledby="mpNombre">
+    <div class="bg-[#0f1520] rounded-[22px] max-md:rounded-2xl border border-white/[0.09] max-w-[900px] w-full max-h-[92vh] overflow-y-auto relative" id="mpBox">
+        <button class="mp-close absolute top-4 right-4 w-9 h-9 rounded-full bg-white/[0.07] border border-white/[0.12] text-white/65 text-[0.88rem] flex items-center justify-center cursor-pointer z-[2] transition-colors duration-200 hover:bg-rojo hover:text-white hover:border-rojo" id="mpClose" aria-label="Cerrar">
             <i class="fas fa-times"></i>
         </button>
-        <div class="mp-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-0 md:min-h-[460px]">
 
             <!-- Galería -->
-            <div class="mp-img-panel">
-                <div class="mp-main-img-wrap" id="mpMainWrap">
-                    <img id="mpMainImg" src="" alt="" class="mp-main-img" style="display:none;">
-                    <div class="mp-icon-fallback" id="mpIconFallback">
+            <div class="p-6 md:pt-[2.2rem] md:px-8 md:pb-8 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/[0.07]">
+                <div class="mp-main-img-wrap group relative w-full max-w-[240px] md:max-w-[300px] aspect-square bg-[#131b27] rounded-2xl overflow-hidden cursor-zoom-in flex items-center justify-center border border-white/[0.07] hover:after:content-[''] hover:after:absolute hover:after:inset-0 hover:after:bg-black/[0.18]" id="mpMainWrap">
+                    <img id="mpMainImg" src="" alt="" class="hidden w-full h-full object-contain block transition-transform duration-[350ms] ease group-hover:scale-[1.04]">
+                    <div class="text-[4rem] text-white/[0.18]" id="mpIconFallback">
                         <i id="mpIconEl" class="fas fa-box"></i>
                     </div>
-                    <div class="mp-zoom-badge"><i class="fas fa-search-plus"></i> Zoom</div>
+                    <div class="absolute bottom-[10px] right-[10px] bg-black/[0.55] border border-white/[0.15] text-white/75 rounded-lg px-[9px] py-1 text-[0.72rem] font-semibold flex items-center gap-1 pointer-events-none">
+                        <i class="fas fa-search-plus"></i> Zoom
+                    </div>
                 </div>
-                <div class="mp-thumbs" id="mpThumbs"></div>
+                <div class="mp-thumbs flex gap-2 mt-[1.1rem] flex-wrap justify-center" id="mpThumbs"></div>
             </div>
 
             <!-- Info -->
-            <div class="mp-info-panel">
-                <div class="mp-badge-row" id="mpBadgeRow"></div>
-                <h2 class="mp-nombre" id="mpNombre"></h2>
-                <div class="mp-cat" id="mpCat"></div>
-                <div class="mp-divider"></div>
-                <p class="mp-desc" id="mpDesc"></p>
-                <div class="mp-precio-block">
-                    <span class="mp-precio-label">Precio</span>
-                    <div class="mp-precio" id="mpPrecio"></div>
+            <div class="p-6 md:pt-[2.2rem] md:px-8 md:pb-8 flex flex-col">
+                <div class="mb-[0.9rem] min-h-[1.6rem]" id="mpBadgeRow"></div>
+                <h2 class="text-[1.2rem] md:text-[1.42rem] font-extrabold text-white leading-[1.3] mb-[0.35rem]" id="mpNombre"></h2>
+                <div class="text-[0.75rem] font-bold text-rojo uppercase tracking-[1.8px] mb-4" id="mpCat"></div>
+                <div class="w-[38px] h-[3px] bg-rojo rounded mb-[1.1rem]"></div>
+                <p class="text-white/[0.62] text-[0.91rem] leading-[1.8] flex-1 mb-[1.4rem] whitespace-pre-line" id="mpDesc"></p>
+                <div class="mb-[1.6rem]">
+                    <span class="text-[0.7rem] font-bold uppercase tracking-[1.2px] text-white/[0.38] block mb-[0.2rem]">Precio</span>
+                    <div class="text-[1.55rem] font-extrabold text-white leading-[1.2]" id="mpPrecio"></div>
                 </div>
-                <a id="mpWaBtn" href="#" target="_blank" rel="noopener" class="mp-btn-wa">
+                <a id="mpWaBtn" href="#" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-[0.8rem] rounded-full font-bold text-[0.9rem] no-underline transition-colors duration-200 hover:bg-[#1ebe5a] hover:text-white">
                     <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
                 </a>
             </div>
@@ -339,22 +59,32 @@
 </div>
 
 <!-- ══ LIGHTBOX ZOOM ══ -->
-<div id="mpLightbox" class="mp-lightbox" aria-label="Zoom de imagen">
-    <div class="mp-lb-img-wrap" id="mpLbWrap">
-        <img id="mpLbImg" src="" alt="" class="mp-lb-img" draggable="false">
+<div id="mpLightbox" class="hidden fixed inset-0 bg-black/[0.96] z-[9000] items-center justify-center select-none" aria-label="Zoom de imagen">
+    <div class="absolute inset-0 flex items-center justify-center overflow-hidden cursor-grab" id="mpLbWrap">
+        <img id="mpLbImg" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain pointer-events-none origin-center transition-transform duration-[180ms] ease will-change-transform" draggable="false">
     </div>
-    <button class="mp-lb-close" id="mpLbClose" aria-label="Cerrar zoom">
+    <button class="fixed top-[1.1rem] right-[1.1rem] w-[46px] h-[46px] bg-white/10 border border-white/[0.18] rounded-full text-white text-base cursor-pointer flex items-center justify-center z-[9001] transition-colors duration-200 hover:bg-rojo hover:border-rojo" id="mpLbClose" aria-label="Cerrar zoom">
         <i class="fas fa-times"></i>
     </button>
-    <div class="mp-lb-controls">
-        <button id="mpLbIn" title="Acercar"><i class="fas fa-plus"></i></button>
-        <button id="mpLbReset" title="Tamaño original"><i class="fas fa-expand-arrows-alt"></i></button>
-        <button id="mpLbOut" title="Alejar"><i class="fas fa-minus"></i></button>
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-[9001] bg-black/50 border border-white/10 rounded-full px-[10px] py-[6px]">
+        <button id="mpLbIn" title="Acercar" class="w-[38px] h-[38px] bg-transparent border-0 rounded-lg text-white/80 text-[0.85rem] cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-white/[0.12] hover:text-white"><i class="fas fa-plus"></i></button>
+        <button id="mpLbReset" title="Tamaño original" class="w-[38px] h-[38px] bg-transparent border-0 rounded-lg text-white/80 text-[0.85rem] cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-white/[0.12] hover:text-white"><i class="fas fa-expand-arrows-alt"></i></button>
+        <button id="mpLbOut" title="Alejar" class="w-[38px] h-[38px] bg-transparent border-0 rounded-lg text-white/80 text-[0.85rem] cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-white/[0.12] hover:text-white"><i class="fas fa-minus"></i></button>
     </div>
 </div>
 
 <script>
 (function () {
+    /* ── Clases Tailwind reutilizadas por el JS (equivalentes a los antiguos
+         modificadores .active / .vacia / .consultar / .grabbing) ── */
+    var MP_DESC_BASE    = 'text-white/[0.62] text-[0.91rem] leading-[1.8] flex-1 mb-[1.4rem] whitespace-pre-line';
+    var MP_DESC_VACIA   = 'text-white/30 text-[0.91rem] leading-[1.8] flex-1 mb-[1.4rem] whitespace-pre-line italic';
+    var MP_PRECIO_BASE  = 'text-[1.55rem] font-extrabold text-white leading-[1.2]';
+    var MP_PRECIO_CONSULTAR = 'text-[0.95rem] text-white/45 italic font-semibold';
+    var MP_THUMB_BASE   = 'mp-thumb w-[58px] h-[58px] rounded-[10px] overflow-hidden border-2 cursor-pointer transition-all duration-200 bg-[#131b27] flex-shrink-0 flex items-center justify-center hover:border-[rgba(255,0,51,0.5)] hover:-translate-y-0.5';
+    var MP_THUMB_ACTIVE   = 'border-rojo';
+    var MP_THUMB_INACTIVE = 'border-white/[0.08]';
+
     /* ── Referencias ── */
     const overlay   = document.getElementById('mpOverlay');
     const closeBtn  = document.getElementById('mpClose');
@@ -389,7 +119,7 @@
 
         /* Badge */
         badgeRow.innerHTML = datos.badge
-            ? '<span class="mp-badge">' + escHtml(datos.badge) + '</span>'
+            ? '<span class="inline-block bg-rojo text-white text-[0.7rem] font-bold tracking-[0.6px] px-3 py-[3px] rounded-full uppercase">' + escHtml(datos.badge) + '</span>'
             : '';
 
         /* Texto */
@@ -397,13 +127,13 @@
         catEl.textContent    = datos.categoria || '';
         const desc = datos.descripcion || '';
         descEl.textContent   = desc || 'Sin descripción disponible.';
-        descEl.classList.toggle('vacia', !desc);
+        descEl.className     = desc ? MP_DESC_BASE : MP_DESC_VACIA;
 
         /* Precio */
         const precio = datos.precio || '';
         const esConsultar = !precio || precio.toLowerCase() === 'consultar precio';
         precioEl.textContent = esConsultar ? 'Consultar precio' : precio;
-        precioEl.className   = 'mp-precio' + (esConsultar ? ' consultar' : '');
+        precioEl.className   = esConsultar ? MP_PRECIO_CONSULTAR : MP_PRECIO_BASE;
 
         /* WhatsApp */
         waBtn.href = 'https://wa.me/5493704616482?text=' +
@@ -418,19 +148,21 @@
         if (currentImages.length > 1) {
             currentImages.forEach(function (img, idx) {
                 var th = document.createElement('div');
-                th.className = 'mp-thumb' + (idx === 0 ? ' active' : '');
+                th.className = MP_THUMB_BASE + ' ' + (idx === 0 ? MP_THUMB_ACTIVE : MP_THUMB_INACTIVE);
                 if (img.ruta) {
                     var ti = document.createElement('img');
                     ti.src = img.ruta.startsWith('http') ? img.ruta : (window._baseUrl || '') + img.ruta;
                     ti.alt = img.alt_text || '';
+                    ti.className = 'w-full h-full object-cover block';
                     th.appendChild(ti);
                 } else {
-                    th.innerHTML = '<span class="mp-thumb-icon"><i class="fas fa-image"></i></span>';
+                    th.innerHTML = '<span class="text-white/30 text-[1.2rem]"><i class="fas fa-image"></i></span>';
                 }
                 th.addEventListener('click', function () {
                     currentImgIdx = idx;
                     thumbsEl.querySelectorAll('.mp-thumb').forEach(function(t, i) {
-                        t.classList.toggle('active', i === idx);
+                        t.classList.remove(MP_THUMB_ACTIVE, MP_THUMB_INACTIVE);
+                        t.classList.add(i === idx ? MP_THUMB_ACTIVE : MP_THUMB_INACTIVE);
                     });
                     mostrarImgPrincipal(img.ruta || '', img.alt_text || datos.nombre, datos.icono || 'fas fa-box');
                 });
@@ -438,7 +170,8 @@
             });
         }
 
-        overlay.classList.add('open');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
         document.body.style.overflow = 'hidden';
     }
 
@@ -447,16 +180,16 @@
             const src = ruta.startsWith('http') ? ruta : (window._baseUrl || '') + ruta;
             mainImg.src = src;
             mainImg.alt = alt;
-            mainImg.style.display = '';
-            iconFallb.style.display = 'none';
+            mainImg.classList.remove('hidden');
+            iconFallb.classList.add('hidden');
             mainImg.onerror = function () {
-                this.style.display = 'none';
-                iconFallb.style.display = 'flex';
+                this.classList.add('hidden');
+                iconFallb.classList.remove('hidden');
                 iconEl.className = icono;
             };
         } else {
-            mainImg.style.display = 'none';
-            iconFallb.style.display = 'flex';
+            mainImg.classList.add('hidden');
+            iconFallb.classList.remove('hidden');
             iconEl.className = icono;
         }
     }
@@ -467,7 +200,8 @@
 
     /* ── Cerrar modal ── */
     function mpCerrar() {
-        overlay.classList.remove('open');
+        overlay.classList.remove('flex');
+        overlay.classList.add('hidden');
         document.body.style.overflow = '';
     }
     closeBtn.addEventListener('click', mpCerrar);
@@ -476,20 +210,21 @@
     });
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
-            if (lightbox.classList.contains('open')) lbCerrar();
+            if (!lightbox.classList.contains('hidden')) lbCerrar();
             else mpCerrar();
         }
     });
 
     /* ── Click en imagen → Lightbox ── */
     mainWrap.addEventListener('click', function () {
-        const src = mainImg.style.display !== 'none' ? mainImg.src : '';
+        const src = !mainImg.classList.contains('hidden') ? mainImg.src : '';
         if (!src) return;
         lbImg.src = src;
         lbImg.alt = mainImg.alt;
         lbScale = 1; lbX = 0; lbY = 0;
         aplicarZoom();
-        lightbox.classList.add('open');
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
     });
 
     /* ── Lightbox zoom y drag ── */
@@ -516,7 +251,8 @@
         dragging = true;
         dragStartX = e.clientX - lbX;
         dragStartY = e.clientY - lbY;
-        lbWrap.classList.add('grabbing');
+        lbWrap.classList.remove('cursor-grab');
+        lbWrap.classList.add('cursor-grabbing');
     });
     document.addEventListener('mousemove', function(e) {
         if (!dragging) return;
@@ -527,7 +263,8 @@
     document.addEventListener('mouseup', function() {
         if (!dragging) return;
         dragging = false;
-        lbWrap.classList.remove('grabbing');
+        lbWrap.classList.remove('cursor-grabbing');
+        lbWrap.classList.add('cursor-grab');
     });
 
     /* Touch pinch zoom (mobile) */
@@ -553,7 +290,8 @@
     }, { passive: false });
 
     function lbCerrar() {
-        lightbox.classList.remove('open');
+        lightbox.classList.remove('flex');
+        lightbox.classList.add('hidden');
     }
     lbClose.addEventListener('click', lbCerrar);
     lbWrap.addEventListener('click', function(e) {

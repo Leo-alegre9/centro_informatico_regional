@@ -1,172 +1,7 @@
 <style>
     /* ══════════════════════════════════════════════════════════
-       HERO — White Premium 2026
+       HERO — Keyframes no registrados en tailwind_config.php
     ══════════════════════════════════════════════════════════ */
-    .hero-section {
-        min-height: 90vh;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        border-bottom: 1px solid #EEF0F3;
-    }
-
-    /* Fondo decorativo: dot grid sutil */
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(circle, #E5E7EB 1px, transparent 1px);
-        background-size: 28px 28px;
-        opacity: 0.45;
-        pointer-events: none;
-    }
-    /* Fade blanco que apaga el grid cerca del contenido */
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(ellipse 65% 80% at 30% 50%, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.6) 55%, transparent 75%),
-            radial-gradient(ellipse 50% 70% at 80% 50%, rgba(255,255,255,0.85) 0%, transparent 70%);
-        pointer-events: none;
-    }
-
-    .hero-inner {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        padding: 5rem 0 4.5rem;
-    }
-
-    /* ── LEFT: Text ── */
-    .hero-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #9CA3AF;
-        margin-bottom: 1.3rem;
-        animation: heroFadeUp 0.55s ease both;
-    }
-    .hero-eyebrow-line {
-        display: inline-block;
-        width: 22px; height: 2px;
-        background: #FF0033;
-        border-radius: 2px;
-        flex-shrink: 0;
-    }
-
-    .hero-title {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: clamp(2rem, 3.8vw, 3.1rem);
-        font-weight: 800;
-        line-height: 1.15;
-        color: #0F172A;
-        letter-spacing: -0.025em;
-        margin-bottom: 1.3rem;
-        animation: heroFadeUp 0.55s ease 0.1s both;
-    }
-    .hero-title .ha { color: #FF0033; }
-
-    .hero-desc {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 1rem;
-        color: #6B7280;
-        line-height: 1.85;
-        max-width: 480px;
-        margin-bottom: 2rem;
-        animation: heroFadeUp 0.55s ease 0.18s both;
-    }
-
-    /* CTAs */
-    .hero-ctas {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.7rem;
-        animation: heroFadeUp 0.55s ease 0.26s both;
-    }
-    .hero-btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #FF0033;
-        color: #fff !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.88rem;
-        font-weight: 700;
-        padding: 0.78rem 1.65rem;
-        border-radius: 50px;
-        text-decoration: none;
-        box-shadow: 0 4px 18px rgba(255,0,51,0.28);
-        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    }
-    .hero-btn-primary:hover {
-        background: #cc0029;
-        box-shadow: 0 7px 24px rgba(255,0,51,0.38);
-        transform: translateY(-2px);
-        color: #fff !important;
-    }
-    .hero-btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #fff;
-        color: #374151 !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.88rem;
-        font-weight: 600;
-        padding: 0.78rem 1.65rem;
-        border-radius: 50px;
-        text-decoration: none;
-        border: 1.5px solid #E5E7EB;
-        transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
-    }
-    .hero-btn-secondary:hover {
-        border-color: #25D366;
-        color: #1a9e4e !important;
-        background: #F0FDF4;
-        transform: translateY(-2px);
-    }
-    .hero-btn-secondary .wa-icon { color: #25D366; }
-
-    /* ── RIGHT: Logo ── */
-    .hero-logo-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        animation: heroFadeIn 0.7s ease 0.3s both;
-    }
-    /* Glow ambiental detrás del logo */
-    .hero-logo-wrap::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse 70% 55% at 50% 50%,
-            rgba(255,0,51,0.08) 0%,
-            rgba(255,0,51,0.03) 55%,
-            transparent 75%);
-        filter: blur(30px);
-        border-radius: 50%;
-        pointer-events: none;
-    }
-    .hero-logo-img {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        max-width: 520px;
-        height: auto;
-        display: block;
-        object-fit: contain;
-    }
-
-    /* ── Keyframes ── */
     @keyframes heroFadeUp {
         from { opacity: 0; transform: translateY(16px); }
         to   { opacity: 1; transform: translateY(0); }
@@ -175,68 +10,64 @@
         from { opacity: 0; }
         to   { opacity: 1; }
     }
-
-    /* ── Responsive ── */
-    @media (max-width: 991px) {
-        .hero-inner { padding: 3.5rem 0 3rem; }
-        .hero-desc { max-width: 100%; }
-        .hero-logo-img { max-width: 380px; }
-    }
-    @media (max-width: 767px) {
-        .hero-inner { padding: 3rem 0 2.5rem; }
-        .hero-logo-wrap { margin-top: 2rem; }
-        .hero-logo-img { max-width: 280px; }
-    }
-    @media (max-width: 575px) {
-        .hero-title { font-size: 1.85rem; letter-spacing: -0.02em; }
-    }
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════
      HERO SECTION
 ═══════════════════════════════════════════════════════════ -->
-<section class="hero-section" aria-label="Presentación de Centro Informático Regional">
-    <div class="hero-inner">
+<section class="min-h-[90vh] bg-white flex items-center relative overflow-hidden border-b border-[#EEF0F3]
+                 before:content-[''] before:absolute before:inset-0
+                 before:bg-[radial-gradient(circle,#E5E7EB_1px,transparent_1px)] before:bg-[length:28px_28px]
+                 before:opacity-45 before:pointer-events-none
+                 after:content-[''] after:absolute after:inset-0 after:pointer-events-none
+                 after:bg-[radial-gradient(ellipse_65%_80%_at_30%_50%,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.6)_55%,transparent_75%),radial-gradient(ellipse_50%_70%_at_80%_50%,rgba(255,255,255,0.85)_0%,transparent_70%)]"
+         aria-label="Presentación de Centro Informático Regional">
+    <div class="relative z-[1] w-full pt-[3rem] pb-[2.5rem] md:pt-[3.5rem] md:pb-[3rem] lg:pt-[5rem] lg:pb-[4.5rem]">
         <div class="container">
-            <div class="row align-items-center g-5">
+            <div class="flex flex-col lg:flex-row lg:items-center gap-12">
 
                 <!-- ── LEFT: Contenido principal ── -->
-                <div class="col-lg-6">
+                <div class="lg:w-1/2">
 
-                    <p class="hero-eyebrow">
-                        <span class="hero-eyebrow-line"></span>
+                    <p class="flex items-center gap-[9px] font-inter text-[0.68rem] font-bold tracking-[0.18em] uppercase text-gray-400 mb-[1.3rem] animate-[heroFadeUp_0.55s_ease_both]">
+                        <span class="inline-block w-[22px] h-0.5 bg-rojo rounded-full shrink-0"></span>
                         Centro Informático Regional
                     </p>
 
-                    <h1 class="hero-title">
+                    <h1 class="font-inter text-[1.85rem] sm:text-[clamp(2rem,3.8vw,3.1rem)] font-extrabold leading-[1.15] text-slate-900 tracking-[-0.02em] sm:tracking-[-0.025em] mb-[1.3rem] animate-[heroFadeUp_0.55s_ease_0.1s_both]">
                         Tecnología, hogar y<br>
                         equipamiento para<br>
-                        <span class="ha">cada necesidad.</span>
+                        <span class="text-rojo">cada necesidad.</span>
                     </h1>
 
-                    <p class="hero-desc">
+                    <p class="font-inter text-base text-gray-500 leading-[1.85] max-w-full lg:max-w-[480px] mb-8 animate-[heroFadeUp_0.55s_ease_0.18s_both]">
                         Encontrá informática, muebles, electrodomésticos y soluciones
                         comerciales en un solo lugar. Calidad y asesoramiento real.
                     </p>
 
-                    <div class="hero-ctas">
-                        <a href="<?= base_url('catalogo') ?>" class="hero-btn-primary">
+                    <div class="flex flex-wrap gap-[0.7rem] animate-[heroFadeUp_0.55s_ease_0.26s_both]">
+                        <a href="<?= base_url('catalogo') ?>"
+                           class="inline-flex items-center gap-2 bg-rojo text-white font-inter text-[0.88rem] font-bold px-[1.65rem] py-[0.78rem] rounded-full no-underline shadow-[0_4px_18px_rgba(255,0,51,0.28)] transition-[background,box-shadow,transform] duration-200 hover:bg-rojo-dark hover:shadow-[0_7px_24px_rgba(255,0,51,0.38)] hover:-translate-y-0.5 hover:text-white">
                             <i class="fas fa-th-large"></i> Ver Catálogo
                         </a>
                         <a href="https://wa.me/5493704616482?text=Hola%2C%20quiero%20consultar%20sobre%20sus%20productos"
                            target="_blank" rel="noopener noreferrer"
-                           class="hero-btn-secondary">
-                            <i class="fab fa-whatsapp wa-icon"></i> Consultar por WhatsApp
+                           class="inline-flex items-center gap-2 bg-white text-gray-700 font-inter text-[0.88rem] font-semibold px-[1.65rem] py-[0.78rem] rounded-full no-underline border-[1.5px] border-gray-200 transition-colors duration-200 hover:border-[#25D366] hover:text-[#1a9e4e] hover:bg-green-50 hover:-translate-y-0.5">
+                            <i class="fab fa-whatsapp text-[#25D366]"></i> Consultar por WhatsApp
                         </a>
                     </div>
 
                 </div>
 
                 <!-- ── RIGHT: Logo ── -->
-                <div class="col-lg-6 hero-logo-wrap">
+                <div class="lg:w-1/2 flex items-center justify-center relative mt-8 md:mt-0
+                            animate-[heroFadeIn_0.7s_ease_0.3s_both]
+                            before:content-[''] before:absolute before:inset-0
+                            before:bg-[radial-gradient(ellipse_70%_55%_at_50%_50%,rgba(255,0,51,0.08)_0%,rgba(255,0,51,0.03)_55%,transparent_75%)]
+                            before:blur-[30px] before:rounded-full before:pointer-events-none">
                     <img src="<?= base_url('assets/img/CIR_sinfondo.png') ?>"
                          alt="Centro Informático Regional"
-                         class="hero-logo-img">
+                         class="relative z-[1] w-full max-w-[280px] md:max-w-[380px] lg:max-w-[520px] h-auto block object-contain">
                 </div>
 
             </div>

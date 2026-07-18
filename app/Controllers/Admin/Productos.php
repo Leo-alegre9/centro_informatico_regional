@@ -7,6 +7,7 @@ use App\Models\ProductoModel;
 use App\Models\CategoriaModel;
 use App\Models\ProductoImagenModel;
 use App\Models\MarcaModel;
+use App\Models\FabricaModel;
 use App\Models\SeccionModel;
 use App\Models\ProductoSeccionModel;
 use App\Models\ConfiguracionModel;
@@ -17,6 +18,7 @@ class Productos extends BaseController
     private CategoriaModel      $catModel;
     private ProductoImagenModel $imgModel;
     private MarcaModel          $marcaModel;
+    private FabricaModel        $fabricaModel;
     private SeccionModel        $seccionModel;
     private ProductoSeccionModel $prodSeccionModel;
 
@@ -26,6 +28,7 @@ class Productos extends BaseController
         $this->catModel         = new CategoriaModel();
         $this->imgModel         = new ProductoImagenModel();
         $this->marcaModel       = new MarcaModel();
+        $this->fabricaModel     = new FabricaModel();
         $this->seccionModel     = new SeccionModel();
         $this->prodSeccionModel = new ProductoSeccionModel();
     }
@@ -59,6 +62,7 @@ class Productos extends BaseController
             'jerarquia'         => $this->catModel->buildJerarquia(),
             'imagenesActuales'  => [],
             'marcas'            => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
+            'fabricas'          => $this->fabricaModel->getActivas(),
             'secciones'         => $this->getSeccionesFormulario(),
             'seccionesActivas'  => [],
         ]);
@@ -74,6 +78,13 @@ class Productos extends BaseController
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $categoriaId = (int) $this->request->getPost('categoria_id');
+        $fabricaId   = (int) $this->request->getPost('fabrica_id');
+
+        if ($errorFabrica = $this->validarFabricaRequerida($categoriaId, $fabricaId)) {
+            return redirect()->back()->withInput()->with('errors', [$errorFabrica]);
         }
 
         $nombre  = $this->request->getPost('nombre');
@@ -95,13 +106,15 @@ class Productos extends BaseController
         }
 
         $id = $this->model->insert([
-            'categoria_id'      => (int) $this->request->getPost('categoria_id'),
+            'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
+            'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
             'codigo'            => $codigo,
             'nombre'            => $nombre,
             'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
+            'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
             'precio_dolar'      => $precioDolar,
             'badge'             => $this->request->getPost('badge') ?? '',
@@ -140,6 +153,7 @@ class Productos extends BaseController
             'jerarquia'         => $this->catModel->buildJerarquia(),
             'imagenesActuales'  => $this->imgModel->getByProducto($id),
             'marcas'            => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
+            'fabricas'          => $this->fabricaModel->getActivas(),
             'secciones'         => $this->getSeccionesFormulario(),
             'seccionesActivas'  => $this->prodSeccionModel->getSeccionIdsDeProducto($id),
         ]);
@@ -170,6 +184,13 @@ class Productos extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $categoriaId = (int) $this->request->getPost('categoria_id');
+        $fabricaId   = (int) $this->request->getPost('fabrica_id');
+
+        if ($errorFabrica = $this->validarFabricaRequerida($categoriaId, $fabricaId)) {
+            return redirect()->back()->withInput()->with('errors', [$errorFabrica]);
+        }
+
         $nombre      = $this->request->getPost('nombre');
         $marcaId     = (int) $this->request->getPost('marca_id');
         $seccionIds  = array_map('intval', (array) ($this->request->getPost('secciones') ?? []));
@@ -184,13 +205,15 @@ class Productos extends BaseController
         }
 
         $this->model->update($id, [
-            'categoria_id'      => (int) $this->request->getPost('categoria_id'),
+            'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
+            'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
             'codigo'            => $codigoNuevo,
             'nombre'            => $nombre,
             'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
+            'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
             'precio_dolar'      => $precioDolar,
             'badge'             => $this->request->getPost('badge') ?? '',
@@ -309,6 +332,24 @@ class Productos extends BaseController
 
     // ─── helpers privados ─────────────────────────────────────────────────────
 
+    /**
+     * Los productos del rubro "Muebles" requieren seleccionar una fábrica.
+     * Devuelve el mensaje de error si falta, o null si la validación pasa.
+     */
+    private function validarFabricaRequerida(int $categoriaId, int $fabricaId): ?string
+    {
+        if ($fabricaId > 0) {
+            return null;
+        }
+
+        $rubro = $this->catModel->getSlugPath($categoriaId)['rubro'] ?? '';
+        if ($rubro !== 'muebles') {
+            return null;
+        }
+
+        return 'Seleccioná la fábrica del mueble.';
+    }
+
     private function calcularPrecioARS(float $precioDolar): ?string
     {
         $config     = new ConfiguracionModel();
@@ -330,7 +371,7 @@ class Productos extends BaseController
     private function getSeccionesFormulario(): array
     {
         return $this->seccionModel
-            ->whereIn('slug', ['inicio', 'catalogo', 'rubro', 'subrubro'])
+            ->whereIn('slug', ['inicio', 'catalogo', 'rubro', 'subrubro', 'carrusel_promo'])
             ->where('activo', 1)
             ->orderBy('orden', 'ASC')
             ->findAll();

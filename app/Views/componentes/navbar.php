@@ -1,621 +1,10 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-    /* ══════════════════════════════════════════════════════════
-       MEGA DROPDOWN — Estilo Naldo: sidebar + columnas de cats
-    ══════════════════════════════════════════════════════════ */
-    .mega-dropdown {
-        position: fixed;
-        top: var(--header-h, 120px);
-        left: 0; right: 0;
-        background: #fff;
-        z-index: 1028;
-        box-shadow: 0 12px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06);
-        display: none;
-        border-top: 3px solid #FF0033;
-        animation: megaSlideIn 0.2s cubic-bezier(.4,0,.2,1);
-    }
-    @keyframes megaSlideIn {
-        from { opacity: 0; transform: translateY(-8px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .mega-dropdown.open { display: block; }
-
-    /* ── Layout principal: sidebar | panel ── */
-    .mega-body {
-        display: flex;
-        max-width: 1400px;
-        margin: 0 auto;
-        max-height: 500px;
-        min-height: 360px;
-    }
-
-    /* ══ Sidebar izquierdo ══════════════════════════════════ */
-    .mega-sidebar {
-        width: 245px;
-        flex-shrink: 0;
-        background: #F7F8FA;
-        border-right: 1px solid #E8ECF0;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-    }
-    .mega-sidebar-hdr {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0.9rem 1.1rem 0.7rem;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.76rem;
-        font-weight: 800;
-        color: #111827;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        border-bottom: 1px solid #E8ECF0;
-        flex-shrink: 0;
-    }
-    .mega-sidebar-hdr i { color: #FF0033; font-size: 0.78rem; }
-
-    .mega-rubro-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding: 0.62rem 1.1rem;
-        cursor: pointer;
-        user-select: none;
-        border-left: 3px solid transparent;
-        background: transparent;
-        transition: background 0.12s, border-color 0.12s;
-        text-decoration: none;
-    }
-    .mega-rubro-item:hover {
-        background: #ECEEF2;
-        border-left-color: rgba(255,0,51,0.35);
-    }
-    .mega-rubro-item.active {
-        background: #fff;
-        border-left-color: #FF0033;
-    }
-    .mri-icon {
-        width: 28px; height: 28px;
-        display: flex; align-items: center; justify-content: center;
-        border-radius: 6px;
-        background: #E5E7EB;
-        color: #6B7280;
-        font-size: 0.74rem;
-        flex-shrink: 0;
-        transition: background 0.12s, color 0.12s;
-    }
-    .mega-rubro-item:hover .mri-icon,
-    .mega-rubro-item.active .mri-icon {
-        background: rgba(255,0,51,0.09);
-        color: #FF0033;
-    }
-    .mri-name {
-        flex: 1;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.84rem;
-        font-weight: 500;
-        color: #374151;
-        transition: color 0.12s;
-        white-space: nowrap;
-    }
-    .mega-rubro-item:hover .mri-name,
-    .mega-rubro-item.active .mri-name {
-        color: #111827;
-        font-weight: 600;
-    }
-    .mri-arrow {
-        font-size: 0.58rem;
-        color: #C9CDD4;
-        flex-shrink: 0;
-        transition: color 0.12s;
-    }
-    .mega-rubro-item.active .mri-arrow { color: #FF0033; }
-
-    .mega-sidebar-footer {
-        margin-top: auto;
-        padding: 0.7rem 1.1rem;
-        border-top: 1px solid #E8ECF0;
-        flex-shrink: 0;
-    }
-    .mega-sidebar-all-link {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #FF0033;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.76rem;
-        font-weight: 700;
-        text-decoration: none;
-        transition: opacity 0.14s;
-    }
-    .mega-sidebar-all-link:hover { opacity: 0.72; }
-
-    /* ══ Panel derecho: columnas de categorías ══════════════ */
-    .mega-panel-wrap {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        background: #fff;
-    }
-
-    .mega-panel {
-        flex: 1;
-        display: none;
-        flex-direction: column;
-        animation: megaPanelIn 0.16s ease;
-        min-height: 0;
-    }
-    .mega-panel.active { display: flex; }
-    @keyframes megaPanelIn {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-
-    /* Fila de columnas (scrollable horizontalmente si hay muchas) */
-    .mega-panel-cols {
-        flex: 1;
-        display: flex;
-        overflow-x: auto;
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: #E5E7EB transparent;
-    }
+    /* Excepciones mínimas: lo único que Tailwind Play CDN no puede expresar
+       como utilidad (pseudo-elemento ::-webkit-scrollbar). Todo lo demás
+       (colores, spacing, flex/grid, tipografía, animaciones, hover, etc.)
+       vive como clases de utilidad directamente en el markup. */
     .mega-panel-cols::-webkit-scrollbar { height: 4px; }
     .mega-panel-cols::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 4px; }
-
-    /* Una columna = una subcategoría */
-    .mega-panel-col {
-        flex: 1;
-        min-width: 160px;
-        max-width: 215px;
-        padding: 1.2rem 1rem 1rem;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid #F0F2F5;
-    }
-    .mega-panel-col:last-child { border-right: none; }
-
-    /* Título de la subcategoría */
-    .mpc-title {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: #111827;
-        text-decoration: none;
-        display: block;
-        margin-bottom: 0.6rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        transition: color 0.13s;
-        line-height: 1.3;
-    }
-    .mpc-title:hover { color: #FF0033; }
-
-    /* Imagen representativa (placeholder con ícono) */
-    .mpc-img {
-        width: 100%;
-        aspect-ratio: 1.75;
-        background: #F5F7FA;
-        border: 1px solid #EEF0F3;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 0.75rem;
-        flex-shrink: 0;
-        overflow: hidden;
-        transition: background 0.15s, border-color 0.15s;
-    }
-    .mega-panel-col:hover .mpc-img {
-        background: #EEF1F8;
-        border-color: #D8DCE6;
-    }
-    .mpc-img i {
-        font-size: 1.65rem;
-        color: #C4C9D4;
-        transition: color 0.15s;
-    }
-    .mega-panel-col:hover .mpc-img i { color: #9CA3AF; }
-
-    /* Lista de sub-subcategorías */
-    .mpc-list {
-        list-style: none;
-        padding: 0; margin: 0;
-        flex: 1;
-    }
-    .mpc-list li { padding: 0; margin: 0; }
-    .mpc-list li a {
-        display: block;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.76rem;
-        color: #6B7280;
-        text-decoration: none;
-        padding: 3px 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        transition: color 0.12s;
-    }
-    .mpc-list li a:hover { color: #111827; }
-    .mpc-list li a::before {
-        content: '·';
-        margin-right: 5px;
-        color: #D1D5DB;
-    }
-
-    /* "Ver todo" de cada columna */
-    .mpc-all {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.73rem;
-        font-weight: 600;
-        color: #FF0033;
-        text-decoration: none;
-        margin-top: 0.5rem;
-        flex-shrink: 0;
-        transition: gap 0.14s, color 0.13s;
-    }
-    .mpc-all:hover { gap: 7px; color: #cc0029; }
-    .mpc-all i { font-size: 0.57rem; }
-
-    /* Footer del panel: "Ver todo en [Rubro]" */
-    .mega-panel-footer {
-        flex-shrink: 0;
-        padding: 0.55rem 1.1rem;
-        border-top: 1px solid #F0F2F5;
-        background: #FAFBFC;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .mega-panel-footer-title {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.74rem;
-        font-weight: 600;
-        color: #9CA3AF;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .mega-panel-footer-title i { font-size: 0.68rem; }
-    .mega-panel-footer-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.74rem;
-        font-weight: 700;
-        color: #FF0033;
-        text-decoration: none;
-        transition: gap 0.14s;
-    }
-    .mega-panel-footer-link:hover { gap: 8px; }
-    .mega-panel-footer-link i { font-size: 0.58rem; }
-
-    /* Placeholder cuando no hay nada seleccionado */
-    .mega-panel-placeholder {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        color: #D1D5DB;
-        font-family: 'Inter', system-ui, sans-serif;
-    }
-    .mega-panel-placeholder i { font-size: 2rem; }
-    .mega-panel-placeholder span { font-size: 0.82rem; }
-
-    /* ══════════════════════════════════════════════════════════
-       SITE HEADER — fondo blanco, comercial, premium
-    ══════════════════════════════════════════════════════════ */
-    .site-header {
-        background: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1030;
-        box-shadow: 0 1px 0 #E8ECF0;
-        transition: box-shadow 0.3s ease;
-        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    }
-    .site-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-
-    /* ── Barra superior ── */
-    .header-top { border-bottom: 1px solid #EEF0F3; }
-    .header-top-inner {
-        display: grid;
-        grid-template-columns: 22fr 56fr 22fr;
-        align-items: center;
-        gap: 1.25rem;
-        height: 78px;
-        transition: height 0.3s ease;
-    }
-    .site-header.scrolled .header-top-inner { height: 60px; }
-
-    /* ── Brand ── */
-    .header-brand {
-        display: flex; align-items: center; gap: 10px;
-        text-decoration: none; flex-shrink: 0; transition: opacity 0.2s;
-    }
-    .header-brand:hover { opacity: 0.85; }
-    .header-logo {
-        height: 50px; width: auto; object-fit: contain;
-        display: block; flex-shrink: 0; transition: height 0.3s ease;
-    }
-    .site-header.scrolled .header-logo { height: 38px; }
-    .header-brand-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.1; }
-    .brand-main {
-        color: #111827; font-size: 0.9rem; font-weight: 800;
-        letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap;
-        transition: font-size 0.3s;
-    }
-    .site-header.scrolled .brand-main { font-size: 0.8rem; }
-    .brand-sub {
-        color: #FF0033; font-size: 0.6rem; font-weight: 700;
-        letter-spacing: 0.28em; text-transform: uppercase; white-space: nowrap;
-        transition: font-size 0.3s;
-    }
-    .site-header.scrolled .brand-sub { font-size: 0.55rem; }
-
-    /* ── Buscador ── */
-    .header-search {
-        display: flex; align-items: center;
-        background: #F4F6F9; border: 1.5px solid #E8ECF0; border-radius: 50px;
-        overflow: hidden; transition: border-color 0.22s, box-shadow 0.22s; width: 100%;
-    }
-    .header-search:focus-within {
-        border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.08); background: #fff;
-    }
-    .header-search-input {
-        flex: 1; border: none; background: transparent; padding: 0.6rem 1.1rem;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem;
-        color: #111827; outline: none; min-width: 0;
-    }
-    .header-search-input::placeholder { color: #9CA3AF; }
-    .header-search-btn {
-        display: flex; align-items: center; justify-content: center;
-        width: 44px; height: 44px; background: #FF0033; border: none;
-        border-radius: 0 50px 50px 0; color: #fff; font-size: 0.9rem;
-        cursor: pointer; flex-shrink: 0; transition: background 0.2s;
-    }
-    .header-search-btn:hover { background: #cc0029; }
-
-    /* ── Acciones ── */
-    .header-actions {
-        display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem;
-    }
-    .header-wa-btn {
-        display: inline-flex; align-items: center; gap: 7px;
-        background: #FF0033; color: #fff !important;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 0.84rem; font-weight: 700;
-        padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; white-space: nowrap;
-        box-shadow: 0 3px 12px rgba(255,0,51,0.25);
-        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    }
-    .header-wa-btn:hover {
-        background: #cc0029; box-shadow: 0 5px 18px rgba(255,0,51,0.38);
-        transform: translateY(-1px); color: #fff !important;
-    }
-    .header-admin-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        background: #FFF5F7; border: 1.5px solid rgba(255,0,51,0.25);
-        color: #FF0033 !important; font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.8rem; font-weight: 700; padding: 0.42rem 0.9rem;
-        border-radius: 50px; text-decoration: none; white-space: nowrap;
-        transition: background 0.2s, border-color 0.2s;
-    }
-    .header-admin-badge:hover {
-        background: #FFE4EA; border-color: rgba(255,0,51,0.45); color: #FF0033 !important;
-    }
-    .header-admin-logout {
-        display: flex; align-items: center; justify-content: center;
-        width: 36px; height: 36px; border-radius: 8px;
-        background: #F9FAFB; border: 1.5px solid #E5E7EB;
-        color: #6B7280 !important; font-size: 0.85rem; text-decoration: none;
-        transition: background 0.2s, color 0.2s, border-color 0.2s;
-    }
-    .header-admin-logout:hover {
-        background: #FFF5F7; border-color: rgba(255,0,51,0.3); color: #FF0033 !important;
-    }
-
-    /* ── Hamburguesa ── */
-    .header-toggler {
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        width: 40px; height: 40px; background: #F9FAFB; border: 1.5px solid #E5E7EB;
-        border-radius: 8px; cursor: pointer; gap: 5px; padding: 0; flex-shrink: 0;
-        transition: background 0.2s, border-color 0.2s;
-    }
-    .header-toggler:hover { background: #FFF5F7; border-color: rgba(255,0,51,0.3); }
-    .header-toggler .hbar {
-        display: block; width: 18px; height: 2px; background: #374151; border-radius: 2px;
-        transition: transform 0.25s ease, opacity 0.2s, width 0.2s; transform-origin: center;
-    }
-    .header-toggler.open .hbar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .header-toggler.open .hbar:nth-child(2) { opacity: 0; width: 0; }
-    .header-toggler.open .hbar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ══ Barra de navegación ══════════════════════════════════ */
-    .header-nav { background: #fff; border-top: 1px solid #EEF0F3; }
-    .header-nav-inner { display: flex; align-items: stretch; height: 44px; gap: 0; }
-    .hnav-link {
-        position: relative; display: inline-flex; align-items: center; gap: 5px;
-        color: #374151; font-family: 'Inter', system-ui, sans-serif; font-size: 0.84rem;
-        font-weight: 500; padding: 0 1rem; text-decoration: none; white-space: nowrap;
-        cursor: pointer; user-select: none; transition: color 0.18s;
-        border-bottom: 2px solid transparent;
-    }
-    .hnav-link::after {
-        content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
-        background: #FF0033; border-radius: 2px 2px 0 0;
-        transform: scaleX(0); transition: transform 0.22s cubic-bezier(.4,0,.2,1); transform-origin: center;
-    }
-    .hnav-link:hover { color: #FF0033; text-decoration: none; }
-    .hnav-link:hover::after,
-    .hnav-link.active::after,
-    .hnav-link.mega-open::after { transform: scaleX(1); }
-    .hnav-link.active { color: #FF0033; font-weight: 600; }
-    .hnav-link.mega-open { color: #FF0033; }
-    .hnav-link .hnav-arrow { font-size: 0.62rem; opacity: 0.6; transition: transform 0.2s, opacity 0.2s; }
-    .hnav-link.mega-open .hnav-arrow { transform: rotate(180deg); opacity: 1; }
-    .hnav-sep { width: 1px; background: #EEF0F3; margin: 8px 0; flex-shrink: 0; }
-
-    /* ══ Panel mobile ════════════════════════════════════════ */
-    .mobile-panel {
-        background: #fff; border-top: 1px solid #EEF0F3; overflow: hidden;
-        max-height: 0; transition: max-height 0.36s cubic-bezier(.4,0,.2,1);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    }
-    .mobile-panel.open { max-height: 85vh; overflow-y: auto; }
-    .mob-inner { padding: 0.75rem 0 1.5rem; }
-    .mob-search-wrap { padding: 0.5rem 1rem 0.75rem; border-bottom: 1px solid #EEF0F3; }
-    .mob-search-form {
-        display: flex; align-items: center; background: #F4F6F9;
-        border: 1.5px solid #E8ECF0; border-radius: 50px; overflow: hidden; transition: border-color 0.22s;
-    }
-    .mob-search-form:focus-within { border-color: #FF0033; }
-    .mob-search-form input {
-        flex: 1; border: none; background: transparent; padding: 0.58rem 1rem;
-        font-size: 0.875rem; color: #111827; outline: none; font-family: 'Inter', system-ui, sans-serif;
-    }
-    .mob-search-form input::placeholder { color: #9CA3AF; }
-    .mob-search-form button {
-        display: flex; align-items: center; justify-content: center;
-        width: 40px; height: 40px; background: #FF0033; border: none;
-        border-radius: 0 50px 50px 0; color: #fff; font-size: 0.88rem;
-        cursor: pointer; flex-shrink: 0; transition: background 0.2s;
-    }
-    .mob-search-form button:hover { background: #cc0029; }
-    .mob-lnk {
-        display: flex; align-items: center; gap: 10px; color: #374151;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 0.9rem; font-weight: 500;
-        padding: 0.72rem 1.2rem; text-decoration: none; border-bottom: 1px solid #F3F4F6;
-        transition: color 0.15s, background 0.15s;
-    }
-    .mob-lnk:hover { color: #FF0033; background: #FFF5F7; }
-    .mob-lnk.active { color: #FF0033; font-weight: 600; }
-    .mob-lnk i { font-size: 0.8rem; opacity: 0.5; width: 16px; text-align: center; flex-shrink: 0; }
-    .mob-acc-hdr {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 0.72rem 1.2rem; color: #374151; font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.9rem; font-weight: 500; cursor: pointer; border-bottom: 1px solid #F3F4F6;
-        transition: color 0.15s, background 0.15s; user-select: none;
-    }
-    .mob-acc-hdr span { display: flex; align-items: center; gap: 10px; }
-    .mob-acc-hdr span i { font-size: 0.8rem; opacity: 0.5; }
-    .mob-acc-hdr:hover { color: #FF0033; background: #FFF5F7; }
-    .mob-acc-arrow { font-size: 0.68rem; opacity: 0.5; transition: transform 0.22s, opacity 0.2s; }
-    .mob-acc-hdr.open .mob-acc-arrow { transform: rotate(180deg); opacity: 1; }
-    .mob-acc-body {
-        display: none; background: #FAFAFA;
-        padding: 0.4rem 1.2rem 0.7rem 1.6rem; border-bottom: 1px solid #F3F4F6;
-    }
-    .mob-acc-body.open { display: block; }
-    .mega-mobile-link {
-        color: #6B7280; font-family: 'Inter', system-ui, sans-serif; font-size: .84rem;
-        text-decoration: none; display: block; padding: 5px 0; transition: color .15s;
-    }
-    .mega-mobile-link:hover { color: #FF0033; }
-    .mega-mobile-link.ver-todo { color: #FF0033; font-weight: 600; margin-top: .3rem; }
-    .mega-mob-rubro-item { border-bottom: 1px solid #F3F4F6; }
-    .mega-mob-rubro-item:last-of-type { border-bottom: none; }
-    .mega-mob-rubro-hdr {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: .5rem 0; color: #4B5563; font-size: .84rem; font-weight: 600;
-        cursor: pointer; user-select: none; transition: color .15s;
-    }
-    .mega-mob-rubro-hdr:hover, .mega-mob-rubro-hdr.open { color: #FF0033; }
-    .mega-mob-rubro-arrow { font-size: .65rem; opacity: .5; transition: transform .2s; }
-    .mega-mob-rubro-hdr.open .mega-mob-rubro-arrow { transform: rotate(90deg); opacity: 1; }
-    .mega-mob-rubro-body { display: none; padding: .1rem 0 .4rem .6rem; }
-    .mega-mob-rubro-body.open { display: block; }
-    .mob-actions {
-        padding: 1rem 1.2rem; border-top: 1px solid #EEF0F3;
-        display: flex; flex-wrap: wrap; gap: 0.7rem;
-    }
-
-    /* ══ Responsive ══════════════════════════════════════════ */
-    @media (max-width: 991px) {
-        .header-nav     { display: none !important; }
-        .header-actions { display: none !important; }
-        .header-search  { display: none !important; }
-        .mega-dropdown  { display: none !important; }
-        .header-top-inner { grid-template-columns: 1fr auto; }
-        .header-logo { height: 40px; }
-    }
-    @media (min-width: 992px) {
-        .header-toggler { display: none !important; }
-        .mobile-panel   { display: none !important; }
-    }
-    @media (max-width: 575px) {
-        .brand-main { font-size: 0.8rem; }
-        .brand-sub  { font-size: 0.55rem; }
-    }
-
-    /* ── Botón de inicio de sesión profesional ── */
-    .header-login-btn {
-        display: inline-flex; align-items: center; gap: 7px;
-        background: transparent; color: #374151 !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.82rem; font-weight: 600;
-        padding: 0.44rem 1.05rem; border-radius: 8px;
-        text-decoration: none; white-space: nowrap;
-        border: 1.5px solid #E5E7EB;
-        transition: background 0.18s, border-color 0.18s, color 0.18s;
-    }
-    .header-login-btn:hover {
-        background: #F9FAFB; border-color: #D1D5DB; color: #111827 !important;
-    }
-    .header-login-btn i { font-size: 0.8rem; }
-
-    /* ── Botón flotante de WhatsApp ── */
-    .floating-wa {
-        position: fixed;
-        bottom: 28px; right: 28px;
-        z-index: 9998;
-        width: 56px; height: 56px;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        background: #25D366; color: #fff !important;
-        text-decoration: none;
-        box-shadow: 0 6px 24px rgba(37,211,102,0.4);
-        animation: floatWaIn 0.55s cubic-bezier(.4,0,.2,1) 0.9s both;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .floating-wa:hover {
-        transform: translateY(-3px) scale(1.07);
-        box-shadow: 0 10px 32px rgba(37,211,102,0.52);
-        color: #fff !important;
-    }
-    .floating-wa .fwa-icon { font-size: 1.45rem; line-height: 1; }
-    .floating-wa-text { display: none; }
-    /* Anillo pulsante */
-    .floating-wa::before {
-        content: '';
-        position: absolute;
-        inset: -6px; border-radius: 50%;
-        border: 2px solid rgba(37,211,102,0.45);
-        animation: floatWaPulse 2.8s ease-in-out infinite 1.4s;
-        pointer-events: none;
-    }
-    @keyframes floatWaIn {
-        from { opacity: 0; transform: translateY(20px) scale(0.88); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes floatWaPulse {
-        0%, 100% { opacity: 0.85; transform: scale(1); }
-        50%       { opacity: 0;    transform: scale(1.22); }
-    }
-    @media (max-width: 575px) {
-        .floating-wa { width: 50px; height: 50px; bottom: 20px; right: 20px; }
-        .floating-wa .fwa-icon { font-size: 1.25rem; }
-    }
 </style>
 
 <?php
@@ -627,6 +16,7 @@ $isCatalogo    = (strncmp($currentPath, 'catalogo', 8) === 0);
 $isServicio    = ($currentPath === 'servicio-tecnico');
 $isNosotros    = ($currentPath === 'nosotros');
 $isContacto    = ($currentPath === 'contacto');
+$isPromos      = ($currentPath === 'promociones');
 $isInformatica = (strncmp($currentPath, 'catalogo/informatica', 20) === 0);
 $isMuebles     = (strncmp($currentPath, 'catalogo/muebles', 16) === 0);
 $isElectro     = (strncmp($currentPath, 'catalogo/electrodomesticos', 26) === 0);
@@ -634,92 +24,116 @@ $isLinea       = (strncmp($currentPath, 'catalogo/linea-comercial', 24) === 0);
 
 $_megaModel = new \App\Models\CategoriaModel();
 $_megaData  = $_megaModel->getMegaMenu();
+
+/* Clases compartidas para links del nav (hover subrayado con ::after animado
+   + estado "active"/"mega-open" aplicado como marcador de clase que el JS
+   togglea en tiempo real). */
+$hnavLinkBase = 'relative inline-flex items-center gap-[5px] text-[#374151] font-inter text-[0.84rem] font-medium px-4 no-underline whitespace-nowrap cursor-pointer select-none transition-colors duration-[180ms] border-b-2 border-transparent hover:text-rojo hover:no-underline '
+    . 'after:content-[\'\'] after:absolute after:-bottom-px after:left-0 after:right-0 after:h-[2px] after:bg-rojo after:rounded-t-[2px] after:origin-center after:scale-x-0 after:transition-transform after:duration-[220ms] after:ease-[cubic-bezier(.4,0,.2,1)] hover:after:scale-x-100 '
+    . '[&.active]:text-rojo [&.active]:font-semibold [&.active]:after:scale-x-100 [&.mega-open]:text-rojo [&.mega-open]:after:scale-x-100';
+
+$mobLnkBase = 'flex items-center gap-[10px] text-[#374151] font-inter text-[0.9rem] font-medium py-[0.72rem] px-[1.2rem] no-underline border-b border-[#F3F4F6] transition-colors duration-150 hover:text-rojo hover:bg-[#FFF5F7] [&.active]:text-rojo [&.active]:font-semibold';
 ?>
 
 <!-- ═══════════════════════════════════════════════════════════
      HEADER PRINCIPAL
 ═══════════════════════════════════════════════════════════ -->
-<header class="site-header" id="siteHeader">
+<header class="site-header group sticky top-0 z-[1030] bg-white shadow-[0_1px_0_#E8ECF0] transition-shadow duration-300 font-inter [&.scrolled]:shadow-[0_4px_20px_rgba(0,0,0,0.1)]" id="siteHeader">
 
-    <div class="header-top">
-        <div class="container header-top-inner">
+    <div class="border-b border-[#EEF0F3]">
+        <div class="container grid grid-cols-[22fr_56fr_22fr] items-center gap-5 h-[78px] transition-[height] duration-300 max-lg:grid-cols-[1fr_auto] group-[.scrolled]:h-[60px]">
 
-            <a href="<?= base_url('/') ?>" class="header-brand">
+            <a href="<?= base_url('/') ?>" class="flex items-center gap-[10px] no-underline shrink-0 transition-opacity duration-200 hover:opacity-[0.85]">
                 <img src="<?= base_url('assets/img/logo_sinfondo.png') ?>"
-                     alt="Centro Informático Regional" class="header-logo">
-                <div class="header-brand-text">
-                    <span class="brand-main">Centro Informático</span>
-                    <span class="brand-sub">Regional</span>
+                     alt="Centro Informático Regional"
+                     class="h-[50px] w-auto object-contain block shrink-0 transition-[height] duration-300 max-lg:h-10 group-[.scrolled]:h-[38px]">
+                <div class="flex flex-col gap-px leading-[1.1]">
+                    <span class="text-dark text-[0.9rem] font-extrabold tracking-[0.03em] uppercase whitespace-nowrap transition-[font-size] duration-300 group-[.scrolled]:text-[0.8rem] max-[575px]:text-[0.8rem]">Centro Informático</span>
+                    <span class="text-rojo text-[0.6rem] font-bold tracking-[0.28em] uppercase whitespace-nowrap transition-[font-size] duration-300 group-[.scrolled]:text-[0.55rem] max-[575px]:text-[0.55rem]">Regional</span>
                 </div>
             </a>
 
             <form action="<?= base_url('catalogo/buscar') ?>" method="GET"
-                  class="header-search" role="search">
-                <input type="search" name="q" class="header-search-input"
+                  class="flex items-center bg-[#F4F6F9] border-[1.5px] border-[#E8ECF0] rounded-[50px] overflow-hidden transition-[border-color,box-shadow] duration-[220ms] w-full max-lg:!hidden focus-within:border-rojo focus-within:shadow-[0_0_0_3px_rgba(255,0,51,0.08)] focus-within:bg-white"
+                  role="search">
+                <input type="search" name="q"
+                       class="flex-1 border-0 bg-transparent py-[0.6rem] px-[1.1rem] font-inter text-[0.875rem] text-dark outline-none min-w-0 placeholder:text-[#9CA3AF]"
                        placeholder="Buscar productos, marcas o categorías..."
                        autocomplete="off" aria-label="Buscar">
-                <button type="submit" class="header-search-btn" aria-label="Buscar">
+                <button type="submit"
+                        class="flex items-center justify-center w-11 h-11 bg-rojo border-0 rounded-[0_50px_50px_0] text-white text-[0.9rem] cursor-pointer shrink-0 transition-colors duration-200 hover:bg-rojo-dark"
+                        aria-label="Buscar">
                     <i class="fas fa-search"></i>
                 </button>
             </form>
 
-            <div class="header-actions">
+            <div class="flex items-center justify-end gap-[0.6rem] max-lg:!hidden">
                 <?php if ($adminLoggedIn): ?>
-                    <a href="<?= base_url('admin/dashboard') ?>" class="header-admin-badge"
+                    <a href="<?= base_url('admin/dashboard') ?>"
+                       class="inline-flex items-center gap-[6px] bg-[#FFF5F7] border-[1.5px] border-rojo/[0.25] text-rojo font-inter text-[0.8rem] font-bold py-[0.42rem] px-[0.9rem] rounded-[50px] no-underline whitespace-nowrap transition-[background-color,border-color] duration-200 hover:bg-[#FFE4EA] hover:border-rojo/[0.45] hover:text-rojo"
                        title="Panel de administración">
                         <i class="fas fa-shield-halved"></i> Panel
                     </a>
-                    <a href="<?= base_url('admin/logout') ?>" class="header-admin-logout"
+                    <a href="<?= base_url('admin/logout') ?>"
+                       class="flex items-center justify-center w-9 h-9 rounded-lg bg-[#F9FAFB] border-[1.5px] border-[#E5E7EB] text-[#6B7280] text-[0.85rem] no-underline transition-colors duration-200 hover:bg-[#FFF5F7] hover:border-rojo/[0.3] hover:text-rojo"
                        title="Cerrar sesión (<?= esc($adminNombre) ?>)">
                         <i class="fas fa-right-from-bracket"></i>
                     </a>
                 <?php else: ?>
-                    <a href="<?= base_url('admin/login') ?>" class="header-login-btn"
+                    <a href="<?= base_url('admin/login') ?>"
+                       class="inline-flex items-center gap-[7px] bg-transparent text-[#374151] font-inter text-[0.82rem] font-semibold py-[0.44rem] px-[1.05rem] rounded-lg no-underline whitespace-nowrap border-[1.5px] border-[#E5E7EB] transition-colors duration-[180ms] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] hover:text-dark"
                        title="Iniciar sesión">
-                        <i class="fas fa-right-to-bracket"></i> Iniciar sesión
+                        <i class="fas fa-right-to-bracket text-[0.8rem]"></i> Iniciar sesión
                     </a>
                 <?php endif; ?>
             </div>
 
-            <button class="header-toggler" id="headerToggler"
+            <button class="group flex flex-col justify-center items-center w-10 h-10 bg-[#F9FAFB] border-[1.5px] border-[#E5E7EB] rounded-lg cursor-pointer gap-[5px] p-0 shrink-0 transition-colors duration-200 hover:bg-[#FFF5F7] hover:border-rojo/[0.3] lg:!hidden"
+                    id="headerToggler"
                     aria-label="Abrir menú" aria-expanded="false">
-                <span class="hbar"></span>
-                <span class="hbar"></span>
-                <span class="hbar"></span>
+                <span class="block w-[18px] h-[2px] bg-[#374151] rounded-[2px] origin-center transition-[transform,opacity,width] duration-[250ms] ease-in-out group-[.open]:translate-y-[7px] group-[.open]:rotate-45"></span>
+                <span class="block w-[18px] h-[2px] bg-[#374151] rounded-[2px] origin-center transition-[transform,opacity,width] duration-[250ms] ease-in-out group-[.open]:opacity-0 group-[.open]:w-0"></span>
+                <span class="block w-[18px] h-[2px] bg-[#374151] rounded-[2px] origin-center transition-[transform,opacity,width] duration-[250ms] ease-in-out group-[.open]:-translate-y-[7px] group-[.open]:-rotate-45"></span>
             </button>
 
         </div>
     </div>
 
-    <nav class="header-nav" aria-label="Navegación principal">
+    <nav class="bg-white border-t border-[#EEF0F3] max-lg:!hidden" aria-label="Navegación principal">
         <div class="container">
-            <div class="header-nav-inner">
+            <div class="flex items-stretch h-11 gap-0">
 
                 <a href="<?= base_url('/') ?>"
-                   class="hnav-link<?= $isHome ? ' active' : '' ?>">
+                   class="<?= $hnavLinkBase ?><?= $isHome ? ' active' : '' ?>">
                     Inicio
                 </a>
 
-                <div class="hnav-link" id="mega-trigger-btn"
+                <div class="group <?= $hnavLinkBase ?>" id="mega-trigger-btn"
                      role="button" tabindex="0"
                      aria-haspopup="true" aria-expanded="false">
-                    Catálogo <i class="fas fa-chevron-down hnav-arrow"></i>
+                    Catálogo <i class="fas fa-chevron-down text-[0.62rem] opacity-60 transition-[transform,opacity] duration-200 group-[.mega-open]:rotate-180 group-[.mega-open]:opacity-100"></i>
                 </div>
 
-                <div class="hnav-sep"></div>
+                <a href="<?= base_url('promociones') ?>"
+                   class="<?= $hnavLinkBase ?><?= $isPromos ? ' active' : '' ?> font-bold <?= $isPromos ? 'text-rojo' : 'text-[#e8002d]' ?>">
+                    <i class="fas fa-percent text-[0.7rem]"></i>
+                    Promociones
+                </a>
+
+                <div class="w-px bg-[#EEF0F3] my-2 shrink-0"></div>
 
                 <a href="<?= base_url('servicio-tecnico') ?>"
-                   class="hnav-link<?= $isServicio ? ' active' : '' ?>">
-                    <i class="fas fa-screwdriver-wrench" style="font-size:.72rem;opacity:.55;"></i>
+                   class="<?= $hnavLinkBase ?><?= $isServicio ? ' active' : '' ?>">
+                    <i class="fas fa-screwdriver-wrench text-[0.72rem] opacity-[0.55]"></i>
                     Servicio Técnico
                 </a>
                 <a href="<?= base_url('nosotros') ?>"
-                   class="hnav-link<?= $isNosotros ? ' active' : '' ?>">
-                    <i class="fas fa-building" style="font-size:.72rem;opacity:.55;"></i>
+                   class="<?= $hnavLinkBase ?><?= $isNosotros ? ' active' : '' ?>">
+                    <i class="fas fa-building text-[0.72rem] opacity-[0.55]"></i>
                     Nosotros
                 </a>
                 <a href="<?= base_url('contacto') ?>"
-                   class="hnav-link<?= $isContacto ? ' active' : '' ?>">
+                   class="<?= $hnavLinkBase ?><?= $isContacto ? ' active' : '' ?>">
                     Contacto
                 </a>
 
@@ -727,91 +141,105 @@ $_megaData  = $_megaModel->getMegaMenu();
         </div>
     </nav>
 
-    <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
-        <div class="mob-inner">
+    <div class="mobile-panel bg-white border-t border-[#EEF0F3] overflow-hidden max-h-0 transition-[max-height] duration-[360ms] ease-[cubic-bezier(.4,0,.2,1)] shadow-[0_8px_24px_rgba(0,0,0,0.1)] lg:!hidden [&.open]:max-h-[85vh] [&.open]:overflow-y-auto"
+         id="mobilePanel" aria-hidden="true">
+        <div class="pt-[0.75rem] pb-[1.5rem]">
 
-            <div class="mob-search-wrap">
+            <div class="pt-2 px-4 pb-3 border-b border-[#EEF0F3]">
                 <form action="<?= base_url('catalogo/buscar') ?>" method="GET"
-                      class="mob-search-form" role="search">
+                      class="flex items-center bg-[#F4F6F9] border-[1.5px] border-[#E8ECF0] rounded-[50px] overflow-hidden transition-colors duration-[220ms] focus-within:border-rojo"
+                      role="search">
                     <input type="search" name="q" placeholder="Buscar productos..."
+                           class="flex-1 border-0 bg-transparent py-[0.58rem] px-4 text-[0.875rem] text-dark outline-none font-inter placeholder:text-[#9CA3AF]"
                            autocomplete="off" aria-label="Buscar">
-                    <button type="submit" aria-label="Buscar">
+                    <button type="submit"
+                            class="flex items-center justify-center w-10 h-10 bg-rojo border-0 rounded-[0_50px_50px_0] text-white text-[0.88rem] cursor-pointer shrink-0 transition-colors duration-200 hover:bg-rojo-dark"
+                            aria-label="Buscar">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
 
             <a href="<?= base_url('/') ?>"
-               class="mob-lnk nav-mob-close<?= $isHome ? ' active' : '' ?>">
-                <i class="fas fa-home"></i> Inicio
+               class="<?= $mobLnkBase ?> nav-mob-close<?= $isHome ? ' active' : '' ?>">
+                <i class="fas fa-home text-[0.8rem] opacity-50 w-4 text-center shrink-0"></i> Inicio
             </a>
 
-            <div class="mob-acc-hdr" id="mega-mobile-toggle" role="button" tabindex="0">
-                <span><i class="fas fa-layer-group"></i> Catálogo</span>
-                <i class="fas fa-chevron-down mob-acc-arrow"></i>
+            <div class="group flex items-center justify-between py-[0.72rem] px-[1.2rem] text-[#374151] font-inter text-[0.9rem] font-medium cursor-pointer border-b border-[#F3F4F6] transition-colors duration-150 select-none hover:text-rojo hover:bg-[#FFF5F7]"
+                 id="mega-mobile-toggle" role="button" tabindex="0">
+                <span class="flex items-center gap-[10px]"><i class="fas fa-layer-group text-[0.8rem] opacity-50"></i> Catálogo</span>
+                <i class="fas fa-chevron-down text-[0.68rem] opacity-50 transition-[transform,opacity] duration-[220ms] group-[.open]:rotate-180 group-[.open]:opacity-100"></i>
             </div>
-            <div class="mob-acc-body" id="mega-mobile-body">
+            <div class="mob-acc-body hidden bg-[#FAFAFA] pt-[0.4rem] pr-[1.2rem] pb-[0.7rem] pl-[1.6rem] border-b border-[#F3F4F6] [&.open]:block"
+                 id="mega-mobile-body">
                 <?php if (!empty($_megaData)): ?>
                     <?php foreach ($_megaData as $r): ?>
-                    <div class="mega-mob-rubro-item">
-                        <div class="mega-mob-rubro-hdr" role="button" tabindex="0">
+                    <div class="border-b border-[#F3F4F6] last-of-type:border-b-0">
+                        <div class="mega-mob-rubro-hdr group flex items-center justify-between py-2 text-[#4B5563] text-[0.84rem] font-semibold cursor-pointer select-none transition-colors duration-150 hover:text-rojo [&.open]:text-rojo"
+                             role="button" tabindex="0">
                             <span>
-                                <i class="<?= esc($r['icono']) ?>" style="margin-right:5px;font-size:.78rem;opacity:.6;"></i>
+                                <i class="<?= esc($r['icono']) ?> mr-[5px] text-[0.78rem] opacity-60"></i>
                                 <?= esc($r['nombre']) ?>
                             </span>
-                            <i class="fas fa-chevron-right mega-mob-rubro-arrow"></i>
+                            <i class="fas fa-chevron-right text-[0.65rem] opacity-50 transition-transform duration-200 group-[.open]:rotate-90 group-[.open]:opacity-100"></i>
                         </div>
-                        <div class="mega-mob-rubro-body">
+                        <div class="hidden pt-[0.1rem] pr-0 pb-[0.4rem] pl-[0.6rem] [&.open]:block">
                             <?php foreach ($r['hijos'] as $sub): ?>
                             <a href="<?= base_url('catalogo/'.esc($r['slug']).'/'.esc($sub['slug'])) ?>"
-                               class="mega-mobile-link nav-mob-close">
-                                <i class="<?= esc($sub['icono']) ?>" style="margin-right:4px;font-size:.72rem;opacity:.5;"></i>
+                               class="text-[#6B7280] font-inter text-[0.84rem] no-underline block py-[5px] transition-colors duration-150 hover:text-rojo nav-mob-close">
+                                <i class="<?= esc($sub['icono']) ?> mr-1 text-[0.72rem] opacity-50"></i>
                                 <?= esc($sub['nombre']) ?>
                             </a>
                             <?php endforeach; ?>
                             <a href="<?= base_url('catalogo/'.esc($r['slug'])) ?>"
-                               class="mega-mobile-link ver-todo nav-mob-close">
+                               class="text-rojo font-semibold mt-[0.3rem] font-inter text-[0.84rem] no-underline block py-[5px] transition-colors duration-150 nav-mob-close">
                                 Ver todo en <?= esc($r['nombre']) ?> &rarr;
                             </a>
                         </div>
                     </div>
                     <?php endforeach; ?>
                     <a href="<?= base_url('catalogo') ?>"
-                       class="mega-mobile-link ver-todo nav-mob-close"
-                       style="margin-top:.4rem;border-top:1px solid #F3F4F6;padding-top:.5rem;display:block;">
+                       class="text-rojo font-semibold mt-[0.4rem] font-inter text-[0.84rem] no-underline block py-[5px] pt-[0.5rem] border-t border-[#F3F4F6] transition-colors duration-150 nav-mob-close">
                         Ver catálogo completo &rarr;
                     </a>
                 <?php else: ?>
-                    <a href="<?= base_url('catalogo') ?>" class="mega-mobile-link nav-mob-close">Ver catálogo</a>
+                    <a href="<?= base_url('catalogo') ?>" class="text-[#6B7280] font-inter text-[0.84rem] no-underline block py-[5px] transition-colors duration-150 hover:text-rojo nav-mob-close">Ver catálogo</a>
                 <?php endif; ?>
             </div>
 
-            <a href="<?= base_url('servicio-tecnico') ?>"
-               class="mob-lnk nav-mob-close<?= $isServicio ? ' active' : '' ?>">
-                <i class="fas fa-screwdriver-wrench"></i> Servicio Técnico
-            </a>
-            <a href="<?= base_url('nosotros') ?>"
-               class="mob-lnk nav-mob-close<?= $isNosotros ? ' active' : '' ?>">
-                <i class="fas fa-building"></i> Nosotros
-            </a>
-            <a href="<?= base_url('contacto') ?>"
-               class="mob-lnk nav-mob-close<?= $isContacto ? ' active' : '' ?>">
-                <i class="fas fa-envelope"></i> Contacto
+            <a href="<?= base_url('promociones') ?>"
+               class="<?= $mobLnkBase ?> nav-mob-close<?= $isPromos ? ' active' : '' ?> font-bold text-[#e8002d]">
+                <i class="fas fa-percent text-[0.8rem] opacity-50 w-4 text-center shrink-0"></i> Promociones
             </a>
 
-            <div class="mob-actions">
+            <a href="<?= base_url('servicio-tecnico') ?>"
+               class="<?= $mobLnkBase ?> nav-mob-close<?= $isServicio ? ' active' : '' ?>">
+                <i class="fas fa-screwdriver-wrench text-[0.8rem] opacity-50 w-4 text-center shrink-0"></i> Servicio Técnico
+            </a>
+            <a href="<?= base_url('nosotros') ?>"
+               class="<?= $mobLnkBase ?> nav-mob-close<?= $isNosotros ? ' active' : '' ?>">
+                <i class="fas fa-building text-[0.8rem] opacity-50 w-4 text-center shrink-0"></i> Nosotros
+            </a>
+            <a href="<?= base_url('contacto') ?>"
+               class="<?= $mobLnkBase ?> nav-mob-close<?= $isContacto ? ' active' : '' ?>">
+                <i class="fas fa-envelope text-[0.8rem] opacity-50 w-4 text-center shrink-0"></i> Contacto
+            </a>
+
+            <div class="pt-4 px-[1.2rem] pb-4 border-t border-[#EEF0F3] flex flex-wrap gap-[0.7rem]">
                 <?php if ($adminLoggedIn): ?>
-                    <a href="<?= base_url('admin/dashboard') ?>" class="header-admin-badge">
+                    <a href="<?= base_url('admin/dashboard') ?>"
+                       class="inline-flex items-center gap-[6px] bg-[#FFF5F7] border-[1.5px] border-rojo/[0.25] text-rojo font-inter text-[0.8rem] font-bold py-[0.42rem] px-[0.9rem] rounded-[50px] no-underline whitespace-nowrap transition-[background-color,border-color] duration-200 hover:bg-[#FFE4EA] hover:border-rojo/[0.45] hover:text-rojo">
                         <i class="fas fa-shield-halved"></i> Panel Admin
                     </a>
-                    <a href="<?= base_url('admin/logout') ?>" class="header-admin-logout"
+                    <a href="<?= base_url('admin/logout') ?>"
+                       class="flex items-center justify-center w-9 h-9 rounded-lg bg-[#F9FAFB] border-[1.5px] border-[#E5E7EB] text-[#6B7280] text-[0.85rem] no-underline transition-colors duration-200 hover:bg-[#FFF5F7] hover:border-rojo/[0.3] hover:text-rojo"
                        title="Cerrar sesión">
                         <i class="fas fa-right-from-bracket"></i>
                     </a>
                 <?php else: ?>
-                    <a href="<?= base_url('admin/login') ?>" class="header-login-btn"
-                       style="width:100%; justify-content:center;">
-                        <i class="fas fa-right-to-bracket"></i> Iniciar sesión
+                    <a href="<?= base_url('admin/login') ?>"
+                       class="inline-flex items-center gap-[7px] bg-transparent text-[#374151] font-inter text-[0.82rem] font-semibold py-[0.44rem] px-[1.05rem] rounded-lg no-underline whitespace-nowrap border-[1.5px] border-[#E5E7EB] transition-colors duration-[180ms] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] hover:text-dark w-full justify-center">
+                        <i class="fas fa-right-to-bracket text-[0.8rem]"></i> Iniciar sesión
                     </a>
                 <?php endif; ?>
             </div>
@@ -824,73 +252,75 @@ $_megaData  = $_megaModel->getMegaMenu();
 <!-- Botón flotante de WhatsApp -->
 <a href="https://wa.me/5493704616482?text=Hola%2C%20quiero%20consultar%20sobre%20sus%20productos"
    target="_blank" rel="noopener noreferrer"
-   class="floating-wa"
+   class="fixed bottom-7 right-7 z-[9998] w-14 h-14 rounded-full flex items-center justify-center bg-[#25D366] text-white no-underline shadow-[0_6px_24px_rgba(37,211,102,0.4)] animate-float-wa-in transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:scale-[1.07] hover:shadow-[0_10px_32px_rgba(37,211,102,0.52)] hover:text-white max-[575px]:w-[50px] max-[575px]:h-[50px] max-[575px]:bottom-5 max-[575px]:right-5 before:content-[''] before:absolute before:-inset-[6px] before:rounded-full before:border-2 before:border-[rgba(37,211,102,0.45)] before:animate-float-wa-pulse before:pointer-events-none"
    aria-label="Consultar por WhatsApp">
-    <i class="fab fa-whatsapp fwa-icon"></i>
-    <span class="floating-wa-text">Consultar por WhatsApp</span>
+    <i class="fab fa-whatsapp text-[1.45rem] leading-none max-[575px]:text-[1.25rem]"></i>
+    <span class="hidden">Consultar por WhatsApp</span>
 </a>
 
 <!-- ═══════════════════════════════════════════════════════════
      MEGA DROPDOWN — Estilo Naldo: sidebar + columnas de cats
 ═══════════════════════════════════════════════════════════ -->
-<div class="mega-dropdown" id="mega-dropdown" role="dialog" aria-label="Menú de categorías">
+<div class="mega-dropdown fixed left-0 right-0 top-[var(--header-h,120px)] z-[1028] bg-white shadow-[0_12px_32px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)] border-t-[3px] border-rojo animate-mega-slide-in hidden max-lg:!hidden [&.open]:block"
+     id="mega-dropdown" role="dialog" aria-label="Menú de categorías">
 
     <?php if (!empty($_megaData)): ?>
 
-    <div class="mega-body">
+    <div class="flex max-w-[1400px] mx-auto max-h-[500px] min-h-[360px]">
 
         <!-- ══ Sidebar izquierdo: rubros ══ -->
-        <div class="mega-sidebar">
-            <div class="mega-sidebar-hdr">
-                <i class="fas fa-bars"></i> Categorías
+        <div class="w-[245px] shrink-0 bg-[#F7F8FA] border-r border-[#E8ECF0] flex flex-col overflow-y-auto">
+            <div class="flex items-center gap-2 pt-[0.9rem] px-[1.1rem] pb-[0.7rem] font-inter text-[0.76rem] font-extrabold text-dark tracking-[0.04em] uppercase border-b border-[#E8ECF0] shrink-0">
+                <i class="fas fa-bars text-rojo text-[0.78rem]"></i> Categorías
             </div>
 
             <?php foreach ($_megaData as $rubro): ?>
-            <div class="mega-rubro-item"
+            <div class="mega-rubro-item group flex items-center gap-[9px] py-[0.62rem] px-[1.1rem] cursor-pointer select-none border-l-[3px] border-transparent bg-transparent transition-colors duration-[120ms] no-underline hover:bg-[#ECEEF2] hover:border-l-[rgba(255,0,51,0.35)] [&.active]:bg-white [&.active]:border-l-rojo"
                  data-pane="mgp-<?= (int)$rubro['id'] ?>"
                  role="button" tabindex="0">
-                <span class="mri-icon"><i class="<?= esc($rubro['icono']) ?>"></i></span>
-                <span class="mri-name"><?= esc($rubro['nombre']) ?></span>
-                <i class="fas fa-chevron-right mri-arrow"></i>
+                <span class="w-7 h-7 flex items-center justify-center rounded-[6px] bg-[#E5E7EB] text-[#6B7280] text-[0.74rem] shrink-0 transition-colors duration-[120ms] group-hover:bg-rojo/[0.09] group-hover:text-rojo group-[.active]:bg-rojo/[0.09] group-[.active]:text-rojo"><i class="<?= esc($rubro['icono']) ?>"></i></span>
+                <span class="flex-1 font-inter text-[0.84rem] font-medium text-[#374151] transition-colors duration-[120ms] whitespace-nowrap group-hover:text-dark group-hover:font-semibold group-[.active]:text-dark group-[.active]:font-semibold"><?= esc($rubro['nombre']) ?></span>
+                <i class="fas fa-chevron-right text-[0.58rem] text-[#C9CDD4] shrink-0 transition-colors duration-[120ms] group-[.active]:text-rojo"></i>
             </div>
             <?php endforeach; ?>
 
-            <div class="mega-sidebar-footer">
-                <a href="<?= base_url('catalogo') ?>" class="mega-sidebar-all-link">
+            <div class="mt-auto py-[0.7rem] px-[1.1rem] border-t border-[#E8ECF0] shrink-0">
+                <a href="<?= base_url('catalogo') ?>" class="flex items-center gap-[6px] text-rojo font-inter text-[0.76rem] font-bold no-underline transition-opacity duration-[140ms] hover:opacity-[0.72]">
                     <i class="fas fa-th-large"></i> Ver catálogo completo
                 </a>
             </div>
         </div>
 
         <!-- ══ Panel derecho: columnas de categorías ══ -->
-        <div class="mega-panel-wrap" id="mega-panel-wrap">
+        <div class="flex-1 min-w-0 flex flex-col overflow-hidden bg-white" id="mega-panel-wrap">
 
             <?php foreach ($_megaData as $rubro): ?>
-            <div id="mgp-<?= (int)$rubro['id'] ?>" class="mega-panel">
+            <div id="mgp-<?= (int)$rubro['id'] ?>" class="mega-panel flex-1 hidden flex-col animate-mega-panel-in min-h-0 [&.active]:flex">
 
                 <!-- Columnas de subcategorías -->
-                <div class="mega-panel-cols">
+                <div class="mega-panel-cols flex-1 flex overflow-x-auto overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#E5E7EB_transparent]">
                     <?php if (!empty($rubro['hijos'])): ?>
                         <?php foreach ($rubro['hijos'] as $sub): ?>
-                        <div class="mega-panel-col">
+                        <div class="group flex-1 min-w-[160px] max-w-[215px] pt-[1.2rem] px-4 pb-4 flex flex-col border-r border-[#F0F2F5] last:border-r-0">
 
                             <!-- Título: enlace a la subcategoría -->
                             <a href="<?= base_url('catalogo/'.esc($rubro['slug']).'/'.esc($sub['slug'])) ?>"
-                               class="mpc-title">
+                               class="font-inter text-[0.82rem] font-bold text-dark no-underline block mb-[0.6rem] whitespace-nowrap overflow-hidden text-ellipsis transition-colors duration-[130ms] leading-[1.3] hover:text-rojo">
                                 <?= esc($sub['nombre']) ?>
                             </a>
 
                             <!-- Imagen representativa (placeholder con ícono) -->
-                            <div class="mpc-img">
-                                <i class="<?= esc($sub['icono']) ?>"></i>
+                            <div class="w-full aspect-[1.75] bg-[#F5F7FA] border border-[#EEF0F3] rounded-lg flex items-center justify-center mb-3 shrink-0 overflow-hidden transition-colors duration-150 group-hover:bg-[#EEF1F8] group-hover:border-[#D8DCE6]">
+                                <i class="<?= esc($sub['icono']) ?> text-[1.65rem] text-[#C4C9D4] transition-colors duration-150 group-hover:text-[#9CA3AF]"></i>
                             </div>
 
                             <!-- Sub-subcategorías -->
                             <?php if (!empty($sub['hijos'])): ?>
-                            <ul class="mpc-list">
+                            <ul class="list-none p-0 m-0 flex-1">
                                 <?php foreach ($sub['hijos'] as $subsub): ?>
-                                <li>
-                                    <a href="<?= base_url('catalogo/'.esc($rubro['slug']).'/'.esc($sub['slug']).'/'.esc($subsub['slug'])) ?>">
+                                <li class="p-0 m-0">
+                                    <a href="<?= base_url('catalogo/'.esc($rubro['slug']).'/'.esc($sub['slug']).'/'.esc($subsub['slug'])) ?>"
+                                       class="block font-inter text-[0.76rem] text-[#6B7280] no-underline py-[3px] whitespace-nowrap overflow-hidden text-ellipsis transition-colors duration-[120ms] hover:text-dark before:content-['·'] before:mr-[5px] before:text-[#D1D5DB]">
                                         <?= esc($subsub['nombre']) ?>
                                     </a>
                                 </li>
@@ -900,18 +330,18 @@ $_megaData  = $_megaModel->getMegaMenu();
 
                             <!-- Ver todo de esta subcategoría -->
                             <a href="<?= base_url('catalogo/'.esc($rubro['slug']).'/'.esc($sub['slug'])) ?>"
-                               class="mpc-all">
-                                Ver todo <i class="fas fa-arrow-right"></i>
+                               class="inline-flex items-center gap-1 font-inter text-[0.73rem] font-semibold text-rojo no-underline mt-2 shrink-0 transition-[gap,color] duration-[140ms] hover:gap-[7px] hover:text-rojo-dark">
+                                Ver todo <i class="fas fa-arrow-right text-[0.57rem]"></i>
                             </a>
 
                         </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;color:#9CA3AF;">
-                            <div style="text-align:center;">
-                                <i class="<?= esc($rubro['icono']) ?>" style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>
+                        <div class="flex-1 flex items-center justify-center p-8 text-[#9CA3AF]">
+                            <div class="text-center">
+                                <i class="<?= esc($rubro['icono']) ?> block mb-2 text-[2rem]"></i>
                                 <a href="<?= base_url('catalogo/'.esc($rubro['slug'])) ?>"
-                                   style="font-family:'Inter',system-ui,sans-serif;font-size:.84rem;color:#FF0033;font-weight:600;text-decoration:none;">
+                                   class="font-inter text-[0.84rem] text-rojo font-semibold no-underline">
                                     Ver <?= esc($rubro['nombre']) ?> &rarr;
                                 </a>
                             </div>
@@ -920,15 +350,15 @@ $_megaData  = $_megaModel->getMegaMenu();
                 </div>
 
                 <!-- Footer: "Ver todo en Rubro" -->
-                <div class="mega-panel-footer">
-                    <span class="mega-panel-footer-title">
-                        <i class="<?= esc($rubro['icono']) ?>"></i>
+                <div class="shrink-0 py-[0.55rem] px-[1.1rem] border-t border-[#F0F2F5] bg-[#FAFBFC] flex items-center justify-between">
+                    <span class="font-inter text-[0.74rem] font-semibold text-[#9CA3AF] flex items-center gap-[6px]">
+                        <i class="<?= esc($rubro['icono']) ?> text-[0.68rem]"></i>
                         <?= esc($rubro['nombre']) ?>
                     </span>
                     <a href="<?= base_url('catalogo/'.esc($rubro['slug'])) ?>"
-                       class="mega-panel-footer-link">
+                       class="inline-flex items-center gap-[5px] font-inter text-[0.74rem] font-bold text-rojo no-underline transition-[gap] duration-[140ms] hover:gap-2">
                         Ver todo en <?= esc($rubro['nombre']) ?>
-                        <i class="fas fa-arrow-right"></i>
+                        <i class="fas fa-arrow-right text-[0.58rem]"></i>
                     </a>
                 </div>
 
@@ -936,9 +366,9 @@ $_megaData  = $_megaModel->getMegaMenu();
             <?php endforeach; ?>
 
             <!-- Placeholder inicial -->
-            <div id="mega-panel-placeholder" class="mega-panel-placeholder">
-                <i class="fas fa-layer-group"></i>
-                <span>Pasá el cursor por una categoría</span>
+            <div id="mega-panel-placeholder" class="flex-1 flex flex-col items-center justify-center gap-[10px] text-[#D1D5DB] font-inter">
+                <i class="fas fa-layer-group text-[2rem]"></i>
+                <span class="text-[0.82rem]">Pasá el cursor por una categoría</span>
             </div>
 
         </div><!-- /.mega-panel-wrap -->
@@ -946,7 +376,7 @@ $_megaData  = $_megaModel->getMegaMenu();
     </div><!-- /.mega-body -->
 
     <?php else: ?>
-    <div style="padding:2rem;color:#9CA3AF;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;">
+    <div class="p-8 text-[#9CA3AF] font-inter text-[0.9rem]">
         No hay categorías disponibles.
     </div>
     <?php endif; ?>

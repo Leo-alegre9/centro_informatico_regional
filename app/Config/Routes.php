@@ -55,16 +55,29 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('marcas/(:num)/editar',              'Admin\Marcas::actualizar/$1');
     $routes->post('marcas/(:num)/eliminar',            'Admin\Marcas::eliminar/$1');
 
+    // Fábricas
+    $routes->get('fabricas',                            'Admin\Fabricas::index');
+    $routes->get('fabricas/crear',                      'Admin\Fabricas::crear');
+    $routes->post('fabricas/crear',                     'Admin\Fabricas::guardar');
+    $routes->get('fabricas/(:num)/editar',               'Admin\Fabricas::editar/$1');
+    $routes->post('fabricas/(:num)/editar',              'Admin\Fabricas::actualizar/$1');
+    $routes->post('fabricas/(:num)/eliminar',            'Admin\Fabricas::eliminar/$1');
+
     // Configuración de precios
     $routes->get('configuracion',                      'Admin\Configuracion::index');
     $routes->post('configuracion/guardar',             'Admin\Configuracion::guardar');
 });
+
+$routes->get('promociones', 'Promociones::index');
 
 $routes->get('servicio-tecnico', 'ServicioTecnico::index');
 $routes->post('consultas/guardar', 'ConsultaServicio::guardar');
 
 $routes->get('contacto', 'Contacto::index');
 $routes->post('contacto', 'Contacto::enviar');
+
+$routes->get('politica-privacidad', 'Pages::politicaPrivacidad');
+$routes->get('condiciones-servicio', 'Pages::condicionesServicio');
 
 $routes->get('catalogo/buscar', 'Catalogo::buscar');
 $routes->get('catalogo/(:segment)/(:segment)/(:segment)', 'Catalogo::browse/$1/$2/$3');

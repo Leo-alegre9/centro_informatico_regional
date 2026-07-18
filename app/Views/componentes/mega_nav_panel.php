@@ -11,240 +11,67 @@ $isDark  = ($mnpTema !== 'light');
 $mnpId   = 'mnp-' . substr(md5(uniqid('', true)), 0, 8);
 
 if (empty($megaMenuData)) return;
+
+/* Clases Tailwind condicionadas al tema (dark/light) — el scoping por ID
+   ya no hace falta para el CSS (son utilidades), $mnpId se conserva solo
+   como hook de JS para poder tener varias instancias en la misma página. */
+$borderCol      = $isDark ? 'border-white/[0.07]' : 'border-[#e9ecef]';
+$chipBase       = $isDark
+    ? 'border-white/[0.12] bg-white/[0.04] text-white/55'
+    : 'border-[#dee2e6] bg-[#f8f9fa] text-gris';
+$chipHover      = $isDark
+    ? 'hover:text-white hover:bg-white/[0.09] hover:border-white/[0.22]'
+    : 'hover:text-dark hover:bg-[#f1f3f5] hover:border-[#adb5bd]';
+$titleColor     = $isDark ? 'text-white' : 'text-dark';
+$subHeaderColor = $isDark ? 'text-white/85' : 'text-dark';
+$subsubColor    = $isDark ? 'text-white/[0.42]' : 'text-gris';
+$accHdrColor    = $isDark ? 'text-white/80' : 'text-[#374151]';
+$accLinkBase    = $isDark
+    ? 'text-white/55 border-white/[0.07] bg-white/[0.02]'
+    : 'text-gris border-[#e9ecef] bg-black/[0.02]';
 ?>
 
-<style>
-#<?= $mnpId ?> {
-    border-radius: 16px;
-    overflow: hidden;
-    background: <?= $isDark ? '#111827' : '#fff' ?>;
-    <?= !$isDark ? 'border: 1.5px solid #e9ecef;' : '' ?>
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* ── Chips row (desktop) ── */
-#<?= $mnpId ?> .mnp-chips-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid <?= $isDark ? 'rgba(255,255,255,0.07)' : '#e9ecef' ?>;
-}
-#<?= $mnpId ?> .mnp-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 0.45rem 1.1rem;
-    border-radius: 50px;
-    font-size: 0.84rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1.5px solid <?= $isDark ? 'rgba(255,255,255,0.12)' : '#dee2e6' ?>;
-    background: <?= $isDark ? 'rgba(255,255,255,0.04)' : '#f8f9fa' ?>;
-    color: <?= $isDark ? 'rgba(255,255,255,0.55)' : '#6B7280' ?>;
-    transition: color .18s, background .18s, border-color .18s;
-    white-space: nowrap;
-    user-select: none;
-}
-#<?= $mnpId ?> .mnp-chip:hover {
-    color: <?= $isDark ? '#fff' : '#111827' ?>;
-    background: <?= $isDark ? 'rgba(255,255,255,0.09)' : '#f1f3f5' ?>;
-    border-color: <?= $isDark ? 'rgba(255,255,255,0.22)' : '#adb5bd' ?>;
-}
-#<?= $mnpId ?> .mnp-chip.active {
-    background: #FF0033;
-    border-color: #FF0033;
-    color: #fff;
-}
-#<?= $mnpId ?> .mnp-chip .mnp-arrow {
-    font-size: 0.65rem;
-    transition: transform .2s;
-    opacity: .7;
-}
-#<?= $mnpId ?> .mnp-chip.active .mnp-arrow {
-    transform: rotate(180deg);
-    opacity: 1;
-}
-
-/* ── Panel de subrubros (desktop) ── */
-#<?= $mnpId ?> .mnp-panel {
-    padding: 1.4rem 1.25rem 1.5rem;
-}
-#<?= $mnpId ?> .mnp-pane-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid <?= $isDark ? 'rgba(255,255,255,0.07)' : '#e9ecef' ?>;
-}
-#<?= $mnpId ?> .mnp-pane-title {
-    font-size: .9rem;
-    font-weight: 700;
-    color: <?= $isDark ? '#fff' : '#111827' ?>;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-#<?= $mnpId ?> .mnp-pane-title i { color: #FF0033; font-size: .82rem; }
-#<?= $mnpId ?> .mnp-ver-todo {
-    color: #FF0033;
-    font-size: .8rem;
-    font-weight: 700;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: gap .18s;
-}
-#<?= $mnpId ?> .mnp-ver-todo:hover { gap: 9px; }
-#<?= $mnpId ?> .mnp-subs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1.25rem 1.5rem;
-}
-#<?= $mnpId ?> .mnp-sub-header {
-    color: <?= $isDark ? 'rgba(255,255,255,0.85)' : '#111827' ?>;
-    font-size: .84rem;
-    font-weight: 700;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: .35rem;
-    transition: color .15s;
-}
-#<?= $mnpId ?> .mnp-sub-header:hover { color: #FF0033; }
-#<?= $mnpId ?> .mnp-sub-header i { font-size: .73rem; opacity: .6; flex-shrink: 0; }
-#<?= $mnpId ?> .mnp-subsub-link {
-    color: <?= $isDark ? 'rgba(255,255,255,0.42)' : '#6B7280' ?>;
-    font-size: .77rem;
-    text-decoration: none;
-    display: block;
-    padding: 2px 0 2px .1rem;
-    transition: color .15s;
-}
-#<?= $mnpId ?> .mnp-subsub-link:hover { color: #FF0033; }
-
-/* ── Accordion (mobile) — oculto en desktop ── */
-#<?= $mnpId ?> .mnp-accordion { display: none; }
-
-@media (max-width: 767px) {
-    #<?= $mnpId ?> .mnp-chips-row { display: none !important; }
-    #<?= $mnpId ?> .mnp-panel     { display: none !important; }
-    #<?= $mnpId ?> .mnp-accordion { display: block !important; }
-
-    #<?= $mnpId ?> .mnp-acc-item {
-        border-bottom: 1px solid <?= $isDark ? 'rgba(255,255,255,0.07)' : '#e9ecef' ?>;
-    }
-    #<?= $mnpId ?> .mnp-acc-item:last-child { border-bottom: none; }
-    #<?= $mnpId ?> .mnp-acc-hdr {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: .8rem 1rem;
-        cursor: pointer;
-        color: <?= $isDark ? 'rgba(255,255,255,0.8)' : '#374151' ?>;
-        font-size: .9rem;
-        font-weight: 700;
-        user-select: none;
-        transition: color .15s;
-    }
-    #<?= $mnpId ?> .mnp-acc-hdr:hover { color: #FF0033; }
-    #<?= $mnpId ?> .mnp-acc-hdr .mnp-acc-left { display: flex; align-items: center; gap: 8px; }
-    #<?= $mnpId ?> .mnp-acc-hdr .mnp-acc-arrow {
-        font-size: .68rem;
-        transition: transform .22s;
-        opacity: .5;
-    }
-    #<?= $mnpId ?> .mnp-acc-hdr.open .mnp-acc-arrow { transform: rotate(180deg); opacity: 1; }
-    #<?= $mnpId ?> .mnp-acc-body { display: none; padding: .4rem 1rem .9rem; }
-    #<?= $mnpId ?> .mnp-acc-body.open { display: block; }
-    #<?= $mnpId ?> .mnp-acc-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: .6rem;
-        margin-bottom: .6rem;
-    }
-    #<?= $mnpId ?> .mnp-acc-link {
-        color: <?= $isDark ? 'rgba(255,255,255,0.55)' : '#6B7280' ?>;
-        font-size: .82rem;
-        font-weight: 600;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: .4rem .6rem;
-        border-radius: 8px;
-        border: 1px solid <?= $isDark ? 'rgba(255,255,255,0.07)' : '#e9ecef' ?>;
-        background: <?= $isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)' ?>;
-        transition: color .15s, border-color .15s, background .15s;
-    }
-    #<?= $mnpId ?> .mnp-acc-link:hover {
-        color: #FF0033;
-        border-color: rgba(255,0,51,.25);
-        background: rgba(255,0,51,.04);
-    }
-    #<?= $mnpId ?> .mnp-acc-link i { font-size: .7rem; flex-shrink: 0; }
-    #<?= $mnpId ?> .mnp-acc-ver-todo {
-        color: #FF0033;
-        font-size: .79rem;
-        font-weight: 700;
-        text-decoration: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-        transition: gap .18s;
-        margin-top: .25rem;
-    }
-    #<?= $mnpId ?> .mnp-acc-ver-todo:hover { gap: 9px; }
-}
-</style>
-
-<div id="<?= $mnpId ?>">
+<div id="<?= $mnpId ?>" class="rounded-2xl overflow-hidden max-w-[1200px] mx-auto <?= $isDark ? 'bg-dark' : 'bg-white border-[1.5px] border-[#e9ecef]' ?>">
 
     <!-- ── Fila de chips (desktop) ── -->
-    <div class="mnp-chips-row">
+    <div class="mnp-chips-row hidden md:flex flex-wrap justify-center items-center gap-2 px-5 py-4 border-b <?= $borderCol ?>">
         <?php foreach ($megaMenuData as $rubro): ?>
-        <button type="button" class="mnp-chip"
+        <button type="button"
+                class="mnp-chip inline-flex items-center gap-[7px] px-[1.1rem] py-[0.45rem] rounded-full text-[0.84rem] font-semibold cursor-pointer border-[1.5px] whitespace-nowrap select-none transition-colors duration-[180ms] <?= $chipBase ?> <?= $chipHover ?>"
                 data-pane="<?= $mnpId ?>-pane-<?= (int) $rubro['id'] ?>">
             <i class="<?= esc($rubro['icono']) ?>"></i>
             <?= esc($rubro['nombre']) ?>
-            <i class="fas fa-chevron-down mnp-arrow"></i>
+            <i class="fas fa-chevron-down mnp-arrow text-[0.65rem] transition-transform duration-200 opacity-70"></i>
         </button>
         <?php endforeach; ?>
     </div>
 
     <!-- ── Panel de contenido (desktop) — oculto por defecto ── -->
-    <div class="mnp-panel" id="<?= $mnpId ?>-panel" style="display:none;">
+    <div class="mnp-panel hidden pt-[1.4rem] px-5 pb-6" id="<?= $mnpId ?>-panel">
         <?php foreach ($megaMenuData as $rubro): ?>
-        <div id="<?= $mnpId ?>-pane-<?= (int) $rubro['id'] ?>" style="display:none;">
-            <div class="mnp-pane-header">
-                <span class="mnp-pane-title">
-                    <i class="<?= esc($rubro['icono']) ?>"></i>
+        <div id="<?= $mnpId ?>-pane-<?= (int) $rubro['id'] ?>" class="hidden">
+            <div class="flex items-center justify-between pb-3 mb-4 border-b <?= $borderCol ?>">
+                <span class="text-[0.9rem] font-bold flex items-center gap-[7px] <?= $titleColor ?>">
+                    <i class="<?= esc($rubro['icono']) ?> text-rojo text-[0.82rem]"></i>
                     <?= esc($rubro['nombre']) ?>
                 </span>
-                <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>" class="mnp-ver-todo">
+                <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>"
+                   class="text-rojo text-[0.8rem] font-bold no-underline inline-flex items-center gap-[5px] transition-[gap] duration-[180ms] hover:gap-[9px]">
                     Ver todo <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
             <?php if (!empty($rubro['hijos'])): ?>
-            <div class="mnp-subs-grid">
+            <div class="grid gap-x-6 gap-y-5 grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
                 <?php foreach ($rubro['hijos'] as $sub): ?>
                 <div>
                     <a href="<?= base_url('catalogo/' . esc($rubro['slug']) . '/' . esc($sub['slug'])) ?>"
-                       class="mnp-sub-header">
-                        <i class="<?= esc($sub['icono']) ?>"></i>
+                       class="flex items-center gap-[6px] mb-[0.35rem] text-[0.84rem] font-bold no-underline transition-colors duration-150 <?= $subHeaderColor ?> hover:text-rojo">
+                        <i class="<?= esc($sub['icono']) ?> text-[0.73rem] opacity-60 shrink-0"></i>
                         <?= esc($sub['nombre']) ?>
                     </a>
                     <?php foreach ($sub['hijos'] as $subsub): ?>
                     <a href="<?= base_url('catalogo/' . esc($rubro['slug']) . '/' . esc($sub['slug']) . '/' . esc($subsub['slug'])) ?>"
-                       class="mnp-subsub-link">
+                       class="block text-[0.77rem] no-underline py-[2px] pl-[0.1rem] transition-colors duration-150 <?= $subsubColor ?> hover:text-rojo">
                         <?= esc($subsub['nombre']) ?>
                     </a>
                     <?php endforeach; ?>
@@ -252,7 +79,8 @@ if (empty($megaMenuData)) return;
                 <?php endforeach; ?>
             </div>
             <?php else: ?>
-            <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>" class="mnp-ver-todo">
+            <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>"
+               class="text-rojo text-[0.8rem] font-bold no-underline inline-flex items-center gap-[5px] transition-[gap] duration-[180ms] hover:gap-[9px]">
                 <i class="<?= esc($rubro['icono']) ?>"></i>
                 Explorar <?= esc($rubro['nombre']) ?> <i class="fas fa-arrow-right"></i>
             </a>
@@ -262,29 +90,30 @@ if (empty($megaMenuData)) return;
     </div>
 
     <!-- ── Acordeón (mobile) ── -->
-    <div class="mnp-accordion">
+    <div class="mnp-accordion block md:hidden">
         <?php foreach ($megaMenuData as $rubro): ?>
-        <div class="mnp-acc-item">
-            <div class="mnp-acc-hdr" role="button" tabindex="0">
-                <span class="mnp-acc-left">
+        <div class="mnp-acc-item border-b last:border-b-0 <?= $borderCol ?>">
+            <div class="mnp-acc-hdr flex items-center justify-between px-4 py-[0.8rem] cursor-pointer text-[0.9rem] font-bold select-none transition-colors duration-150 <?= $accHdrColor ?> hover:text-rojo" role="button" tabindex="0">
+                <span class="mnp-acc-left flex items-center gap-2">
                     <i class="<?= esc($rubro['icono']) ?>"></i>
                     <?= esc($rubro['nombre']) ?>
                 </span>
-                <i class="fas fa-chevron-down mnp-acc-arrow"></i>
+                <i class="fas fa-chevron-down mnp-acc-arrow text-[0.68rem] transition-transform duration-[220ms] opacity-50"></i>
             </div>
-            <div class="mnp-acc-body">
+            <div class="mnp-acc-body hidden pt-[0.4rem] px-4 pb-[0.9rem]">
                 <?php if (!empty($rubro['hijos'])): ?>
-                <div class="mnp-acc-grid">
+                <div class="grid grid-cols-2 gap-[0.6rem] mb-[0.6rem]">
                     <?php foreach ($rubro['hijos'] as $sub): ?>
                     <a href="<?= base_url('catalogo/' . esc($rubro['slug']) . '/' . esc($sub['slug'])) ?>"
-                       class="mnp-acc-link">
-                        <i class="<?= esc($sub['icono']) ?>"></i>
+                       class="flex items-center gap-[6px] px-[0.6rem] py-[0.4rem] rounded-lg border text-[0.82rem] font-semibold no-underline transition-colors duration-150 <?= $accLinkBase ?> hover:text-rojo hover:border-[rgba(255,0,51,0.25)] hover:bg-[rgba(255,0,51,0.04)]">
+                        <i class="<?= esc($sub['icono']) ?> text-[0.7rem] shrink-0"></i>
                         <?= esc($sub['nombre']) ?>
                     </a>
                     <?php endforeach; ?>
                 </div>
                 <?php endif; ?>
-                <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>" class="mnp-acc-ver-todo">
+                <a href="<?= base_url('catalogo/' . esc($rubro['slug'])) ?>"
+                   class="text-rojo text-[0.79rem] font-bold no-underline flex justify-center items-center gap-[5px] transition-[gap] duration-[180ms] hover:gap-[9px] mt-1">
                     Ver todo en <?= esc($rubro['nombre']) ?> <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -303,6 +132,20 @@ if (empty($megaMenuData)) return;
     var chips     = wrap.querySelectorAll('.mnp-chip');
     var activeId  = null; // ID del pane activo
 
+    var CHIP_ACTIVE_CLASSES = ['!bg-rojo', '!border-rojo', '!text-white'];
+    var ARROW_ACTIVE_CLASSES = ['!rotate-180', '!opacity-100'];
+
+    function setChipActive(chip, active) {
+        var arrow = chip.querySelector('.mnp-arrow');
+        if (active) {
+            chip.classList.add.apply(chip.classList, CHIP_ACTIVE_CLASSES);
+            if (arrow) arrow.classList.add.apply(arrow.classList, ARROW_ACTIVE_CLASSES);
+        } else {
+            chip.classList.remove.apply(chip.classList, CHIP_ACTIVE_CLASSES);
+            if (arrow) arrow.classList.remove.apply(arrow.classList, ARROW_ACTIVE_CLASSES);
+        }
+    }
+
     /* ── Desktop: chip → mostrar/ocultar panel ── */
     chips.forEach(function (chip) {
         chip.addEventListener('click', function () {
@@ -312,20 +155,20 @@ if (empty($megaMenuData)) return;
             /* Ocultar pane anterior */
             if (activeId) {
                 var prev = document.getElementById(activeId);
-                if (prev) prev.style.display = 'none';
+                if (prev) prev.classList.add('hidden');
             }
-            chips.forEach(function (c) { c.classList.remove('active'); });
+            chips.forEach(function (c) { setChipActive(c, false); });
 
             if (same) {
                 /* Mismo chip: cerrar todo */
-                panel.style.display = 'none';
+                panel.classList.add('hidden');
                 activeId = null;
             } else {
                 /* Chip nuevo: mostrar pane */
                 var pane = document.getElementById(paneId);
-                if (pane) pane.style.display = 'block';
-                panel.style.display = 'block';
-                chip.classList.add('active');
+                if (pane) pane.classList.remove('hidden');
+                panel.classList.remove('hidden');
+                setChipActive(chip, true);
                 activeId = paneId;
             }
         });
@@ -335,12 +178,13 @@ if (empty($megaMenuData)) return;
     wrap.querySelectorAll('.mnp-acc-hdr').forEach(function (hdr) {
         function toggle() {
             var body   = hdr.nextElementSibling;
-            var isOpen = body.classList.contains('open');
-            wrap.querySelectorAll('.mnp-acc-body').forEach(function (b) { b.classList.remove('open'); });
-            wrap.querySelectorAll('.mnp-acc-hdr').forEach(function (h) { h.classList.remove('open'); });
+            var arrow  = hdr.querySelector('.mnp-acc-arrow');
+            var isOpen = !body.classList.contains('hidden');
+            wrap.querySelectorAll('.mnp-acc-body').forEach(function (b) { b.classList.add('hidden'); });
+            wrap.querySelectorAll('.mnp-acc-arrow').forEach(function (a) { a.classList.remove('!rotate-180', '!opacity-100'); });
             if (!isOpen) {
-                body.classList.add('open');
-                hdr.classList.add('open');
+                body.classList.remove('hidden');
+                if (arrow) arrow.classList.add('!rotate-180', '!opacity-100');
             }
         }
         hdr.addEventListener('click', toggle);

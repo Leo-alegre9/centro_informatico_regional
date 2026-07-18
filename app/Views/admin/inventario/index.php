@@ -1,144 +1,24 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .inv-form-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 1.75rem;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        margin-bottom: 1.75rem;
-    }
-    .inv-form-card .form-label {
-        font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem;
-    }
-    .inv-form-card .form-control,
-    .inv-form-card .form-select {
-        border: 1.5px solid #e5e7eb; border-radius: 9px;
-        padding: 0.6rem 0.95rem; font-size: 0.92rem; color: #111827;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .inv-form-card .form-control:focus,
-    .inv-form-card .form-select:focus {
-        border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.1); outline: none;
-    }
-    .btn-buscar {
-        background: #FF0033; color: #fff; border: none;
-        padding: 0.65rem 1.75rem; border-radius: 50px;
-        font-size: 0.92rem; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        transition: background 0.2s; cursor: pointer;
-    }
-    .btn-buscar:hover { background: #cc0028; }
-    .btn-limpiar {
-        color: #6B7280; text-decoration: none;
-        padding: 0.65rem 1.2rem; border-radius: 50px;
-        font-size: 0.92rem; font-weight: 600;
-        border: 1.5px solid #e5e7eb; display: inline-flex;
-        align-items: center; gap: 0.4rem; transition: background 0.15s;
-    }
-    .btn-limpiar:hover { background: #f3f4f6; color: #374151; }
+<?php
+$inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark transition-colors focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none';
+?>
 
-    .page-header { margin-bottom: 1.75rem; }
-    .page-header h2 { font-size: 1.4rem; font-weight: 700; color: #111827; margin-bottom: 0.2rem; }
-    .page-header p { color: #6B7280; font-size: 0.92rem; margin: 0; }
-
-    .results-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .results-header {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #f0f0f0;
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 0.5rem;
-    }
-    .results-header .results-title {
-        font-size: 0.92rem; font-weight: 700; color: #111827;
-    }
-    .results-header .results-count {
-        background: rgba(255,0,51,0.08); color: #FF0033;
-        font-size: 0.78rem; font-weight: 700;
-        padding: 0.2rem 0.65rem; border-radius: 50px;
-    }
-    .inv-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
-    .inv-table th {
-        background: #f9fafb;
-        color: #6B7280; font-size: 0.72rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.8px;
-        padding: 0.7rem 1.2rem; border-bottom: 1px solid #f0f0f0;
-        white-space: nowrap; text-align: left;
-    }
-    .inv-table td {
-        padding: 0.85rem 1.2rem;
-        border-bottom: 1px solid #f8f9fa;
-        color: #374151; vertical-align: middle;
-    }
-    .inv-table tr:last-child td { border-bottom: none; }
-    .inv-table tr:hover td { background: #fafafa; }
-    .inv-nombre { font-weight: 700; color: #111827; }
-    .inv-modelo { font-size: 0.78rem; color: #9CA3AF; }
-    .inv-categoria { font-size: 0.78rem; color: #6B7280; }
-    .inv-marca { font-size: 0.82rem; color: #6B7280; }
-    .inv-precio { font-weight: 600; color: #111827; font-size: 0.85rem; }
-    .badge-ubicacion {
-        display: inline-flex; align-items: center; gap: 5px;
-        padding: 0.3rem 0.75rem; border-radius: 50px;
-        font-size: 0.75rem; font-weight: 700; white-space: nowrap;
-    }
-    .ubic-negocio    { background: rgba(16,185,129,0.1);  color: #065f46; }
-    .ubic-deposito-a { background: rgba(59,130,246,0.1);  color: #1e40af; }
-    .ubic-deposito-b { background: rgba(245,158,11,0.1);  color: #92400e; }
-    .ubic-deposito-c { background: rgba(139,92,246,0.1);  color: #5b21b6; }
-    .ubic-sin        { background: rgba(156,163,175,0.15); color: #6B7280; }
-
-    .estado-badge {
-        display: inline-flex; align-items: center; gap: 4px;
-        padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.73rem; font-weight: 700;
-    }
-    .estado-activo   { background: rgba(16,185,129,0.1); color: #065f46; }
-    .estado-inactivo { background: rgba(156,163,175,0.15); color: #6B7280; }
-
-    .empty-state {
-        text-align: center; padding: 4rem 2rem;
-    }
-    .empty-state i { font-size: 3rem; color: #dee2e6; margin-bottom: 1rem; display: block; }
-    .empty-state h5 { font-size: 1rem; font-weight: 700; color: #374151; margin-bottom: 0.4rem; }
-    .empty-state p { font-size: 0.88rem; color: #9CA3AF; margin: 0; }
-
-    .estado-inicial {
-        text-align: center; padding: 4rem 2rem;
-    }
-    .estado-inicial i { font-size: 3rem; color: #dee2e6; margin-bottom: 1rem; display: block; }
-    .estado-inicial p { font-size: 0.9rem; color: #9CA3AF; margin: 0; }
-
-    .btn-editar-prod {
-        display: inline-flex; align-items: center; gap: 4px;
-        color: #6B7280; font-size: 0.78rem; text-decoration: none;
-        padding: 0.25rem 0.6rem; border: 1px solid #e5e7eb;
-        border-radius: 6px; transition: border-color 0.15s, color 0.15s;
-    }
-    .btn-editar-prod:hover { border-color: #FF0033; color: #FF0033; }
-</style>
-
-<div class="page-header">
-    <h2><i class="fas fa-warehouse me-2" style="color:#FF0033;font-size:1.1rem;"></i>Inventario por ubicación</h2>
-    <p>Buscá productos según el lugar donde se encuentran. Solo visible para el administrador.</p>
+<div class="mb-7">
+    <h2 class="text-[1.4rem] font-bold text-dark mb-[0.2rem]"><i class="fas fa-warehouse mr-2 text-rojo text-[1.1rem]"></i>Inventario por ubicación</h2>
+    <p class="text-gray-500 text-[0.92rem] m-0">Buscá productos según el lugar donde se encuentran. Solo visible para el administrador.</p>
 </div>
 
 <!-- Formulario de búsqueda -->
-<div class="inv-form-card">
+<div class="bg-white border border-gray-200 rounded-[14px] p-7 shadow-[0_1px_4px_rgba(0,0,0,0.05)] mb-7">
     <form method="GET" action="<?= base_url('admin/inventario') ?>">
-        <div class="row g-3 align-items-end">
-            <div class="col-12 col-md-4">
-                <label for="ubicacion" class="form-label">
-                    <i class="fas fa-map-marker-alt me-1" style="color:#FF0033;"></i>Ubicación
+        <div class="flex flex-wrap gap-4 items-end">
+            <div class="w-full md:w-1/3">
+                <label for="ubicacion" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">
+                    <i class="fas fa-map-marker-alt mr-1 text-rojo"></i>Ubicación
                 </label>
-                <select id="ubicacion" name="ubicacion" class="form-select">
+                <select id="ubicacion" name="ubicacion" class="<?= $inputCls ?>">
                     <option value="">— Todas las ubicaciones —</option>
                     <option value="En el negocio"        <?= $ubicacion === 'En el negocio'        ? 'selected' : '' ?>>En el negocio</option>
                     <option value="Deposito nuevo local"  <?= $ubicacion === 'Deposito nuevo local'  ? 'selected' : '' ?>>Deposito nuevo local</option>
@@ -146,21 +26,21 @@
                     <option value="Deposito casa"        <?= $ubicacion === 'Deposito casa'        ? 'selected' : '' ?>>Deposito casa</option>
                 </select>
             </div>
-            <div class="col-12 col-md-5">
-                <label for="q" class="form-label">
-                    <i class="fas fa-search me-1" style="color:#FF0033;"></i>Buscar producto
+            <div class="w-full md:w-5/12">
+                <label for="q" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">
+                    <i class="fas fa-search mr-1 text-rojo"></i>Buscar producto
                 </label>
-                <input type="text" id="q" name="q" class="form-control"
+                <input type="text" id="q" name="q" class="<?= $inputCls ?>"
                        value="<?= esc($q) ?>"
                        placeholder="Nombre, modelo, marca...">
             </div>
-            <div class="col-12 col-md-3">
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn-buscar">
+            <div class="w-full md:w-1/4">
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-rojo hover:bg-rojo-dark text-white px-7 py-[0.65rem] rounded-full text-[0.92rem] font-semibold inline-flex items-center gap-[0.4rem] transition-colors cursor-pointer">
                         <i class="fas fa-search"></i> Buscar
                     </button>
                     <?php if ($buscando): ?>
-                    <a href="<?= base_url('admin/inventario') ?>" class="btn-limpiar">
+                    <a href="<?= base_url('admin/inventario') ?>" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 no-underline px-[1.2rem] py-[0.65rem] rounded-full text-[0.92rem] font-semibold border-[1.5px] border-gray-200 inline-flex items-center gap-[0.4rem] transition-colors">
                         <i class="fas fa-times"></i> Limpiar
                     </a>
                     <?php endif; ?>
@@ -171,22 +51,22 @@
 </div>
 
 <!-- Resultados -->
-<div class="results-card">
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <?php if (!$buscando): ?>
-        <div class="estado-inicial">
-            <i class="fas fa-warehouse"></i>
-            <p>Seleccioná una ubicación o escribí el nombre de un producto para buscar.</p>
+        <div class="text-center py-16 px-8">
+            <i class="fas fa-warehouse text-5xl text-gray-200 mb-4 block"></i>
+            <p class="text-[0.9rem] text-gray-400 m-0">Seleccioná una ubicación o escribí el nombre de un producto para buscar.</p>
         </div>
     <?php elseif (empty($productos)): ?>
-        <div class="empty-state">
-            <i class="fas fa-box-open"></i>
-            <h5>Sin resultados</h5>
-            <p>No se encontraron productos que coincidan con los filtros seleccionados.</p>
+        <div class="text-center py-16 px-8">
+            <i class="fas fa-box-open text-5xl text-gray-200 mb-4 block"></i>
+            <h5 class="text-base font-bold text-gray-700 mb-[0.4rem]">Sin resultados</h5>
+            <p class="text-[0.88rem] text-gray-400 m-0">No se encontraron productos que coincidan con los filtros seleccionados.</p>
         </div>
     <?php else: ?>
-        <div class="results-header">
-            <span class="results-title">
-                <i class="fas fa-list me-1" style="color:#FF0033;"></i>
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
+            <span class="text-[0.92rem] font-bold text-dark">
+                <i class="fas fa-list mr-1 text-rojo"></i>
                 <?php if ($ubicacion): ?>
                     Productos en <strong><?= esc($ubicacion) ?></strong>
                     <?php if ($q): ?> que coinciden con <strong>"<?= esc($q) ?>"</strong><?php endif; ?>
@@ -194,19 +74,19 @@
                     Resultados para <strong>"<?= esc($q) ?>"</strong>
                 <?php endif; ?>
             </span>
-            <span class="results-count"><?= count($productos) ?> producto<?= count($productos) !== 1 ? 's' : '' ?></span>
+            <span class="bg-rojo/10 text-rojo text-[0.78rem] font-bold px-[0.65rem] py-[0.2rem] rounded-full"><?= count($productos) ?> producto<?= count($productos) !== 1 ? 's' : '' ?></span>
         </div>
-        <div style="overflow-x:auto;">
-            <table class="inv-table">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-[0.87rem]">
                 <thead>
                     <tr>
-                        <th>Producto</th>
-                        <th>Categoría</th>
-                        <th>Marca</th>
-                        <th>Precio</th>
-                        <th>Ubicación</th>
-                        <th>Estado</th>
-                        <th></th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Producto</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Categoría</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Marca</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Precio</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Ubicación</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left">Estado</th>
+                        <th class="bg-gray-50 text-gray-500 text-[0.72rem] font-bold uppercase tracking-[0.8px] px-[1.2rem] py-[0.7rem] border-b border-gray-100 whitespace-nowrap text-left"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -214,11 +94,11 @@
                     <?php
                         $ubic = $p['ubicacion'] ?? '';
                         $ubicClase = match($ubic) {
-                            'En el negocio'        => 'ubic-negocio',
-                            'Deposito nuevo local'  => 'ubic-deposito-a',
-                            'Deposito quincho'     => 'ubic-deposito-b',
-                            'Deposito casa'        => 'ubic-deposito-c',
-                            default                => 'ubic-sin',
+                            'En el negocio'        => 'bg-emerald-500/10 text-emerald-800',
+                            'Deposito nuevo local'  => 'bg-blue-500/10 text-blue-800',
+                            'Deposito quincho'     => 'bg-amber-500/10 text-amber-800',
+                            'Deposito casa'        => 'bg-violet-500/10 text-violet-800',
+                            default                => 'bg-gray-400/15 text-gray-500',
                         };
                         $ubicIcono = match($ubic) {
                             'En el negocio'        => 'fas fa-store',
@@ -228,31 +108,31 @@
                             default                => 'fas fa-question-circle',
                         };
                     ?>
-                    <tr>
-                        <td>
-                            <div class="inv-nombre"><?= esc($p['nombre']) ?></div>
+                    <tr class="border-b border-gray-50 last:border-b-0 hover:bg-gray-50">
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle">
+                            <div class="font-bold text-dark"><?= esc($p['nombre']) ?></div>
                             <?php if (!empty($p['modelo'])): ?>
-                                <div class="inv-modelo"><?= esc($p['modelo']) ?></div>
+                                <div class="text-[0.78rem] text-gray-400"><?= esc($p['modelo']) ?></div>
                             <?php endif; ?>
                         </td>
-                        <td><span class="inv-categoria"><?= esc($p['categoria_nombre'] ?? '—') ?></span></td>
-                        <td><span class="inv-marca"><?= esc($p['marca_nombre'] ?? '—') ?></span></td>
-                        <td><span class="inv-precio"><?= esc($p['precio_texto'] ?? 'Consultar') ?></span></td>
-                        <td>
-                            <span class="badge-ubicacion <?= $ubicClase ?>">
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle"><span class="text-[0.78rem] text-gray-500"><?= esc($p['categoria_nombre'] ?? '—') ?></span></td>
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle"><span class="text-[0.82rem] text-gray-500"><?= esc($p['marca_nombre'] ?? '—') ?></span></td>
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle"><span class="font-semibold text-dark text-[0.85rem]"><?= esc($p['precio_texto'] ?? 'Consultar') ?></span></td>
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle">
+                            <span class="inline-flex items-center gap-[5px] px-3 py-[0.3rem] rounded-full text-[0.75rem] font-bold whitespace-nowrap <?= $ubicClase ?>">
                                 <i class="<?= $ubicIcono ?>"></i>
                                 <?= $ubic !== '' ? esc($ubic) : 'Sin asignar' ?>
                             </span>
                         </td>
-                        <td>
-                            <span class="estado-badge <?= $p['activo'] ? 'estado-activo' : 'estado-inactivo' ?>">
-                                <i class="fas fa-circle" style="font-size:0.5rem;"></i>
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle">
+                            <span class="inline-flex items-center gap-1 px-[0.6rem] py-[0.2rem] rounded-full text-[0.73rem] font-bold <?= $p['activo'] ? 'bg-emerald-500/10 text-emerald-800' : 'bg-gray-400/15 text-gray-500' ?>">
+                                <i class="fas fa-circle text-[0.5rem]"></i>
                                 <?= $p['activo'] ? 'Activo' : 'Inactivo' ?>
                             </span>
                         </td>
-                        <td>
+                        <td class="px-[1.2rem] py-[0.85rem] align-middle">
                             <a href="<?= base_url('admin/productos/' . $p['id'] . '/editar') ?>"
-                               class="btn-editar-prod">
+                               class="inline-flex items-center gap-1 text-gray-500 text-[0.78rem] no-underline px-[0.6rem] py-1 border border-gray-200 rounded-md transition-colors hover:border-rojo hover:text-rojo">
                                 <i class="fas fa-pen"></i> Editar
                             </a>
                         </td>

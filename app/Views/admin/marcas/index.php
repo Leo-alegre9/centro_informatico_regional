@@ -1,138 +1,92 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .page-header-row {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
-    }
-    .page-header-row h2 { font-size: 1.4rem; font-weight: 700; color: #111827; margin: 0; }
-    .btn-rojo {
-        background: #FF0033; color: #fff; border: none;
-        padding: 0.55rem 1.25rem; border-radius: 50px;
-        font-size: 0.9rem; font-weight: 600; text-decoration: none;
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        transition: background 0.2s; white-space: nowrap;
-    }
-    .btn-rojo:hover { background: #cc0028; color: #fff; }
-    .filtros-bar {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        padding: 1rem 1.25rem; margin-bottom: 1.25rem;
-        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-    }
-    .filtros-bar label { font-size: 0.85rem; font-weight: 600; color: #374151; margin: 0; }
-    .filtros-bar input {
-        border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 0.4rem 0.9rem;
-        font-size: 0.88rem; color: #374151; background: #f9fafb; outline: none;
-        transition: border-color 0.2s; flex: 1; min-width: 180px;
-    }
-    .filtros-bar input:focus { border-color: #FF0033; }
-    .count-badge {
-        background: rgba(255,0,51,0.08); color: #FF0033; border-radius: 50px;
-        padding: 0.2rem 0.7rem; font-size: 0.8rem; font-weight: 600; margin-left: auto;
-    }
-    .tabla-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .table { margin: 0; font-size: 0.88rem; }
-    .table thead th {
-        background: #f9fafb; color: #374151; font-weight: 700;
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
-        border-bottom: 2px solid #e5e7eb; padding: 0.85rem 1rem; white-space: nowrap;
-    }
-    .table tbody td { vertical-align: middle; padding: 0.75rem 1rem; border-color: #f3f4f6; color: #374151; }
-    .table tbody tr:hover { background: #fafafa; }
-    .badge-activo   { background: rgba(16,185,129,0.12); color: #059669; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .badge-inactivo { background: rgba(239,68,68,0.1);  color: #DC2626;  padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .btn-accion { padding: 0.3rem 0.7rem; font-size: 0.78rem; border-radius: 7px; font-weight: 600; }
-    .marca-logo {
-        width: 40px; height: 40px; border-radius: 8px; object-fit: contain;
-        border: 1px solid #e5e7eb; background: #f9fafb; padding: 3px;
-    }
-    .logo-placeholder {
-        width: 40px; height: 40px; border-radius: 8px; background: #f3f4f6;
-        display: flex; align-items: center; justify-content: center; color: #d1d5db; font-size: 1.1rem;
-    }
-    .empty-state { text-align: center; padding: 4rem 2rem; color: #9CA3AF; }
-    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; color: #D1D5DB; }
-    .empty-state h5 { color: #374151; font-weight: 600; margin-bottom: 0.5rem; }
-</style>
+<?php
+$badgeActivo   = 'bg-emerald-500/10 text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold';
+$badgeInactivo = 'bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold';
+$btnAccionBase = 'inline-flex items-center justify-center rounded-[7px] px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold transition-colors border';
+$btnSecondary  = $btnAccionBase . ' border-gray-300 text-gray-600 bg-white hover:bg-gray-100';
+$btnDanger     = $btnAccionBase . ' border-red-400 text-red-600 bg-white hover:bg-red-50';
+$btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounded-full text-sm font-semibold no-underline inline-flex items-center gap-[0.4rem] transition-colors whitespace-nowrap';
+?>
 
-<div class="page-header-row">
-    <h2><i class="fas fa-tag me-2" style="color:#FF0033;font-size:1.1rem;"></i>Gestión de Marcas</h2>
-    <a href="<?= base_url('admin/marcas/crear') ?>" class="btn-rojo">
+<div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <h2 class="text-[1.4rem] font-bold text-dark m-0"><i class="fas fa-tag mr-2 text-rojo text-[1.1rem]"></i>Gestión de Marcas</h2>
+    <a href="<?= base_url('admin/marcas/crear') ?>" class="<?= $btnRojo ?>">
         <i class="fas fa-plus"></i> Nueva Marca
     </a>
 </div>
 
 <?php if ($success = session()->getFlashdata('success')): ?>
-<div class="alert alert-success d-flex align-items-center gap-2 mb-3" style="border-radius:10px;">
+<div class="bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-[10px] flex items-center gap-2 mb-4 px-4 py-3 text-sm">
     <i class="fas fa-check-circle"></i> <?= esc($success) ?>
 </div>
 <?php endif; ?>
 
-<div class="filtros-bar">
-    <label for="filtroBuscar"><i class="fas fa-search me-1"></i>Buscar:</label>
-    <input type="text" id="filtroBuscar" placeholder="Nombre o slug..." oninput="filtrarTabla(this.value)">
-    <span class="count-badge" id="countVisible"><?= count($marcas) ?> marcas</span>
+<div class="bg-white border border-gray-200 rounded-xl px-5 py-4 mb-5 flex items-center gap-4 flex-wrap">
+    <label for="filtroBuscar" class="text-[0.85rem] font-semibold text-gray-700 m-0"><i class="fas fa-search mr-1"></i>Buscar:</label>
+    <input type="text" id="filtroBuscar"
+           class="border-[1.5px] border-gray-200 rounded-lg px-[0.9rem] py-[0.4rem] text-[0.88rem] text-gray-700 bg-gray-50 outline-none transition-colors flex-1 min-w-[180px] focus:border-rojo"
+           placeholder="Nombre o slug..." oninput="filtrarTabla(this.value)">
+    <span class="bg-rojo/10 text-rojo rounded-full px-[0.7rem] py-[0.2rem] text-[0.8rem] font-semibold ml-auto" id="countVisible"><?= count($marcas) ?> marcas</span>
 </div>
 
 <?php if (!empty($marcas)): ?>
-<div class="tabla-card">
-    <div class="table-responsive">
-        <table class="table" id="tablaMarcas">
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="overflow-x-auto">
+        <table class="w-full text-[0.88rem] border-collapse" id="tablaMarcas">
             <thead>
                 <tr>
-                    <th>Logo</th>
-                    <th>Nombre</th>
-                    <th>Slug</th>
-                    <th>Sitio web</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Logo</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Slug</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Sitio web</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Estado</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($marcas as $marca): ?>
-                <tr data-busqueda="<?= esc(strtolower($marca['nombre'] . ' ' . $marca['slug'])) ?>">
-                    <td>
+                <tr class="border-b border-gray-100 hover:bg-gray-50" data-busqueda="<?= esc(strtolower($marca['nombre'] . ' ' . $marca['slug'])) ?>">
+                    <td class="align-middle px-4 py-3">
                         <?php if (!empty($marca['logo_url'])): ?>
-                            <img src="<?= esc($marca['logo_url']) ?>" alt="<?= esc($marca['nombre']) ?>" class="marca-logo"
+                            <img src="<?= esc($marca['logo_url']) ?>" alt="<?= esc($marca['nombre']) ?>"
+                                 class="w-10 h-10 rounded-lg object-contain border border-gray-200 bg-gray-50 p-[3px]"
                                  onerror="this.style.display='none'">
                         <?php else: ?>
-                            <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-[1.1rem]"><i class="fas fa-image"></i></div>
                         <?php endif; ?>
                     </td>
-                    <td><strong style="color:#111827;"><?= esc($marca['nombre']) ?></strong></td>
-                    <td><code style="font-size:0.78rem;color:#374151;"><?= esc($marca['slug']) ?></code></td>
-                    <td>
+                    <td class="align-middle px-4 py-3"><strong class="text-dark"><?= esc($marca['nombre']) ?></strong></td>
+                    <td class="align-middle px-4 py-3"><code class="text-[0.78rem] text-gray-700"><?= esc($marca['slug']) ?></code></td>
+                    <td class="align-middle px-4 py-3">
                         <?php if (!empty($marca['sitio_web'])): ?>
                             <a href="<?= esc($marca['sitio_web']) ?>" target="_blank"
-                               style="color:#4f46e5;font-size:0.82rem;">
-                                <i class="fas fa-external-link-alt me-1"></i><?= esc(parse_url($marca['sitio_web'], PHP_URL_HOST) ?: $marca['sitio_web']) ?>
+                               class="text-indigo-600 text-[0.82rem]">
+                                <i class="fas fa-external-link-alt mr-1"></i><?= esc(parse_url($marca['sitio_web'], PHP_URL_HOST) ?: $marca['sitio_web']) ?>
                             </a>
                         <?php else: ?>
-                            <span style="color:#D1D5DB;font-size:0.82rem;">—</span>
+                            <span class="text-gray-300 text-[0.82rem]">—</span>
                         <?php endif; ?>
                     </td>
-                    <td>
-                        <span class="<?= $marca['activo'] ? 'badge-activo' : 'badge-inactivo' ?>">
+                    <td class="align-middle px-4 py-3">
+                        <span class="<?= $marca['activo'] ? $badgeActivo : $badgeInactivo ?>">
                             <?= $marca['activo'] ? 'Activa' : 'Inactiva' ?>
                         </span>
                     </td>
-                    <td>
-                        <div class="d-flex align-items-center gap-1">
+                    <td class="align-middle px-4 py-3">
+                        <div class="flex items-center gap-1">
                             <a href="<?= base_url("admin/marcas/{$marca['id']}/editar") ?>"
-                               class="btn btn-sm btn-outline-secondary btn-accion">
+                               class="<?= $btnSecondary ?>">
                                 <i class="fas fa-pen"></i>
                             </a>
-                            <button type="button" class="btn btn-sm btn-outline-danger btn-accion"
+                            <button type="button" class="<?= $btnDanger ?>"
                                     onclick="confirmarEliminar(<?= $marca['id'] ?>, '<?= esc($marca['nombre']) ?>')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                         <form id="del-<?= $marca['id'] ?>" method="POST"
-                              action="<?= base_url("admin/marcas/{$marca['id']}/eliminar") ?>" style="display:none;">
+                              action="<?= base_url("admin/marcas/{$marca['id']}/eliminar") ?>" class="hidden">
                             <?= csrf_field() ?>
                         </form>
                     </td>
@@ -143,12 +97,12 @@
     </div>
 </div>
 <?php else: ?>
-<div class="tabla-card">
-    <div class="empty-state">
-        <i class="fas fa-tag"></i>
-        <h5>No hay marcas aún</h5>
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="text-center py-16 px-8 text-gray-400">
+        <i class="fas fa-tag text-5xl mb-4 block text-gray-300"></i>
+        <h5 class="text-gray-700 font-semibold mb-2">No hay marcas aún</h5>
         <p>Agregá marcas para asociarlas a los productos del catálogo.</p>
-        <a href="<?= base_url('admin/marcas/crear') ?>" class="btn-rojo">
+        <a href="<?= base_url('admin/marcas/crear') ?>" class="<?= $btnRojo ?> mt-4">
             <i class="fas fa-plus"></i> Crear marca
         </a>
     </div>

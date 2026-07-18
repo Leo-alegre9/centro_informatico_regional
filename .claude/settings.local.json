@@ -52,7 +52,27 @@
       "Bash(claude auth *)",
       "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SHOW TABLES FROM cir2;\")",
       "Bash(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"DESCRIBE cir2.productos;\")",
-      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\" -Recurse -Directory)"
+      "Bash(Get-ChildItem -Path \"C:\\\\xampp\\\\htdocs\\\\centro_informatico_regional\" -Recurse -Directory)",
+      "PowerShell(Get-ChildItem \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\writable\\\\\" -Recurse -File | Where-Object {$_.Name -ne \"index.html\"} | Select-Object FullName, LastWriteTime | Sort-Object LastWriteTime -Descending | Select-Object -First 30)",
+      "PowerShell(Get-ChildItem \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\writable\\\\\" -Recurse -File | Where-Object {$_.Name -match \"factory|config|Database\"} | Select-Object FullName)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root -e \"SHOW DATABASES;\" 2>&1)",
+      "PowerShell(& \"C:\\\\xampp\\\\php\\\\php.exe\" -r \"echo phpversion\\(\\);\" ; & \"C:\\\\xampp\\\\php\\\\php.exe\" -r \"echo opcache_get_status\\(\\) ? 'OPcache ON' : 'OPcache OFF';\" 2>&1)",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 -e \"SHOW TABLES;\")",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 -e \"DESCRIBE categorias;\")",
+      "PowerShell(& \"C:\\\\xampp\\\\mysql\\\\bin\\\\mysql.exe\" -u root cir2 -e \"DESCRIBE marcas;\")",
+      "mcp__agent-browser__agent_browser_open",
+      "Read(//tmp/**)",
+      "Bash(wmic process *)",
+      "Bash(tasklist)",
+      "Bash(grep -n -B2 -A5 '\\\\$maxQueries\\\\|environments\\\\|excludedURI\\\\|\\\\$collectors =' app/Config/Toolbar.php)",
+      "Bash(tasklist //FI \"IMAGENAME eq mysqld.exe\")",
+      "Read(//c/xampp/mysql/bin/**)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"DESCRIBE fabricas; SELECT '---'; DESCRIBE productos;\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"SELECT id, usuario, email FROM admin_usuarios LIMIT 5;\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"SHOW TABLES LIKE '%admin%';\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e ' *)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"DELETE FROM fabricas WHERE slug='fabrica-de-prueba';\")",
+      "Bash(rm \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\app\\\\Commands\\\\TestFabricasTemp.php\")"
     ]
   }
 }

@@ -1,181 +1,82 @@
-<style>
-    .nosotros-propuesta { background: var(--fondo); }
-    .propuesta-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.6rem;
-        margin-top: 0.5rem;
-    }
-    .propuesta-card {
-        background: #fff;
-        border-radius: 20px;
-        padding: 2.4rem 2rem;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-        border: 1.5px solid #f0f0f0;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .propuesta-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 18px 50px rgba(0,0,0,0.11);
-    }
-    .propuesta-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 4px;
-        background: var(--rojo);
-        border-radius: 20px 20px 0 0;
-    }
-    .propuesta-icon-wrap {
-        width: 68px; height: 68px;
-        border-radius: 18px;
-        background: rgba(255,0,51,0.07);
-        border: 2px solid rgba(255,0,51,0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.7rem;
-        color: var(--rojo);
-        margin-bottom: 1.4rem;
-        transition: background 0.25s, color 0.25s;
-    }
-    .propuesta-card:hover .propuesta-icon-wrap {
-        background: var(--rojo);
-        color: #fff;
-        border-color: var(--rojo);
-    }
-    .propuesta-card-num {
-        position: absolute;
-        top: 1.4rem;
-        right: 1.6rem;
-        font-size: 3.5rem;
-        font-weight: 900;
-        color: rgba(0,0,0,0.04);
-        line-height: 1;
-        user-select: none;
-    }
-    .propuesta-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: var(--dark-2);
-        margin-bottom: 1rem;
-    }
-    .propuesta-text {
-        color: var(--gris);
-        font-size: 0.9rem;
-        line-height: 1.8;
-        flex: 1;
-        margin-bottom: 1.4rem;
-    }
-    .propuesta-puntos { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem; }
-    .propuesta-puntos li {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.6rem;
-        color: var(--gris);
-        font-size: 0.85rem;
-        line-height: 1.5;
-    }
-    .propuesta-puntos li i { color: var(--rojo); font-size: 0.7rem; margin-top: 4px; flex-shrink: 0; }
-
-    /* CTA inferior */
-    .nosotros-cta {
-        background: var(--dark-2);
-        border-radius: 20px;
-        padding: 2.8rem 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        margin-top: 3.5rem;
-    }
-    .nosotros-cta-text { flex: 1; min-width: 260px; }
-    .nosotros-cta-text h3 { color: #fff; font-size: 1.35rem; font-weight: 800; margin-bottom: 0.4rem; }
-    .nosotros-cta-text p { color: rgba(255,255,255,0.5); font-size: 0.92rem; margin: 0; }
-    .nosotros-cta-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-
-    @media (max-width: 991px) { .propuesta-grid { grid-template-columns: 1fr; } }
-</style>
-
 <!-- ═══════════════════════════════════════════════
-     NOSOTROS — NUESTRA PROPUESTA
+     NUESTRA PROPUESTA
 ═══════════════════════════════════════════════ -->
-<section class="nosotros-propuesta py-5">
+<section class="bg-white pt-14 pb-14 sm:pt-[5.5rem] sm:pb-20">
     <div class="container">
 
-        <div class="text-center mb-2">
-            <span class="section-eyebrow">Nuestros valores</span>
-            <h2 class="section-heading">Nuestra Propuesta</h2>
-        </div>
-        <div class="section-divider"></div>
+        <!-- Cabecera alineada a la izquierda -->
+        <span class="section-eyebrow">Nuestros valores</span>
+        <h2 class="section-heading mb-0">Nuestra Propuesta</h2>
+        <p class="mt-3 mb-14 max-w-[520px] text-[0.97rem] leading-[1.8] text-gris">
+            Los pilares que guían cada decisión, cada producto y cada relación comercial que construimos con nuestros clientes y marcas.
+        </p>
 
-        <div class="propuesta-grid">
-
-            <!-- Calidad -->
-            <div class="propuesta-card">
-                <div class="propuesta-card-num">01</div>
-                <div class="propuesta-icon-wrap"><i class="fas fa-award"></i></div>
-                <div class="propuesta-title">Calidad</div>
-                <p class="propuesta-text">
+        <!-- 01 — Calidad -->
+        <div class="grid grid-cols-[48px_1fr] items-start gap-x-6 gap-y-0 border-t border-b border-[#EEF0F3] py-9 md:grid-cols-[64px_1fr] md:gap-x-10 md:py-11">
+            <div class="pt-[6px] text-[2.4rem] leading-none font-black tracking-[-2px] text-black/[0.055] select-none md:text-[3.2rem]">01</div>
+            <div>
+                <div class="mb-[1.1rem] flex h-[58px] w-[58px] items-center justify-center rounded-2xl border-[1.5px] border-rojo/[0.18] bg-rojo/[0.07] text-[1.45rem] text-rojo"><i class="fas fa-award"></i></div>
+                <div class="mb-[0.65rem] text-xl font-extrabold text-dark-2">Calidad</div>
+                <p class="mb-[1.2rem] max-w-[640px] text-[0.93rem] leading-[1.82] text-gris">
                     Nos aseguramos de que toda nuestra línea de productos sea de alta calidad, con buen respaldo en servicio posventa y garantía en cada artículo que ofrecemos.
                 </p>
-                <ul class="propuesta-puntos">
-                    <li><i class="fas fa-circle"></i> Productos de marcas líderes internacionales</li>
-                    <li><i class="fas fa-circle"></i> Garantía en todos los artículos</li>
-                    <li><i class="fas fa-circle"></i> Soporte posventa personalizado</li>
+                <ul class="m-0 flex list-none flex-col gap-[0.45rem] p-0 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Productos de marcas líderes internacionales</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Garantía en todos los artículos</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Soporte posventa personalizado</li>
                 </ul>
             </div>
+        </div>
 
-            <!-- Responsabilidad -->
-            <div class="propuesta-card">
-                <div class="propuesta-card-num">02</div>
-                <div class="propuesta-icon-wrap"><i class="fas fa-handshake"></i></div>
-                <div class="propuesta-title">Responsabilidad</div>
-                <p class="propuesta-text">
+        <!-- 02 — Responsabilidad -->
+        <div class="grid grid-cols-[48px_1fr] items-start gap-x-6 gap-y-0 border-b border-[#EEF0F3] py-9 md:grid-cols-[64px_1fr] md:gap-x-10 md:py-11">
+            <div class="pt-[6px] text-[2.4rem] leading-none font-black tracking-[-2px] text-black/[0.055] select-none md:text-[3.2rem]">02</div>
+            <div>
+                <div class="mb-[1.1rem] flex h-[58px] w-[58px] items-center justify-center rounded-2xl border-[1.5px] border-rojo/[0.18] bg-rojo/[0.07] text-[1.45rem] text-rojo"><i class="fas fa-handshake"></i></div>
+                <div class="mb-[0.65rem] text-xl font-extrabold text-dark-2">Responsabilidad</div>
+                <p class="mb-[1.2rem] max-w-[640px] text-[0.93rem] leading-[1.82] text-gris">
                     Cumplimos exactamente con todo lo pactado con cada cliente, a través de un seguimiento personalizado desde las primeras tratativas hasta el soporte técnico o garantías que necesite.
                 </p>
-                <ul class="propuesta-puntos">
-                    <li><i class="fas fa-circle"></i> Seguimiento personalizado de cada caso</li>
-                    <li><i class="fas fa-circle"></i> Cumplimiento de plazos y acuerdos</li>
-                    <li><i class="fas fa-circle"></i> Soporte técnico post-venta garantizado</li>
+                <ul class="m-0 flex list-none flex-col gap-[0.45rem] p-0 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Seguimiento personalizado de cada caso</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Cumplimiento de plazos y acuerdos</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Soporte técnico post-venta garantizado</li>
                 </ul>
             </div>
+        </div>
 
-            <!-- Capacitación -->
-            <div class="propuesta-card">
-                <div class="propuesta-card-num">03</div>
-                <div class="propuesta-icon-wrap"><i class="fas fa-graduation-cap"></i></div>
-                <div class="propuesta-title">Capacitación</div>
-                <p class="propuesta-text">
+        <!-- 03 — Capacitación -->
+        <div class="grid grid-cols-[48px_1fr] items-start gap-x-6 gap-y-0 border-b border-[#EEF0F3] py-9 md:grid-cols-[64px_1fr] md:gap-x-10 md:py-11">
+            <div class="pt-[6px] text-[2.4rem] leading-none font-black tracking-[-2px] text-black/[0.055] select-none md:text-[3.2rem]">03</div>
+            <div>
+                <div class="mb-[1.1rem] flex h-[58px] w-[58px] items-center justify-center rounded-2xl border-[1.5px] border-rojo/[0.18] bg-rojo/[0.07] text-[1.45rem] text-rojo"><i class="fas fa-graduation-cap"></i></div>
+                <div class="mb-[0.65rem] text-xl font-extrabold text-dark-2">Capacitación</div>
+                <p class="mb-[1.2rem] max-w-[640px] text-[0.93rem] leading-[1.82] text-gris">
                     La capacitación es donde ponemos especial dedicación. Conformamos un equipo de profesionales para asesorar a nuestro personal en forma permanente, realizando talleres y conferencias para mejorar sistemáticamente cada área.
                 </p>
-                <ul class="propuesta-puntos">
-                    <li><i class="fas fa-circle"></i> Equipo profesional en formación continua</li>
-                    <li><i class="fas fa-circle"></i> Talleres y conferencias periódicas</li>
-                    <li><i class="fas fa-circle"></i> Asesoramiento técnico calificado</li>
+                <ul class="m-0 flex list-none flex-col gap-[0.45rem] p-0 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Equipo profesional en formación continua</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Talleres y conferencias periódicas</li>
+                    <li class="flex items-center gap-[0.55rem] text-[0.84rem] font-medium text-[#4B5563] before:h-[7px] before:w-[7px] before:flex-shrink-0 before:rounded-full before:bg-rojo before:content-['']">Asesoramiento técnico calificado</li>
                 </ul>
             </div>
-
         </div>
 
         <!-- CTA -->
-        <div class="nosotros-cta">
-            <div class="nosotros-cta-text">
-                <h3>¿Querés trabajar con nosotros?</h3>
-                <p>Conocé nuestro catálogo completo o ponete en contacto con nuestro equipo para asesoramiento personalizado.</p>
-            </div>
-            <div class="nosotros-cta-btns">
-                <a href="<?= base_url('catalogo') ?>" class="btn-rojo">
-                    <i class="fas fa-th-large"></i> Ver Catálogo
-                </a>
-                <a href="<?= base_url('contacto') ?>" class="btn-outline-claro">
-                    <i class="fas fa-envelope"></i> Contactanos
-                </a>
+        <div class="mt-[4.5rem]">
+            <div class="relative flex flex-wrap items-center justify-between gap-8 overflow-hidden rounded-[24px] bg-dark-2 p-9 before:pointer-events-none before:absolute before:-top-20 before:-right-20 before:h-[320px] before:w-[320px] before:rounded-full before:bg-[radial-gradient(circle,rgba(255,0,51,0.12)_0%,transparent_70%)] before:content-[''] md:p-12">
+                <div class="relative z-[1] min-w-[260px] flex-1">
+                    <h3 class="mb-2 text-[1.2rem] leading-[1.25] font-extrabold text-white md:text-[1.45rem]">¿Querés trabajar con nosotros?</h3>
+                    <p class="m-0 text-[0.93rem] leading-[1.65] text-white/[0.48]">Conocé nuestro catálogo completo o ponete en contacto con nuestro equipo para asesoramiento personalizado.</p>
+                </div>
+                <div class="relative z-[1] flex flex-shrink-0 flex-wrap gap-[0.85rem]">
+                    <a href="<?= base_url('catalogo') ?>" class="btn-rojo">
+                        <i class="fas fa-th-large"></i> Ver Catálogo
+                    </a>
+                    <a href="<?= base_url('contacto') ?>" class="btn-outline-claro">
+                        <i class="fas fa-envelope"></i> Contactanos
+                    </a>
+                </div>
             </div>
         </div>
 

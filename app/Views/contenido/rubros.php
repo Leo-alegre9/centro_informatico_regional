@@ -1,306 +1,10 @@
 <style>
     /* ══════════════════════════════════════════════════════════
-       CATEGORÍAS — Compra Gamer style · Tab + Visual Grid 2026
+       CATEGORÍAS — Keyframe no registrado en tailwind_config.php
     ══════════════════════════════════════════════════════════ */
-    .cats-section {
-        background: #fff;
-        padding: 5rem 0 5.5rem;
-        border-top: 1px solid #EEF0F3;
-    }
-
-    /* ── Encabezado ── */
-    .cats-hdr {
-        text-align: center;
-        margin-bottom: 2.5rem;
-    }
-    .cats-eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.67rem;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #9CA3AF;
-        margin-bottom: 0.85rem;
-    }
-    .cats-eyebrow::before,
-    .cats-eyebrow::after {
-        content: '';
-        display: inline-block;
-        width: 18px; height: 2px;
-        background: #FF0033;
-        border-radius: 2px;
-        flex-shrink: 0;
-    }
-    .cats-title {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: clamp(1.9rem, 3vw, 2.6rem);
-        font-weight: 800;
-        color: #0F172A;
-        letter-spacing: -0.025em;
-        line-height: 1.15;
-        margin-bottom: 0.75rem;
-    }
-    .cats-title .ca { color: #FF0033; }
-    .cats-subtitle {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.98rem;
-        color: #6B7280;
-        max-width: 500px;
-        margin: 0 auto;
-        line-height: 1.75;
-    }
-
-    /* ── Tabs de rubros ── */
-    .cats-tabs-wrap {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2rem;
-    }
-    .cats-tabs {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-        background: #F9FAFB;
-        border: 1.5px solid #EEF0F3;
-        border-radius: 50px;
-        padding: 5px;
-    }
-    .cats-tab {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 0.52rem 1.25rem;
-        border-radius: 50px;
-        border: none;
-        background: transparent;
-        color: #6B7280;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.84rem;
-        font-weight: 600;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-        outline: none;
-    }
-    .cats-tab i { font-size: 0.78rem; }
-    .cats-tab:hover:not(.active) { color: #374151; background: #fff; }
-    .cats-tab.active {
-        background: #FF0033;
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(255,0,51,0.28);
-    }
-
-    /* ── Panel de categorías (visible/oculto) ── */
-    .cats-panel {
-        display: none;
-        animation: catsPanelIn 0.32s cubic-bezier(.4,0,.2,1);
-    }
-    .cats-panel.active { display: block; }
     @keyframes catsPanelIn {
         from { opacity: 0; transform: translateY(10px); }
         to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       GRILLA ASIMÉTRICA — Compra Gamer layout
-    ══════════════════════════════════════════════════════════ */
-    .cats-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        grid-auto-rows: 208px;
-        gap: 12px;
-    }
-
-    /* ── Tarjeta base ── */
-    .cat-card {
-        position: relative;
-        border-radius: 16px;
-        overflow: hidden;
-        display: block;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    /* Card destacada (primera) */
-    .cat-card-featured {
-        grid-row: span 2;
-        border-radius: 20px;
-    }
-
-    /* Fondo / imagen */
-    .cat-bg {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        transition: transform 0.65s cubic-bezier(.4,0,.2,1);
-        will-change: transform;
-    }
-    .cat-card:hover .cat-bg { transform: scale(1.07); }
-
-    /* Tinte de color (diferencia visual entre categorías del mismo rubro) */
-    .cat-tint {
-        position: absolute;
-        inset: 0;
-        transition: opacity 0.3s;
-    }
-    .cat-card:hover .cat-tint { opacity: 0.6; }
-
-    /* Overlay degradado */
-    .cat-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            to top,
-            rgba(0,0,0,0.88) 0%,
-            rgba(0,0,0,0.45) 38%,
-            rgba(0,0,0,0.1)  70%,
-            transparent      100%
-        );
-        transition: background 0.35s;
-    }
-    .cat-card:hover .cat-overlay {
-        background: linear-gradient(
-            to top,
-            rgba(0,0,0,0.94) 0%,
-            rgba(0,0,0,0.58) 38%,
-            rgba(0,0,0,0.2)  70%,
-            rgba(0,0,0,0.05) 100%
-        );
-    }
-
-    /* Contenido superpuesto */
-    .cat-content {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        padding: 1.1rem 1.25rem 1.2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    .cat-card-featured .cat-content {
-        padding: 1.6rem 1.75rem 1.75rem;
-    }
-
-    /* Ícono */
-    .cat-icon {
-        font-size: 1.1rem;
-        color: rgba(255,255,255,0.65);
-        margin-bottom: 4px;
-        transition: color 0.2s;
-    }
-    .cat-card-featured .cat-icon { font-size: 1.4rem; }
-    .cat-card:hover .cat-icon { color: rgba(255,255,255,0.9); }
-
-    /* Nombre de categoría */
-    .cat-name {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.2;
-        letter-spacing: -0.01em;
-    }
-    .cat-card-featured .cat-name {
-        font-size: clamp(1.4rem, 2.2vw, 1.9rem);
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        margin-bottom: 6px;
-    }
-
-    /* CTA flecha (aparece en hover) */
-    .cat-arrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: rgba(255,255,255,0.7);
-        opacity: 0;
-        transform: translateY(6px);
-        transition: opacity 0.25s, transform 0.25s, color 0.2s;
-        margin-top: 2px;
-    }
-    .cat-arrow i { font-size: 0.6rem; }
-    .cat-card:hover .cat-arrow {
-        opacity: 1;
-        transform: translateY(0);
-        color: #fff;
-    }
-    .cat-card-featured .cat-arrow { font-size: 0.85rem; }
-
-    /* ── CTA general ── */
-    .cats-cta-wrap {
-        text-align: center;
-        margin-top: 2.5rem;
-    }
-    .cats-cta-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        background: #FF0033;
-        color: #fff !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.92rem;
-        font-weight: 700;
-        padding: 0.85rem 2rem;
-        border-radius: 50px;
-        text-decoration: none;
-        box-shadow: 0 4px 18px rgba(255,0,51,0.25);
-        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    }
-    .cats-cta-btn:hover {
-        background: #cc0029;
-        box-shadow: 0 7px 24px rgba(255,0,51,0.36);
-        transform: translateY(-2px);
-        color: #fff !important;
-    }
-
-    /* ── Scroll reveal ── */
-    .cats-reveal {
-        opacity: 0;
-        transform: translateY(22px);
-        transition: opacity 0.52s ease, transform 0.52s ease;
-    }
-    .cats-reveal.visible { opacity: 1; transform: translateY(0); }
-    .cats-d1 { transition-delay: 0.05s; }
-    .cats-d2 { transition-delay: 0.12s; }
-    .cats-d3 { transition-delay: 0.19s; }
-
-    /* ── Responsive ── */
-    @media (max-width: 991px) {
-        .cats-grid { grid-template-columns: 2fr 1fr; grid-auto-rows: 185px; }
-        /* En tablet la card featured ocupa solo col 1 */
-    }
-    @media (max-width: 767px) {
-        .cats-grid {
-            grid-template-columns: 1fr 1fr;
-            grid-auto-rows: 155px;
-        }
-        .cat-card-featured {
-            grid-column: span 2;
-            grid-row: span 1;
-            border-radius: 16px;
-        }
-        .cat-card-featured .cat-name { font-size: 1.35rem; }
-        .cat-arrow { opacity: 1; transform: translateY(0); }
-        .cats-tabs { gap: 6px; }
-        .cats-tab  { padding: 0.45rem 0.9rem; font-size: 0.78rem; }
-    }
-    @media (max-width: 575px) {
-        .cats-section { padding: 3rem 0 3.5rem; }
-        .cats-grid    { grid-auto-rows: 140px; gap: 10px; }
-        .cat-name     { font-size: 0.88rem; }
-        .cat-content  { padding: 0.85rem 1rem; }
-        .cat-card-featured .cat-name { font-size: 1.15rem; }
-        .cat-card-featured .cat-content { padding: 1.1rem 1.25rem; }
-        .cats-tabs    { border-radius: 16px; padding: 4px; }
-        .cats-tab     { border-radius: 12px; }
     }
 </style>
 
@@ -361,21 +65,33 @@ $_rubroConfig = [
     'linea-comercial'   => ['icono' => 'fas fa-store',         'color' => '#7C3AED', 'label' => 'Comercio'],
 ];
 $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Categoría'];
+
+/* Clases de utilidades reutilizadas para tarjeta destacada vs. normal */
+$_catContentBase     = 'absolute bottom-0 left-0 right-0 flex flex-col gap-1 px-4 pt-[0.85rem] pb-4 sm:px-5 sm:pt-[1.1rem] sm:pb-[1.2rem]';
+$_catContentFeatured = 'absolute bottom-0 left-0 right-0 flex flex-col gap-1 px-5 pt-[1.1rem] pb-[1.1rem] sm:px-7 sm:pt-[1.6rem] sm:pb-7';
+$_catIconBase        = 'text-[1.1rem] text-white/65 mb-1 transition-colors duration-200 group-hover:text-white/90';
+$_catIconFeatured    = 'text-[1.4rem] text-white/65 mb-1 transition-colors duration-200 group-hover:text-white/90';
+$_catNameBase        = 'font-inter text-[0.88rem] sm:text-base font-bold text-white leading-[1.2] tracking-[-0.01em]';
+$_catNameFeatured    = 'font-inter text-[1.15rem] sm:text-[1.35rem] md:text-[clamp(1.4rem,2.2vw,1.9rem)] font-extrabold text-white leading-[1.2] tracking-[-0.025em] mb-[6px]';
+$_catArrowBase       = 'inline-flex items-center gap-[6px] font-inter text-xs font-bold text-white/70 opacity-100 translate-y-0 md:opacity-0 md:translate-y-[6px] transition-[opacity,transform,color] duration-[250ms] mt-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-white';
+$_catArrowFeatured   = 'inline-flex items-center gap-[6px] font-inter text-[0.85rem] font-bold text-white/70 opacity-100 translate-y-0 md:opacity-0 md:translate-y-[6px] transition-[opacity,transform,color] duration-[250ms] mt-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:text-white';
 ?>
 
 <!-- ═══════════════════════════════════════════════════════════
      EXPLORÁ NUESTRAS CATEGORÍAS
 ═══════════════════════════════════════════════════════════ -->
-<section class="cats-section" id="rubros" aria-label="Explorá nuestras categorías">
+<section class="bg-white pt-[3rem] pb-14 sm:pt-20 sm:pb-[5.5rem] border-t border-[#EEF0F3]" id="rubros" aria-label="Explorá nuestras categorías">
     <div class="container">
 
         <!-- ── Encabezado ── -->
-        <div class="cats-hdr cats-reveal">
-            <p class="cats-eyebrow">Lo que ofrecemos</p>
-            <h2 class="cats-title">
-                Explorá nuestras <span class="ca">categorías</span>
+        <div class="text-center mb-10 cats-reveal opacity-0 translate-y-[22px] transition-[opacity,transform] duration-[520ms] ease-in-out [&.visible]:opacity-100 [&.visible]:translate-y-0">
+            <p class="inline-flex items-center gap-[9px] font-inter text-[0.67rem] font-bold tracking-[0.18em] uppercase text-gray-400 mb-[0.85rem]
+                      before:content-[''] before:inline-block before:w-[18px] before:h-0.5 before:bg-rojo before:rounded-full before:shrink-0
+                      after:content-[''] after:inline-block after:w-[18px] after:h-0.5 after:bg-rojo after:rounded-full after:shrink-0">Lo que ofrecemos</p>
+            <h2 class="font-inter text-[clamp(1.9rem,3vw,2.6rem)] font-extrabold text-slate-900 tracking-[-0.025em] leading-[1.15] mb-3">
+                Explorá nuestras <span class="text-rojo">categorías</span>
             </h2>
-            <p class="cats-subtitle">
+            <p class="font-inter text-[0.98rem] text-gray-500 max-w-[500px] mx-auto leading-[1.75]">
                 Todo lo que necesitás para tu hogar, oficina o negocio en un solo lugar.
             </p>
         </div>
@@ -383,17 +99,19 @@ $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Ca
         <?php if (!empty($_rubrosData)): ?>
 
         <!-- ── Tabs de rubros ── -->
-        <div class="cats-tabs-wrap cats-reveal cats-d1">
-            <div class="cats-tabs" role="tablist" aria-label="Rubros">
+        <div class="flex justify-center mb-8 cats-reveal opacity-0 translate-y-[22px] transition-[opacity,transform] duration-[520ms] ease-in-out delay-[50ms] [&.visible]:opacity-100 [&.visible]:translate-y-0">
+            <div class="flex gap-1.5 md:gap-2 flex-wrap justify-center bg-gray-50 border-[1.5px] border-[#EEF0F3] rounded-2xl sm:rounded-full p-1 sm:p-[5px]" role="tablist" aria-label="Rubros">
                 <?php foreach ($_rubrosData as $ri => $rubro):
                     $cfg = $_rubroConfig[$rubro['slug']] ?? $_cfgDefault;
                 ?>
-                <button class="cats-tab <?= $ri === 0 ? 'active' : '' ?>"
+                <button class="cats-tab <?= $ri === 0 ? 'active' : '' ?> inline-flex items-center gap-[7px] rounded-xl sm:rounded-full border-none bg-transparent text-gray-500 font-inter text-[0.78rem] md:text-[0.84rem] font-semibold cursor-pointer whitespace-nowrap outline-none px-[0.9rem] py-[0.45rem] md:px-5 md:py-[0.52rem] transition-colors duration-200
+                               [&:hover:not(.active)]:text-gray-700 [&:hover:not(.active)]:bg-white
+                               [&.active]:bg-rojo [&.active]:text-white [&.active]:shadow-[0_4px_14px_rgba(255,0,51,0.28)]"
                         role="tab"
                         aria-selected="<?= $ri === 0 ? 'true' : 'false' ?>"
                         aria-controls="panel-<?= esc($rubro['slug']) ?>"
                         data-panel="panel-<?= esc($rubro['slug']) ?>">
-                    <i class="<?= esc($cfg['icono']) ?>"></i>
+                    <i class="<?= esc($cfg['icono']) ?> text-[0.78rem]"></i>
                     <?= esc($rubro['nombre']) ?>
                 </button>
                 <?php endforeach; ?>
@@ -406,13 +124,13 @@ $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Ca
             $bgRubro   = $_rubroImg[$rubro['slug']] ?? '';
             $hijos     = array_values($rubro['hijos']);
         ?>
-        <div class="cats-panel cats-reveal cats-d2 <?= $ri === 0 ? 'active' : '' ?>"
+        <div class="cats-panel hidden [&.active]:block [&.active]:animate-[catsPanelIn_0.32s_cubic-bezier(.4,0,.2,1)] cats-reveal opacity-0 translate-y-[22px] transition-[opacity,transform] duration-[520ms] ease-in-out delay-[120ms] [&.visible]:opacity-100 [&.visible]:translate-y-0 <?= $ri === 0 ? 'active' : '' ?>"
              id="panel-<?= esc($rubro['slug']) ?>"
              role="tabpanel"
              aria-label="Categorías de <?= esc($rubro['nombre']) ?>">
 
             <?php if (!empty($hijos)): ?>
-            <div class="cats-grid">
+            <div class="grid grid-cols-2 auto-rows-[140px] gap-[10px] sm:auto-rows-[155px] sm:gap-3 md:grid-cols-[2fr_1fr] md:auto-rows-[185px] lg:grid-cols-[2fr_1fr_1fr] lg:auto-rows-[208px]">
                 <?php foreach ($hijos as $ci => $cat):
                     $isFirst  = ($ci === 0);
                     $bgImg    = $_catImg[$cat['slug']] ?? $bgRubro;
@@ -421,28 +139,30 @@ $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Ca
                     $catUrl   = base_url('catalogo/' . esc($rubro['slug']) . '/' . esc($cat['slug']));
                 ?>
                 <a href="<?= $catUrl ?>"
-                   class="cat-card <?= $isFirst ? 'cat-card-featured' : '' ?>"
+                   class="group relative rounded-2xl <?= $isFirst ? 'md:rounded-[20px]' : '' ?> overflow-hidden block no-underline cursor-pointer <?= $isFirst ? 'col-span-2 row-span-1 md:col-span-1 md:row-span-2' : '' ?>"
                    aria-label="Ver <?= esc($cat['nombre']) ?>">
 
                     <!-- Imagen de fondo -->
-                    <div class="cat-bg"
+                    <div class="absolute inset-0 bg-cover transition-transform duration-[650ms] ease-[cubic-bezier(.4,0,.2,1)] will-change-transform group-hover:scale-[1.07]"
                          style="background-image:url('<?= $bgImg ?>');
                                 background-position:<?= $bgPos ?>;"></div>
 
                     <!-- Tinte diferenciador -->
-                    <div class="cat-tint" style="background:<?= $tint ?>;"></div>
+                    <div class="absolute inset-0 transition-opacity duration-300 group-hover:opacity-60" style="background:<?= $tint ?>;"></div>
 
                     <!-- Overlay de legibilidad -->
-                    <div class="cat-overlay"></div>
+                    <div class="absolute inset-0 transition-[background] duration-[350ms]
+                                bg-[linear-gradient(to_top,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.45)_38%,rgba(0,0,0,0.1)_70%,transparent_100%)]
+                                group-hover:bg-[linear-gradient(to_top,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.58)_38%,rgba(0,0,0,0.2)_70%,rgba(0,0,0,0.05)_100%)]"></div>
 
                     <!-- Contenido -->
-                    <div class="cat-content">
-                        <span class="cat-icon">
+                    <div class="<?= $isFirst ? $_catContentFeatured : $_catContentBase ?>">
+                        <span class="<?= $isFirst ? $_catIconFeatured : $_catIconBase ?>">
                             <i class="<?= esc($cat['icono']) ?>"></i>
                         </span>
-                        <div class="cat-name"><?= esc($cat['nombre']) ?></div>
-                        <span class="cat-arrow">
-                            Ver productos <i class="fas fa-arrow-right"></i>
+                        <div class="<?= $isFirst ? $_catNameFeatured : $_catNameBase ?>"><?= esc($cat['nombre']) ?></div>
+                        <span class="<?= $isFirst ? $_catArrowFeatured : $_catArrowBase ?>">
+                            Ver productos <i class="fas fa-arrow-right text-[0.6rem]"></i>
                         </span>
                     </div>
 
@@ -451,7 +171,7 @@ $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Ca
             </div>
 
             <?php else: ?>
-            <div style="text-align:center;padding:4rem 0;font-family:'Inter',system-ui,sans-serif;color:#C4C9D4;font-size:0.9rem;">
+            <div class="text-center py-16 font-inter text-[#C4C9D4] text-[0.9rem]">
                 Categorías de <?= esc($rubro['nombre']) ?> próximamente…
             </div>
             <?php endif; ?>
@@ -460,14 +180,14 @@ $_cfgDefault = ['icono' => 'fas fa-folder', 'color' => '#6B7280', 'label' => 'Ca
         <?php endforeach; ?>
 
         <?php else: ?>
-        <div style="text-align:center;padding:3rem 0;font-family:'Inter',system-ui,sans-serif;color:#9CA3AF;font-size:0.9rem;">
+        <div class="text-center py-12 font-inter text-gray-400 text-[0.9rem]">
             El catálogo estará disponible próximamente.
         </div>
         <?php endif; ?>
 
         <!-- ── CTA general ── -->
-        <div class="cats-cta-wrap cats-reveal cats-d3">
-            <a href="<?= base_url('catalogo') ?>" class="cats-cta-btn">
+        <div class="text-center mt-10 cats-reveal opacity-0 translate-y-[22px] transition-[opacity,transform] duration-[520ms] ease-in-out delay-[190ms] [&.visible]:opacity-100 [&.visible]:translate-y-0">
+            <a href="<?= base_url('catalogo') ?>" class="inline-flex items-center gap-[9px] bg-rojo text-white font-inter text-[0.92rem] font-bold px-8 py-[0.85rem] rounded-full no-underline shadow-[0_4px_18px_rgba(255,0,51,0.25)] transition-[background,box-shadow,transform] duration-200 hover:bg-rojo-dark hover:shadow-[0_7px_24px_rgba(255,0,51,0.36)] hover:-translate-y-0.5 hover:text-white">
                 <i class="fas fa-th-large"></i> Ver catálogo completo
             </a>
         </div>

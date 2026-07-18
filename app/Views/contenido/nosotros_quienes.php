@@ -1,148 +1,88 @@
-<style>
-    .nosotros-quienes { background: #fff; }
-    .nosotros-historia-label {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--rojo);
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 1rem;
-    }
-    .nosotros-historia-title {
-        font-size: clamp(1.7rem, 2.8vw, 2.4rem);
-        font-weight: 900;
-        color: var(--dark-2);
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-    }
-    .nosotros-historia-title em {
-        font-style: normal;
-        color: var(--rojo);
-    }
-    .nosotros-historia-text {
-        color: var(--gris);
-        font-size: 0.97rem;
-        line-height: 1.9;
-        margin-bottom: 1.1rem;
-    }
-    .nosotros-historia-text:last-child { margin-bottom: 0; }
-    .nosotros-highlight {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        background: var(--fondo);
-        border-left: 4px solid var(--rojo);
-        border-radius: 0 12px 12px 0;
-        padding: 1.2rem 1.4rem;
-        margin-top: 1.8rem;
-    }
-    .nosotros-highlight i { color: var(--rojo); font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
-    .nosotros-highlight p { color: var(--dark-2); font-size: 0.92rem; line-height: 1.7; margin: 0; font-weight: 500; }
-
-    /* Tarjetas laterales */
-    .nosotros-cards-col { display: flex; flex-direction: column; gap: 1.2rem; }
-    .nosotros-card {
-        background: var(--dark-2);
-        border-radius: 18px;
-        padding: 1.6rem 1.7rem;
-        display: flex;
-        align-items: flex-start;
-        gap: 1.1rem;
-        border: 1.5px solid rgba(255,255,255,0.05);
-    }
-    .nosotros-card-icon {
-        width: 50px; height: 50px;
-        flex-shrink: 0;
-        border-radius: 13px;
-        background: rgba(255,0,51,0.1);
-        border: 1.5px solid rgba(255,0,51,0.25);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        color: var(--rojo);
-    }
-    .nosotros-card-title { color: #fff; font-size: 0.96rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .nosotros-card-text { color: rgba(255,255,255,0.5); font-size: 0.84rem; line-height: 1.6; margin: 0; }
-    .nosotros-divider {
-        width: 50px; height: 4px;
-        background: var(--rojo);
-        border-radius: 2px;
-        margin-bottom: 1.8rem;
-    }
-</style>
+<?php
+$imgFrenteRuta = FCPATH . 'assets/img/imagen_frente_cir.jpeg';
+$imgFrenteUrl  = base_url('assets/img/imagen_frente_cir.jpeg');
+$imgFrenteOk   = file_exists($imgFrenteRuta) && filesize($imgFrenteRuta) > 0;
+?>
 
 <!-- ═══════════════════════════════════════════════
-     NOSOTROS — QUIÉNES SOMOS
+     HISTORIA — Texto + Imagen
 ═══════════════════════════════════════════════ -->
-<section class="nosotros-quienes py-5">
+<section class="bg-white pt-[5.5rem] pb-[4.5rem]">
     <div class="container">
-        <div class="row g-5 align-items-start">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 
-            <div class="col-lg-7">
-                <div class="nosotros-historia-label">
+            <!-- Texto -->
+            <div>
+                <div class="mb-4 inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[3px] text-rojo uppercase">
                     <i class="fas fa-building"></i> Nuestra Historia
                 </div>
-                <h2 class="nosotros-historia-title">
-                    Una empresa formoseña<br>con <em>vocación de servicio</em>
+                <h2 class="mb-6 text-[clamp(1.7rem,2.8vw,2.4rem)] font-black leading-[1.2] text-dark-2">
+                    Una empresa formoseña<br>con <em class="text-rojo not-italic">vocación de servicio</em>
                 </h2>
-                <div class="nosotros-divider"></div>
+                <div class="mb-7 h-1 w-12 rounded-full bg-rojo"></div>
 
-                <p class="nosotros-historia-text">
-                    Somos una empresa formoseña fundada en el año <strong>1997</strong>, que surge como un emprendimiento dedicado a brindar servicios de capacitación en informática. A lo largo de los años hemos logrado un crecimiento y evolución constante para adaptarnos a las demandas cambiantes del mercado.
+                <p class="mb-[1.1rem] text-[0.97rem] leading-[1.9] text-gris">
+                    Somos una empresa formoseña fundada en el año <strong>1997</strong>, que surge como un emprendimiento dedicado a brindar servicios de capacitación en informática. A lo largo de los años logramos un crecimiento y evolución constante para adaptarnos a las demandas cambiantes del mercado.
                 </p>
-                <p class="nosotros-historia-text">
-                    Hoy contamos con una <strong>presencia regional sólida en la provincia de Formosa y parte del interior del Chaco</strong>. Nuestro compromiso con la excelencia y la calidad nos ha permitido forjar relaciones duraderas tanto con los clientes como con las marcas que representamos.
-                </p>
-                <p class="nosotros-historia-text">
-                    Trabajamos en estrecha colaboración con <strong>más de 50 marcas de renombre internacional</strong>. Nuestro portafolio abarca desde tecnología de vanguardia hasta productos de consumo cotidiano, muebles de oficina y hogar, toda la línea comercial en amoblamientos y la línea de frío y calor.
+                <p class="mb-0 text-[0.97rem] leading-[1.9] text-gris">
+                    Hoy contamos con una <strong>presencia regional sólida en la provincia de Formosa y parte del interior del Chaco</strong>. Trabajamos en estrecha colaboración con <strong>más de 50 marcas de renombre internacional</strong>, con un portafolio que abarca tecnología, muebles, electrodomésticos y equipamiento comercial.
                 </p>
 
-                <div class="nosotros-highlight">
-                    <i class="fas fa-quote-left"></i>
-                    <p>Con amplia trayectoria en el rubro, ágiles y eficaces, asumimos la gran responsabilidad de cumplir fielmente con cada uno de nuestros clientes, porque nos eligieron y nos otorgaron esa posibilidad.</p>
+                <div class="mt-8 flex items-start gap-4 rounded-l-none rounded-r-[14px] border-l-4 border-rojo bg-[#F7F8FA] px-6 py-[1.3rem]">
+                    <i class="fas fa-quote-left mt-[3px] flex-shrink-0 text-base text-rojo"></i>
+                    <p class="m-0 text-[0.9rem] leading-[1.75] font-medium text-dark-2 italic">Con amplia trayectoria en el rubro, ágiles y eficaces, asumimos la gran responsabilidad de cumplir fielmente con cada uno de nuestros clientes, porque nos eligieron y nos otorgaron esa posibilidad.</p>
                 </div>
             </div>
 
-            <div class="col-lg-5">
-                <div class="nosotros-cards-col">
-
-                    <div class="nosotros-card">
-                        <div class="nosotros-card-icon"><i class="fas fa-seedling"></i></div>
-                        <div>
-                            <div class="nosotros-card-title">Origen emprendedor</div>
-                            <p class="nosotros-card-text">Nacimos en 1997 como un servicio de capacitación en informática y evolucionamos hasta convertirnos en una empresa multirubro de alcance regional.</p>
+            <!-- Imagen del local -->
+            <div>
+                <div class="relative aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_28px_70px_rgba(0,0,0,0.14)]">
+                    <?php if ($imgFrenteOk): ?>
+                        <img src="<?= $imgFrenteUrl ?>"
+                             alt="Centro Informático Regional — Local en Formosa"
+                             class="block h-full w-full object-cover object-center">
+                    <?php else: ?>
+                        <div class="flex h-full w-full flex-col items-center justify-center gap-4 bg-dark-2 text-white/25">
+                            <i class="fas fa-store text-[3rem]"></i>
+                            <span class="text-[0.82rem] tracking-[1.5px] uppercase">Centro Informático Regional</span>
                         </div>
-                    </div>
-
-                    <div class="nosotros-card">
-                        <div class="nosotros-card-icon"><i class="fas fa-chart-line"></i></div>
-                        <div>
-                            <div class="nosotros-card-title">Crecimiento constante</div>
-                            <p class="nosotros-card-text">Más de 28 años de evolución continua, adaptándonos a cada cambio del mercado y ampliando nuestra oferta para cubrir todas las necesidades de nuestra región.</p>
-                        </div>
-                    </div>
-
-                    <div class="nosotros-card">
-                        <div class="nosotros-card-icon"><i class="fas fa-handshake"></i></div>
-                        <div>
-                            <div class="nosotros-card-title">Relaciones duraderas</div>
-                            <p class="nosotros-card-text">Construimos vínculos sólidos con clientes y marcas basados en la confianza, el cumplimiento y el acompañamiento permanente en cada etapa.</p>
-                        </div>
-                    </div>
-
-                    <div class="nosotros-card">
-                        <div class="nosotros-card-icon"><i class="fas fa-boxes-stacked"></i></div>
-                        <div>
-                            <div class="nosotros-card-title">Portafolio diversificado</div>
-                            <p class="nosotros-card-text">Tecnología, muebles, electrodomésticos y equipamiento comercial: más de 50 marcas internacionales bajo un mismo techo.</p>
-                        </div>
-                    </div>
-
+                    <?php endif; ?>
                 </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PILARES — 4 tarjetas
+═══════════════════════════════════════════════ -->
+<section class="border-t border-b border-[#EEF0F3] bg-[#F7F8FA] py-16">
+    <div class="container">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+            <div class="group h-full rounded-[20px] border-[1.5px] border-[#EEF0F3] bg-white p-[2rem_1.75rem] shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-[250ms] ease-out hover:-translate-y-[5px] hover:border-rojo/20 hover:shadow-[0_16px_44px_rgba(0,0,0,0.1)]">
+                <div class="mb-[1.15rem] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-rojo/[0.15] bg-rojo/[0.07] text-xl text-rojo transition-colors duration-[250ms] ease-out group-hover:border-rojo group-hover:bg-rojo group-hover:text-white"><i class="fas fa-seedling"></i></div>
+                <div class="mb-[0.55rem] text-base font-extrabold text-dark-2">Origen emprendedor</div>
+                <p class="m-0 text-[0.85rem] leading-[1.75] text-gris">Nacimos en 1997 como un servicio de capacitación en informática y evolucionamos hasta convertirnos en una empresa multirubro de alcance regional.</p>
+            </div>
+
+            <div class="group h-full rounded-[20px] border-[1.5px] border-[#EEF0F3] bg-white p-[2rem_1.75rem] shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-[250ms] ease-out hover:-translate-y-[5px] hover:border-rojo/20 hover:shadow-[0_16px_44px_rgba(0,0,0,0.1)]">
+                <div class="mb-[1.15rem] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-rojo/[0.15] bg-rojo/[0.07] text-xl text-rojo transition-colors duration-[250ms] ease-out group-hover:border-rojo group-hover:bg-rojo group-hover:text-white"><i class="fas fa-chart-line"></i></div>
+                <div class="mb-[0.55rem] text-base font-extrabold text-dark-2">Crecimiento constante</div>
+                <p class="m-0 text-[0.85rem] leading-[1.75] text-gris">Más de 28 años de evolución continua, adaptándonos a cada cambio del mercado y ampliando nuestra oferta para cubrir todas las necesidades de nuestra región.</p>
+            </div>
+
+            <div class="group h-full rounded-[20px] border-[1.5px] border-[#EEF0F3] bg-white p-[2rem_1.75rem] shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-[250ms] ease-out hover:-translate-y-[5px] hover:border-rojo/20 hover:shadow-[0_16px_44px_rgba(0,0,0,0.1)]">
+                <div class="mb-[1.15rem] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-rojo/[0.15] bg-rojo/[0.07] text-xl text-rojo transition-colors duration-[250ms] ease-out group-hover:border-rojo group-hover:bg-rojo group-hover:text-white"><i class="fas fa-handshake"></i></div>
+                <div class="mb-[0.55rem] text-base font-extrabold text-dark-2">Relaciones duraderas</div>
+                <p class="m-0 text-[0.85rem] leading-[1.75] text-gris">Construimos vínculos sólidos con clientes y marcas basados en la confianza, el cumplimiento y el acompañamiento permanente en cada etapa.</p>
+            </div>
+
+            <div class="group h-full rounded-[20px] border-[1.5px] border-[#EEF0F3] bg-white p-[2rem_1.75rem] shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-[250ms] ease-out hover:-translate-y-[5px] hover:border-rojo/20 hover:shadow-[0_16px_44px_rgba(0,0,0,0.1)]">
+                <div class="mb-[1.15rem] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-rojo/[0.15] bg-rojo/[0.07] text-xl text-rojo transition-colors duration-[250ms] ease-out group-hover:border-rojo group-hover:bg-rojo group-hover:text-white"><i class="fas fa-boxes-stacked"></i></div>
+                <div class="mb-[0.55rem] text-base font-extrabold text-dark-2">Portafolio diversificado</div>
+                <p class="m-0 text-[0.85rem] leading-[1.75] text-gris">Tecnología, muebles, electrodomésticos y equipamiento comercial: más de 50 marcas internacionales bajo un mismo techo.</p>
             </div>
 
         </div>

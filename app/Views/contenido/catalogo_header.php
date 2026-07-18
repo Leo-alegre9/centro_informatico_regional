@@ -1,123 +1,37 @@
-<style>
-    .catalogo-hero {
-        background: linear-gradient(135deg, #070c1a 0%, var(--dark-2) 60%, #180a10 100%);
-        padding: 3rem 0 2.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    .catalogo-hero-glow {
-        position: absolute;
-        width: 450px; height: 450px;
-        background: radial-gradient(circle, rgba(255,0,51,0.11) 0%, transparent 70%);
-        top: -120px; right: -80px;
-        border-radius: 50%;
-        pointer-events: none;
-    }
-    .breadcrumb-cir {
-        display: flex; align-items: center; gap: 7px;
-        font-size: 0.82rem; color: rgba(255,255,255,0.4);
-        margin-bottom: 1.6rem; flex-wrap: wrap;
-    }
-    .breadcrumb-cir a { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
-    .breadcrumb-cir a:hover { color: var(--rojo); }
-    .breadcrumb-cir .sep { color: rgba(255,255,255,0.2); }
-    .breadcrumb-cir .current { color: var(--rojo); font-weight: 600; }
-    .catalogo-rubro-icon {
-        width: 70px; height: 70px;
-        background: rgba(255,0,51,0.1); border: 2px solid rgba(255,0,51,0.28);
-        border-radius: 18px; display: flex; align-items: center;
-        justify-content: center; font-size: 1.75rem; color: var(--rojo); margin-bottom: 1.1rem;
-    }
-    .catalogo-rubro-title {
-        color: #fff; font-size: clamp(1.8rem, 3.5vw, 2.7rem);
-        font-weight: 900; margin-bottom: 0.5rem; line-height: 1.15;
-    }
-    .catalogo-rubro-desc {
-        color: rgba(255,255,255,0.58); font-size: 1rem;
-        line-height: 1.75; max-width: 580px; margin-bottom: 0;
-    }
-    .rubros-nav { margin-top: 2.5rem; display: flex; gap: 0.55rem; flex-wrap: wrap; }
-    .rubro-chip {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 6px 13px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
-        text-decoration: none; border: 1.5px solid rgba(255,255,255,0.13);
-        color: rgba(255,255,255,0.6); transition: border-color 0.2s, color 0.2s, background 0.2s;
-        white-space: nowrap;
-    }
-    .rubro-chip:hover { border-color: rgba(255,0,51,0.5); color: var(--rojo); background: rgba(255,0,51,0.05); }
-    .rubro-chip.activo { background: var(--rojo); border-color: var(--rojo); color: #fff; }
-
-    /* ── Barra de búsqueda del hero ── */
-    .cat-hero-search-area { margin-top: 2rem; }
-    .cat-hero-search-row {
-        display: flex; align-items: center; gap: 0.6rem;
-        max-width: 640px;
-    }
-    .cat-hero-search-wrap {
-        position: relative; flex: 1;
-    }
-    .cat-hero-search-icon {
-        position: absolute; left: 1.15rem; top: 50%; transform: translateY(-50%);
-        color: rgba(255,255,255,0.45); font-size: 0.95rem; pointer-events: none; z-index: 2;
-    }
-    .cat-hero-search {
-        width: 100%; padding: 0.9rem 3rem 0.9rem 3rem;
-        border: 2px solid rgba(255,255,255,0.15); border-radius: 50px;
-        font-size: 0.95rem; color: #fff; background: rgba(255,255,255,0.08);
-        outline: none; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-    }
-    .cat-hero-search:focus {
-        border-color: var(--rojo); background: rgba(255,255,255,0.12);
-        box-shadow: 0 0 0 3px rgba(255,0,51,0.18);
-    }
-    .cat-hero-search::placeholder { color: rgba(255,255,255,0.35); }
-    .cat-hero-search-clear {
-        position: absolute; right: 1.1rem; top: 50%; transform: translateY(-50%);
-        background: none; border: none; color: rgba(255,255,255,0.5);
-        cursor: pointer; font-size: 0.9rem; padding: 4px; display: none; z-index: 2; line-height: 1;
-    }
-    .cat-hero-search-clear:hover { color: var(--rojo); }
-    .cat-hero-search-hint {
-        font-size: 0.78rem; color: rgba(255,255,255,0.3);
-        margin-top: 0.55rem; margin-left: 0.2rem;
-    }
-    .cat-hero-search-hint strong { color: rgba(255,255,255,0.55); }
-</style>
-
 <!-- ═══════════════════════════════════════════════
      CATÁLOGO HEADER
 ═══════════════════════════════════════════════ -->
-<div class="catalogo-hero">
-    <div class="catalogo-hero-glow"></div>
-    <div class="container position-relative" style="z-index:1;">
+<div class="relative overflow-hidden pt-12 pb-10 bg-[linear-gradient(135deg,#070c1a_0%,var(--dark-2)_60%,#180a10_100%)]">
+    <div class="absolute w-[450px] h-[450px] bg-[radial-gradient(circle,rgba(255,0,51,0.11)_0%,transparent_70%)] -top-[120px] -right-[80px] rounded-full pointer-events-none"></div>
+    <div class="container relative z-[1]">
 
-        <nav class="breadcrumb-cir" aria-label="breadcrumb">
+        <nav class="flex items-center gap-[7px] text-[0.82rem] text-white/40 mb-[1.6rem] flex-wrap" aria-label="breadcrumb">
             <?php foreach ($breadcrumb as $i => $crumb): ?>
-                <?php if ($i > 0): ?><span class="sep">/</span><?php endif; ?>
+                <?php if ($i > 0): ?><span class="text-white/20">/</span><?php endif; ?>
                 <?php if ($crumb['url'] !== null): ?>
-                    <a href="<?= esc($crumb['url']) ?>"><?php if ($i === 0): ?><i class="fas fa-home"></i> <?php endif; ?><?= esc($crumb['nombre']) ?></a>
+                    <a href="<?= esc($crumb['url']) ?>" class="text-white/50 no-underline transition-colors duration-200 hover:text-rojo"><?php if ($i === 0): ?><i class="fas fa-home"></i> <?php endif; ?><?= esc($crumb['nombre']) ?></a>
                 <?php else: ?>
-                    <span class="current"><?= esc($crumb['nombre']) ?></span>
+                    <span class="text-rojo font-semibold"><?= esc($crumb['nombre']) ?></span>
                 <?php endif; ?>
             <?php endforeach; ?>
         </nav>
 
-        <div class="catalogo-rubro-icon">
+        <div class="w-[70px] h-[70px] bg-rojo/10 border-2 border-rojo/[0.28] rounded-[18px] flex items-center justify-center text-[1.75rem] text-rojo mb-[1.1rem]">
             <i class="<?= esc($current['icono']) ?>"></i>
         </div>
-        <h1 class="catalogo-rubro-title"><?= esc($current['nombre']) ?></h1>
-        <p class="catalogo-rubro-desc"><?= esc($current['descripcion']) ?></p>
+        <h1 class="text-white text-[clamp(1.8rem,3.5vw,2.7rem)] font-black mb-2 leading-[1.15]"><?= esc($current['nombre']) ?></h1>
+        <p class="text-white/[0.58] text-base leading-[1.75] max-w-[580px] mb-0"><?= esc($current['descripcion']) ?></p>
 
         <!-- Barra de búsqueda -->
-        <div class="cat-hero-search-area">
-            <div class="cat-hero-search-row">
-                <div class="cat-hero-search-wrap">
-                    <i class="fas fa-search cat-hero-search-icon"></i>
+        <div class="mt-8">
+            <div class="flex items-center gap-[0.6rem] max-w-[640px]">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-[1.15rem] top-1/2 -translate-y-1/2 text-white/45 text-[0.95rem] pointer-events-none z-[2]"></i>
                     <input type="text"
                            id="cat-hero-search"
-                           class="cat-hero-search"
+                           class="w-full py-[0.9rem] pr-[3rem] pl-[3rem] border-2 border-white/15 rounded-full text-[0.95rem] text-white bg-white/[0.08] outline-none transition-all duration-200 placeholder:text-white/[0.35] focus:border-rojo focus:bg-white/[0.12] focus:shadow-[0_0_0_3px_rgba(255,0,51,0.18)]"
                            placeholder="Buscar producto...">
-                    <button type="button" class="cat-hero-search-clear" id="cat-hero-clear">
+                    <button type="button" class="hidden absolute right-[1.1rem] top-1/2 -translate-y-1/2 bg-transparent border-none text-white/50 cursor-pointer text-[0.9rem] p-1 z-[2] leading-none hover:text-rojo" id="cat-hero-clear">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -125,16 +39,16 @@
             <?php
             $contextNombre = $current['nombre'] ?? 'el catálogo';
             ?>
-            <div class="cat-hero-search-hint" id="cat-hero-hint">
-                Buscá dentro de <strong><?= esc($contextNombre) ?></strong> — hacé clic en un resultado para ver los detalles
+            <div class="text-[0.78rem] text-white/30 mt-[0.55rem] ml-[0.2rem]" id="cat-hero-hint">
+                Buscá dentro de <strong class="text-white/[0.55]"><?= esc($contextNombre) ?></strong> — hacé clic en un resultado para ver los detalles
             </div>
         </div>
 
         <?php if (!empty($siblings)): ?>
-        <nav class="rubros-nav" aria-label="Navegación de rubros">
+        <nav class="mt-10 flex gap-[0.55rem] flex-wrap" aria-label="Navegación de rubros">
             <?php foreach ($siblings as $key => $sibling): ?>
             <a href="<?= esc($sibling['url']) ?>"
-               class="rubro-chip <?= $sibling['activo'] ? 'activo' : '' ?>">
+               class="inline-flex items-center gap-[6px] px-[13px] py-[6px] rounded-full text-[0.8rem] font-semibold no-underline border-[1.5px] whitespace-nowrap transition-colors duration-200 <?= $sibling['activo'] ? 'bg-rojo border-rojo text-white' : 'border-white/[0.13] text-white/60 hover:border-rojo/50 hover:text-rojo hover:bg-rojo/5' ?>">
                 <i class="<?= esc($sibling['icono']) ?>"></i>
                 <?= esc($sibling['nombre']) ?>
             </a>
@@ -148,101 +62,15 @@
 <!-- ═══════════════════════════════════════════════
      PANEL DE RESULTADOS DE BÚSQUEDA
 ═══════════════════════════════════════════════ -->
-<div id="cat-search-panel" style="display:none; background:#f4f6f9; border-bottom:2px solid #e5e7eb;">
-<style>
-    .cat-srp-wrap { padding: 2rem 0 2.5rem; }
-    .cat-srp-header {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;
-    }
-    .cat-srp-title {
-        font-size: 1rem; font-weight: 700; color: #111827;
-        display: flex; align-items: center; gap: 0.5rem;
-    }
-    .cat-srp-count {
-        background: rgba(255,0,51,0.1); color: #FF0033;
-        font-size: 0.78rem; font-weight: 700;
-        padding: 0.18rem 0.65rem; border-radius: 50px;
-    }
-    .cat-srp-close {
-        display: inline-flex; align-items: center; gap: 5px;
-        color: #6B7280; border: 1.5px solid #e5e7eb; background: #fff;
-        padding: 0.4rem 0.9rem; border-radius: 50px;
-        font-size: 0.82rem; font-weight: 600; cursor: pointer;
-        transition: border-color 0.15s, color 0.15s;
-    }
-    .cat-srp-close:hover { border-color: #FF0033; color: #FF0033; }
-
-    .cat-srp-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    .cat-srp-card {
-        background: #fff; border-radius: 14px;
-        border: 1.5px solid #f0f0f0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        overflow: hidden; cursor: pointer;
-        transition: transform 0.22s ease, box-shadow 0.22s ease;
-        display: flex; flex-direction: column;
-    }
-    .cat-srp-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.11); }
-    .cat-srp-img {
-        height: 130px; background: #1a232e;
-        display: flex; align-items: center; justify-content: center;
-        position: relative; overflow: hidden; flex-shrink: 0;
-    }
-    .cat-srp-img img { width: 100%; height: 100%; object-fit: cover; }
-    .cat-srp-img i { color: rgba(255,255,255,0.2); font-size: 2.2rem; }
-    .cat-srp-badge {
-        position: absolute; top: 8px; right: 8px;
-        background: #FF0033; color: #fff;
-        font-size: 0.65rem; font-weight: 700;
-        padding: 2px 8px; border-radius: 50px; letter-spacing: 0.3px;
-    }
-    .cat-srp-overlay {
-        position: absolute; inset: 0; background: rgba(0,0,0,0.45);
-        display: flex; align-items: center; justify-content: center;
-        opacity: 0; transition: opacity 0.2s;
-    }
-    .cat-srp-card:hover .cat-srp-overlay { opacity: 1; }
-    .cat-srp-overlay i { color: #fff; font-size: 1.4rem; }
-    .cat-srp-body { padding: 0.9rem 1rem 1rem; flex: 1; display: flex; flex-direction: column; }
-    .cat-srp-marca { font-size: 0.68rem; font-weight: 700; color: rgba(255,0,51,0.7); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
-    .cat-srp-nombre { font-weight: 700; color: #111827; font-size: 0.88rem; line-height: 1.35; margin-bottom: 0.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .cat-srp-cat { font-size: 0.72rem; color: #9CA3AF; margin-bottom: auto; padding-bottom: 0.6rem; }
-    .cat-srp-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 0.6rem; flex-wrap: wrap; }
-    .cat-srp-precio { font-weight: 700; color: #374151; font-size: 0.82rem; }
-    .cat-srp-wa {
-        display: inline-flex; align-items: center; gap: 4px;
-        background: #25D366; color: #fff;
-        padding: 0.3rem 0.75rem; border-radius: 50px;
-        font-weight: 700; font-size: 0.72rem; text-decoration: none;
-        transition: background 0.2s; white-space: nowrap;
-    }
-    .cat-srp-wa:hover { background: #1ebe5a; color: #fff; }
-
-    .cat-srp-loading { text-align: center; padding: 3rem 1rem; color: #9CA3AF; }
-    .cat-srp-loading i { font-size: 2rem; margin-bottom: 0.6rem; display: block; animation: srpSpin 0.9s linear infinite; }
-    @keyframes srpSpin { to { transform: rotate(360deg); } }
-
-    .cat-srp-empty { text-align: center; padding: 3rem 1rem; }
-    .cat-srp-empty i { font-size: 2.5rem; color: #dee2e6; margin-bottom: 0.75rem; display: block; }
-    .cat-srp-empty h5 { font-size: 0.95rem; font-weight: 700; color: #374151; margin-bottom: 0.3rem; }
-    .cat-srp-empty p { font-size: 0.85rem; color: #9CA3AF; margin: 0; }
-
-    @media (max-width: 1199px) { .cat-srp-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 767px)  { .cat-srp-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 479px)  { .cat-srp-grid { grid-template-columns: 1fr; } }
-</style>
-    <div class="container cat-srp-wrap">
-        <div class="cat-srp-header">
-            <div class="cat-srp-title">
-                <i class="fas fa-search" style="color:#FF0033;"></i>
+<div id="cat-search-panel" class="hidden bg-[#f4f6f9] border-b-2 border-[#e5e7eb]">
+    <div class="container pt-8 pb-10">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <div class="text-base font-bold text-[#111827] flex items-center gap-2">
+                <i class="fas fa-search text-rojo"></i>
                 <span id="cat-srp-label">Resultados</span>
-                <span class="cat-srp-count" id="cat-srp-count" style="display:none;"></span>
+                <span class="hidden bg-rojo/10 text-rojo text-[0.78rem] font-bold px-[0.65rem] py-[0.18rem] rounded-full" id="cat-srp-count"></span>
             </div>
-            <button type="button" class="cat-srp-close" id="cat-srp-close">
+            <button type="button" class="inline-flex items-center gap-[5px] text-[#6B7280] border-[1.5px] border-[#e5e7eb] bg-white px-[0.9rem] py-[0.4rem] rounded-full text-[0.82rem] font-semibold cursor-pointer transition-colors duration-150 hover:border-rojo hover:text-rojo" id="cat-srp-close">
                 <i class="fas fa-times"></i> Cerrar búsqueda
             </button>
         </div>
@@ -293,7 +121,7 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
     function mostrarLoading(q) {
         srplabel.textContent     = 'Buscando "' + q + '"...';
         srpCount.style.display   = 'none';
-        srpBody.innerHTML        = '<div class="cat-srp-loading"><i class="fas fa-spinner"></i><span>Buscando productos...</span></div>';
+        srpBody.innerHTML        = '<div class="text-center py-12 px-4 text-[#9CA3AF]"><i class="fas fa-spinner animate-spin text-[2rem] mb-[0.6rem] block"></i><span>Buscando productos...</span></div>';
         panel.style.display      = 'block';
         panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -303,10 +131,10 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
 
         if (!data || data.total === 0) {
             srpCount.style.display = 'none';
-            srpBody.innerHTML = '<div class="cat-srp-empty">'
-                + '<i class="fas fa-box-open"></i>'
-                + '<h5>Sin resultados</h5>'
-                + '<p>No encontramos productos para <strong>"' + q + '"</strong>.</p>'
+            srpBody.innerHTML = '<div class="text-center py-12 px-4">'
+                + '<i class="fas fa-box-open text-[2.5rem] text-[#dee2e6] mb-3 block"></i>'
+                + '<h5 class="text-[0.95rem] font-bold text-[#374151] mb-1">Sin resultados</h5>'
+                + '<p class="text-[0.85rem] text-[#9CA3AF] m-0">No encontramos productos para <strong>"' + q + '"</strong>.</p>'
                 + '</div>';
             return;
         }
@@ -314,15 +142,15 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
         srpCount.textContent   = data.total + ' producto' + (data.total !== 1 ? 's' : '');
         srpCount.style.display = '';
 
-        let html = '<div class="cat-srp-grid">';
+        let html = '<div class="grid grid-cols-4 gap-4 max-[1199px]:grid-cols-3 max-[767px]:grid-cols-2 max-[479px]:grid-cols-1">';
         data.resultados.forEach(function (p) {
             const imgHtml = p.imagen_url
-                ? '<img src="' + BURL + p.imagen_url + '" alt="' + escHtml(p.nombre) + '" loading="lazy" onerror="this.parentElement.innerHTML=\'<i class=\\\'fas fa-box\\\'></i>\'">'
+                ? '<img src="' + BURL + p.imagen_url + '" alt="' + escHtml(p.nombre) + '" loading="lazy" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML=\'<i class=\\\'fas fa-box\\\'></i>\'">'
                 : '<i class="' + escHtml(p.icono || 'fas fa-box') + '"></i>';
 
             const waUrl = 'https://wa.me/5493704616482?text=' + encodeURIComponent('Hola! Quiero consultar por ' + p.nombre);
 
-            html += '<div class="cat-srp-card" '
+            html += '<div class="cat-srp-card group bg-white rounded-[14px] border-[1.5px] border-[#f0f0f0] shadow-[0_2px_10px_rgba(0,0,0,0.06)] overflow-hidden cursor-pointer transition-all duration-[220ms] flex flex-col hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.11)]" '
                 + 'data-nombre="' + escAttr(p.nombre) + '" '
                 + 'data-precio="' + escAttr(p.precio || 'Consultar precio') + '" '
                 + 'data-descripcion="' + escAttr(p.descripcion || '') + '" '
@@ -332,17 +160,17 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
                 + 'data-imagenes="[]" '
                 + 'data-categoria="' + escAttr(p.categoria || '') + '" '
                 + 'data-wa="' + escAttr(waUrl) + '">'
-                + '<div class="cat-srp-img">' + imgHtml
-                + (p.badge ? '<span class="cat-srp-badge">' + escHtml(p.badge) + '</span>' : '')
-                + '<div class="cat-srp-overlay"><i class="fas fa-expand-alt"></i></div>'
+                + '<div class="h-[130px] bg-[#1a232e] flex items-center justify-center relative overflow-hidden flex-shrink-0 [&>i]:text-white/20 [&>i]:text-[2.2rem]">' + imgHtml
+                + (p.badge ? '<span class="absolute top-2 right-2 bg-rojo text-white text-[0.65rem] font-bold px-2 py-[2px] rounded-full tracking-[0.3px]">' + escHtml(p.badge) + '</span>' : '')
+                + '<div class="absolute inset-0 bg-black/45 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"><i class="fas fa-expand-alt text-white text-[1.4rem]"></i></div>'
                 + '</div>'
-                + '<div class="cat-srp-body">'
-                + (p.marca ? '<div class="cat-srp-marca">' + escHtml(p.marca) + '</div>' : '')
-                + '<div class="cat-srp-nombre">' + escHtml(p.nombre) + '</div>'
-                + (p.categoria ? '<div class="cat-srp-cat">' + escHtml(p.categoria) + '</div>' : '')
-                + '<div class="cat-srp-footer">'
-                + '<span class="cat-srp-precio">' + escHtml(p.precio || 'Consultar precio') + '</span>'
-                + '<a href="' + waUrl + '" target="_blank" rel="noopener" class="cat-srp-wa" onclick="event.stopPropagation()">'
+                + '<div class="px-4 pt-[0.9rem] pb-4 flex-1 flex flex-col">'
+                + (p.marca ? '<div class="text-[0.68rem] font-bold text-rojo/70 uppercase tracking-[0.5px] mb-[0.15rem]">' + escHtml(p.marca) + '</div>' : '')
+                + '<div class="font-bold text-[#111827] text-[0.88rem] leading-[1.35] mb-1 line-clamp-2">' + escHtml(p.nombre) + '</div>'
+                + (p.categoria ? '<div class="text-[0.72rem] text-[#9CA3AF] mb-auto pb-[0.6rem]">' + escHtml(p.categoria) + '</div>' : '')
+                + '<div class="flex items-center justify-between gap-[6px] mt-[0.6rem] flex-wrap">'
+                + '<span class="font-bold text-[#374151] text-[0.82rem]">' + escHtml(p.precio || 'Consultar precio') + '</span>'
+                + '<a href="' + waUrl + '" target="_blank" rel="noopener" class="cat-srp-wa inline-flex items-center gap-1 bg-[#25D366] text-white px-3 py-[0.3rem] rounded-full font-bold text-[0.72rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a]" onclick="event.stopPropagation()">'
                 + '<i class="fab fa-whatsapp"></i> Consultar'
                 + '</a>'
                 + '</div>'
@@ -399,7 +227,7 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
             .then(function (r) { return r.json(); })
             .then(function (data) { renderResultados(q, data); })
             .catch(function () {
-                srpBody.innerHTML = '<div class="cat-srp-empty"><i class="fas fa-exclamation-triangle" style="color:#fca5a5;"></i><h5>Error</h5><p>No se pudo completar la búsqueda.</p></div>';
+                srpBody.innerHTML = '<div class="text-center py-12 px-4"><i class="fas fa-exclamation-triangle text-[#fca5a5] text-[2.5rem] mb-3 block"></i><h5 class="text-[0.95rem] font-bold text-[#374151] mb-1">Error</h5><p class="text-[0.85rem] text-[#9CA3AF] m-0">No se pudo completar la búsqueda.</p></div>';
             });
     }
 

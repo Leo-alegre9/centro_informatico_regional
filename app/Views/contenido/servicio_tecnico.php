@@ -1,291 +1,69 @@
-<style>
-    /* ══════════════════════════════════════════════════════════
-       SERVICIO TÉCNICO — Premium White 2026
-    ══════════════════════════════════════════════════════════ */
-    .tech-section {
-        background: #fff;
-        padding: 5rem 0 5.5rem;
-        position: relative;
-        overflow: hidden;
-        border-top: 1px solid #EEF0F3;
-    }
-
-    /* Dot grid sutil — idéntico al Hero */
-    .tech-section::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(circle, #E5E7EB 1px, transparent 1px);
-        background-size: 28px 28px;
-        opacity: 0.45;
-        pointer-events: none;
-        z-index: 0;
-    }
-    /* Fade que apaga el grid cerca del contenido — idéntico al Hero */
-    .tech-section::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(ellipse 65% 80% at 30% 50%, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.6) 55%, transparent 75%),
-            radial-gradient(ellipse 50% 70% at 80% 50%, rgba(255,255,255,0.85) 0%, transparent 70%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .tech-inner { position: relative; z-index: 1; }
-
-    /* ── Eyebrow ── */
-    .tech-eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.67rem;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #9CA3AF;
-        margin-bottom: 1rem;
-    }
-    .tech-eyebrow::before,
-    .tech-eyebrow::after {
-        content: '';
-        display: inline-block;
-        width: 18px; height: 2px;
-        background: #FF0033;
-        border-radius: 2px;
-        flex-shrink: 0;
-    }
-
-    /* ── Título ── */
-    .tech-title {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: clamp(2rem, 3.8vw, 3rem);
-        font-weight: 800;
-        color: #0F172A;
-        line-height: 1.15;
-        letter-spacing: -0.025em;
-        margin-bottom: 1.1rem;
-    }
-    .tech-title .ta { color: #FF0033; }
-
-    /* ── Descripción ── */
-    .tech-desc {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 1rem;
-        color: #6B7280;
-        line-height: 1.85;
-        margin-bottom: 2rem;
-        max-width: 460px;
-    }
-
-    /* ── Check list moderna ── */
-    .tech-check-list {
-        display: flex;
-        flex-direction: column;
-        gap: 11px;
-        margin-bottom: 2.5rem;
-    }
-    .tech-check-item {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-    }
-    .tech-check-icon {
-        width: 28px; height: 28px;
-        border-radius: 50%;
-        background: rgba(255,0,51,0.08);
-        border: 1px solid rgba(255,0,51,0.22);
-        color: #FF0033;
-        font-size: 0.6rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: background 0.2s, border-color 0.2s;
-    }
-    .tech-check-item:hover .tech-check-icon {
-        background: rgba(255,0,51,0.14);
-        border-color: rgba(255,0,51,0.4);
-    }
-    .tech-check-text {
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.88rem;
-        font-weight: 500;
-        color: #374151;
-        transition: color 0.2s;
-    }
-    .tech-check-item:hover .tech-check-text { color: #0F172A; }
-
-    /* ── CTAs ── */
-    .tech-ctas {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-    .tech-btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #FF0033;
-        color: #fff !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.88rem;
-        font-weight: 700;
-        padding: 0.78rem 1.65rem;
-        border-radius: 50px;
-        text-decoration: none;
-        box-shadow: 0 4px 18px rgba(255,0,51,0.28);
-        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    }
-    .tech-btn-primary:hover {
-        background: #cc0029;
-        box-shadow: 0 7px 24px rgba(255,0,51,0.38);
-        transform: translateY(-2px);
-        color: #fff !important;
-    }
-    .tech-btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #fff;
-        color: #374151 !important;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-size: 0.88rem;
-        font-weight: 600;
-        padding: 0.78rem 1.65rem;
-        border-radius: 50px;
-        text-decoration: none;
-        border: 1.5px solid #E5E7EB;
-        transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
-    }
-    .tech-btn-secondary .wa-c { color: #25D366; }
-    .tech-btn-secondary:hover {
-        border-color: #25D366;
-        color: #1a9e4e !important;
-        background: #F0FDF4;
-        transform: translateY(-2px);
-    }
-
-    /* ── Imagen ── */
-    .tech-visual-wrap { position: relative; }
-
-    .tech-img-frame {
-        position: relative;
-        border-radius: 24px;
-        overflow: hidden;
-        border: 1px solid #EEF0F3;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.06);
-    }
-    .tech-img-frame img {
-        width: 100%;
-        display: block;
-        object-fit: cover;
-        min-height: 380px;
-        transition: transform 0.55s cubic-bezier(.4,0,.2,1);
-    }
-    .tech-img-frame:hover img { transform: scale(1.04); }
-
-    /* Borde rojo decorativo inferior izquierdo */
-    .tech-img-frame::after {
-        content: '';
-        position: absolute;
-        bottom: 0; left: 0;
-        width: 80px; height: 4px;
-        background: #FF0033;
-        border-radius: 0 4px 0 0;
-    }
-
-    /* ── Scroll reveal ── */
-    .tech-reveal {
-        opacity: 0;
-        transform: translateY(22px);
-        transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-    .tech-reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 991px) {
-        .tech-desc { max-width: 100%; }
-    }
-    @media (max-width: 767px) {
-        .tech-visual-wrap { margin-top: 2.5rem; }
-        .tech-img-frame img { min-height: 260px; }
-    }
-    @media (max-width: 575px) {
-        .tech-section { padding: 3.5rem 0 3rem; }
-    }
-</style>
-
 <!-- ═══════════════════════════════════════════════════════════
      SERVICIO TÉCNICO
 ═══════════════════════════════════════════════════════════ -->
-<section class="tech-section" id="servicio-tecnico" aria-label="Servicio Técnico Especializado">
-    <div class="container tech-inner">
-        <div class="row align-items-center g-5">
+<section class="relative overflow-hidden border-t border-[#EEF0F3] bg-white pt-14 pb-12 before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle,#E5E7EB_1px,transparent_1px)] before:bg-[length:28px_28px] before:opacity-[0.45] before:content-[''] after:pointer-events-none after:absolute after:inset-0 after:z-0 after:bg-[radial-gradient(ellipse_65%_80%_at_30%_50%,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.6)_55%,transparent_75%),radial-gradient(ellipse_50%_70%_at_80%_50%,rgba(255,255,255,0.85)_0%,transparent_70%)] after:content-[''] sm:pt-20 sm:pb-[5.5rem]" id="servicio-tecnico" aria-label="Servicio Técnico Especializado">
+    <div class="container relative z-[1]">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 
             <!-- ══ Columna izquierda: contenido ══ -->
-            <div class="col-lg-6">
+            <div>
 
-                <div class="tech-reveal">
-                    <p class="tech-eyebrow">Soporte profesional</p>
-                    <h2 class="tech-title">
+                <div class="tech-reveal translate-y-[22px] opacity-0 transition-all duration-[550ms] ease-out">
+                    <p class="mb-4 inline-flex items-center gap-[9px] font-inter text-[0.67rem] font-bold tracking-[0.18em] text-[#9CA3AF] uppercase before:inline-block before:h-[2px] before:w-[18px] before:flex-shrink-0 before:rounded-sm before:bg-rojo before:content-[''] after:inline-block after:h-[2px] after:w-[18px] after:flex-shrink-0 after:rounded-sm after:bg-rojo after:content-['']">Soporte profesional</p>
+                    <h2 class="mb-[1.1rem] font-inter text-[clamp(2rem,3.8vw,3rem)] leading-[1.15] font-extrabold tracking-[-0.025em] text-[#0F172A]">
                         Servicio Técnico<br>
-                        <span class="ta">Especializado</span>
+                        <span class="text-rojo">Especializado</span>
                     </h2>
-                    <p class="tech-desc">
+                    <p class="mb-8 max-w-full font-inter text-base leading-[1.85] text-[#6B7280] lg:max-w-[460px]">
                         Nuestro equipo de técnicos altamente capacitados está listo para resolver
                         cualquier problema con tu equipo, con rapidez y garantía en cada intervención.
                     </p>
                 </div>
 
-                <div class="tech-check-list tech-reveal" style="transition-delay:0.1s;">
-                    <div class="tech-check-item">
-                        <div class="tech-check-icon"><i class="fas fa-check"></i></div>
-                        <span class="tech-check-text">Mantenimiento preventivo y correctivo de equipos</span>
+                <div class="tech-reveal mb-10 flex translate-y-[22px] flex-col gap-[11px] opacity-0 transition-all duration-[550ms] ease-out [transition-delay:100ms]">
+                    <div class="group flex items-center gap-[13px]">
+                        <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-rojo/[0.22] bg-rojo/[0.08] text-[0.6rem] text-rojo transition-colors duration-200 group-hover:border-rojo/40 group-hover:bg-rojo/[0.14]"><i class="fas fa-check"></i></div>
+                        <span class="font-inter text-[0.88rem] font-medium text-[#374151] transition-colors duration-200 group-hover:text-[#0F172A]">Mantenimiento preventivo y correctivo de equipos</span>
                     </div>
-                    <div class="tech-check-item">
-                        <div class="tech-check-icon"><i class="fas fa-check"></i></div>
-                        <span class="tech-check-text">Diagnóstico y reparación de hardware y software</span>
+                    <div class="group flex items-center gap-[13px]">
+                        <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-rojo/[0.22] bg-rojo/[0.08] text-[0.6rem] text-rojo transition-colors duration-200 group-hover:border-rojo/40 group-hover:bg-rojo/[0.14]"><i class="fas fa-check"></i></div>
+                        <span class="font-inter text-[0.88rem] font-medium text-[#374151] transition-colors duration-200 group-hover:text-[#0F172A]">Diagnóstico y reparación de hardware y software</span>
                     </div>
-                    <div class="tech-check-item">
-                        <div class="tech-check-icon"><i class="fas fa-check"></i></div>
-                        <span class="tech-check-text">Soporte técnico especializado en sitio</span>
+                    <div class="group flex items-center gap-[13px]">
+                        <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-rojo/[0.22] bg-rojo/[0.08] text-[0.6rem] text-rojo transition-colors duration-200 group-hover:border-rojo/40 group-hover:bg-rojo/[0.14]"><i class="fas fa-check"></i></div>
+                        <span class="font-inter text-[0.88rem] font-medium text-[#374151] transition-colors duration-200 group-hover:text-[#0F172A]">Soporte técnico especializado en sitio</span>
                     </div>
-                    <div class="tech-check-item">
-                        <div class="tech-check-icon"><i class="fas fa-check"></i></div>
-                        <span class="tech-check-text">Instalación de redes y sistemas</span>
+                    <div class="group flex items-center gap-[13px]">
+                        <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-rojo/[0.22] bg-rojo/[0.08] text-[0.6rem] text-rojo transition-colors duration-200 group-hover:border-rojo/40 group-hover:bg-rojo/[0.14]"><i class="fas fa-check"></i></div>
+                        <span class="font-inter text-[0.88rem] font-medium text-[#374151] transition-colors duration-200 group-hover:text-[#0F172A]">Instalación de redes y sistemas</span>
                     </div>
-                    <div class="tech-check-item">
-                        <div class="tech-check-icon"><i class="fas fa-check"></i></div>
-                        <span class="tech-check-text">Garantía en todos nuestros trabajos</span>
+                    <div class="group flex items-center gap-[13px]">
+                        <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-rojo/[0.22] bg-rojo/[0.08] text-[0.6rem] text-rojo transition-colors duration-200 group-hover:border-rojo/40 group-hover:bg-rojo/[0.14]"><i class="fas fa-check"></i></div>
+                        <span class="font-inter text-[0.88rem] font-medium text-[#374151] transition-colors duration-200 group-hover:text-[#0F172A]">Garantía en todos nuestros trabajos</span>
                     </div>
                 </div>
 
-                <div class="tech-ctas tech-reveal" style="transition-delay:0.2s;">
-                    <a href="<?= base_url('servicio-tecnico') ?>" class="tech-btn-primary">
+                <div class="tech-reveal flex translate-y-[22px] flex-wrap gap-3 opacity-0 transition-all duration-[550ms] ease-out [transition-delay:200ms]">
+                    <a href="<?= base_url('servicio-tecnico') ?>" class="inline-flex items-center gap-2 rounded-full bg-rojo px-[1.65rem] py-[0.78rem] font-inter text-[0.88rem] font-bold text-white no-underline shadow-[0_4px_18px_rgba(255,0,51,0.28)] transition-all duration-200 hover:-translate-y-[2px] hover:bg-rojo-dark hover:text-white hover:shadow-[0_7px_24px_rgba(255,0,51,0.38)]">
                         <i class="fas fa-screwdriver-wrench"></i> Solicitar asistencia
                     </a>
                     <a href="https://wa.me/5493704616482?text=Hola%2C%20quiero%20consultar%20sobre%20el%20servicio%20t%C3%A9cnico"
                        target="_blank" rel="noopener noreferrer"
-                       class="tech-btn-secondary">
-                        <i class="fab fa-whatsapp wa-c"></i> Consultar por WhatsApp
+                       class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#E5E7EB] bg-white px-[1.65rem] py-[0.78rem] font-inter text-[0.88rem] font-semibold text-[#374151] no-underline transition-all duration-200 hover:-translate-y-[2px] hover:border-[#25D366] hover:bg-[#F0FDF4] hover:text-[#1a9e4e]">
+                        <i class="fab fa-whatsapp text-[#25D366]"></i> Consultar por WhatsApp
                     </a>
                 </div>
 
             </div>
 
             <!-- ══ Columna derecha: imagen ══ -->
-            <div class="col-lg-6 tech-reveal" style="transition-delay:0.14s;">
-                <div class="tech-visual-wrap">
-                    <div class="tech-img-frame">
+            <div class="tech-reveal translate-y-[22px] opacity-0 transition-all duration-[550ms] ease-out [transition-delay:140ms]">
+                <div class="relative mt-10 md:mt-0">
+                    <div class="group relative overflow-hidden rounded-[24px] border border-[#EEF0F3] shadow-[0_24px_60px_rgba(0,0,0,0.1),0_6px_18px_rgba(0,0,0,0.06)] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:rounded-tr-[4px] after:bg-rojo after:content-['']">
                         <img src="<?= base_url('assets/img/servicio_técnico.jpeg') ?>"
                              alt="Técnico realizando mantenimiento de equipo informático"
-                             loading="lazy">
+                             loading="lazy"
+                             class="block min-h-[260px] w-full object-cover transition-transform duration-[550ms] ease-[cubic-bezier(.4,0,.2,1)] group-hover:scale-[1.04] md:min-h-[380px]">
                     </div>
                 </div>
             </div>
@@ -301,7 +79,8 @@
     var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
             if (e.isIntersecting) {
-                e.target.classList.add('visible');
+                e.target.classList.remove('opacity-0', 'translate-y-[22px]');
+                e.target.classList.add('opacity-100', 'translate-y-0');
                 io.unobserve(e.target);
             }
         });

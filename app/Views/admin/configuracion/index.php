@@ -1,157 +1,44 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .config-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        padding: 2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .form-section-title {
-        font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
-        color: #9CA3AF; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6;
-    }
-    .form-label { font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem; }
-    .form-control {
-        border: 1.5px solid #e5e7eb; border-radius: 9px; padding: 0.6rem 0.95rem;
-        font-size: 0.92rem; color: #111827; transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .form-control:focus {
-        border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.1); outline: none;
-    }
-    .field-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 0.3rem; }
-    .input-prefix {
-        background: #f9fafb; border: 1.5px solid #e5e7eb; border-right: none;
-        border-radius: 9px 0 0 9px; padding: 0.6rem 0.85rem;
-        font-size: 0.9rem; font-weight: 600; color: #6B7280;
-    }
-    .input-suffix {
-        background: #f9fafb; border: 1.5px solid #e5e7eb; border-left: none;
-        border-radius: 0 9px 9px 0; padding: 0.6rem 0.85rem;
-        font-size: 0.9rem; font-weight: 600; color: #6B7280;
-    }
-    .input-group .form-control { border-radius: 0; }
+<?php
+$inputCls = 'border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark transition-colors focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none w-full';
+?>
 
-    /* ── Caja de preview del cálculo ── */
-    .calc-preview {
-        background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
-        border: 1.5px solid rgba(255,0,51,0.2); border-radius: 12px;
-        padding: 1.25rem 1.5rem;
-    }
-    .calc-preview .calc-titulo {
-        font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-        color: #FF0033; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.4rem;
-    }
-    .calc-formula {
-        font-size: 0.88rem; color: #374151; line-height: 1.7;
-    }
-    .calc-formula .val {
-        font-weight: 700; color: #111827;
-        background: rgba(255,0,51,0.07); border-radius: 4px; padding: 1px 6px;
-    }
-    .calc-result {
-        font-size: 1.35rem; font-weight: 800; color: #FF0033; margin-top: 0.6rem;
-        display: flex; align-items: baseline; gap: 0.4rem;
-    }
-    .calc-result .ejemplo-label {
-        font-size: 0.75rem; font-weight: 500; color: #9CA3AF;
-    }
-
-    /* ── Tabla de productos ── */
-    .productos-table-wrap {
-        overflow-x: auto; margin-top: 0.5rem; border-radius: 10px;
-        border: 1px solid #e5e7eb;
-    }
-    .productos-table {
-        width: 100%; border-collapse: collapse; font-size: 0.88rem;
-    }
-    .productos-table th {
-        background: #f9fafb; color: #6B7280; font-size: 0.75rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.5px; padding: 0.65rem 1rem;
-        border-bottom: 1px solid #e5e7eb; white-space: nowrap;
-    }
-    .productos-table td {
-        padding: 0.65rem 1rem; border-bottom: 1px solid #f3f4f6; color: #374151; vertical-align: middle;
-    }
-    .productos-table tr:last-child td { border-bottom: none; }
-    .productos-table tr:hover td { background: #fafafa; }
-    .precio-usd {
-        font-weight: 600; color: #059669; white-space: nowrap;
-    }
-    .precio-ars {
-        font-weight: 700; color: #FF0033; white-space: nowrap;
-    }
-    .precio-nuevo {
-        font-weight: 700; color: #FF0033; white-space: nowrap;
-    }
-    .sin-precio { color: #D1D5DB; font-style: italic; }
-
-    .btn-guardar {
-        background: #FF0033; color: #fff; border: none; padding: 0.72rem 2rem;
-        border-radius: 50px; font-size: 0.95rem; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-    }
-    .btn-guardar:hover { background: #cc0028; transform: translateY(-1px); }
-    .btn-guardar:active { transform: translateY(0); }
-
-    .page-header-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .page-header-row h2 { font-size: 1.35rem; font-weight: 700; color: #111827; margin: 0; }
-    .errors-box {
-        background: rgba(255,0,51,0.05); border: 1px solid rgba(255,0,51,0.2); border-radius: 10px;
-        padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: #DC2626;
-    }
-    .errors-box ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
-    .alert-success {
-        background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.25);
-        border-radius: 10px; padding: 0.9rem 1.25rem; margin-bottom: 1.25rem;
-        color: #065f46; font-size: 0.9rem; display: flex; align-items: center; gap: 0.6rem;
-    }
-    .info-box {
-        background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2);
-        border-radius: 9px; padding: 0.75rem 1rem; font-size: 0.82rem; color: #1e40af;
-        display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 1.25rem;
-    }
-    .info-box i { margin-top: 1px; flex-shrink: 0; }
-
-    .empty-state { text-align: center; padding: 2.5rem 1rem; color: #9CA3AF; }
-    .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; color: #E5E7EB; }
-    .empty-state p { font-size: 0.88rem; }
-</style>
-
-<div class="page-header-row">
-    <h2>
-        <i class="fas fa-sliders me-2" style="color:#FF0033;font-size:1.05rem;"></i>
+<div class="flex items-center gap-3 mb-6">
+    <h2 class="text-[1.35rem] font-bold text-dark m-0">
+        <i class="fas fa-sliders mr-2 text-rojo text-[1.05rem]"></i>
         Configuración de precios
     </h2>
 </div>
 
 <?php $errors = session()->getFlashdata('errors'); ?>
 <?php if ($errors): ?>
-<div class="errors-box mb-3">
-    <strong><i class="fas fa-exclamation-triangle me-1"></i>Corregí los siguientes errores:</strong>
-    <ul><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
+<div class="bg-rojo/5 border border-rojo/20 rounded-[10px] px-5 py-4 mb-4 text-[0.88rem] text-red-600">
+    <strong><i class="fas fa-exclamation-triangle mr-1"></i>Corregí los siguientes errores:</strong>
+    <ul class="mt-2 pl-5 list-disc"><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
 </div>
 <?php endif; ?>
 
 <?php $success = session()->getFlashdata('success'); ?>
 <?php if ($success): ?>
-<div class="alert-success">
-    <i class="fas fa-check-circle" style="color:#10b981;"></i>
+<div class="bg-emerald-500/[0.07] border border-emerald-500/25 rounded-[10px] px-5 py-[0.9rem] mb-5 text-emerald-800 text-[0.9rem] flex items-center gap-[0.6rem]">
+    <i class="fas fa-check-circle text-emerald-500"></i>
     <?= esc($success) ?>
 </div>
 <?php endif; ?>
 
-<div class="row g-4">
+<div class="flex flex-wrap gap-6">
 
     <!-- ── Columna izquierda: formulario ── -->
-    <div class="col-12 col-lg-5">
-        <div class="config-card">
-            <div class="form-section-title">
-                <i class="fas fa-dollar-sign me-1"></i>Cotización y ganancia
+    <div class="w-full lg:w-5/12">
+        <div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+            <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100">
+                <i class="fas fa-dollar-sign mr-1"></i>Cotización y ganancia
             </div>
 
-            <div class="info-box">
-                <i class="fas fa-info-circle"></i>
+            <div class="bg-blue-500/[0.06] border border-blue-500/20 rounded-[9px] px-4 py-3 text-[0.82rem] text-blue-800 flex items-start gap-2 mb-5">
+                <i class="fas fa-info-circle mt-px shrink-0"></i>
                 <span>
                     Al guardar, se recalculará automáticamente el precio en pesos de todos los
                     productos que tengan precio en dólares cargado.
@@ -160,64 +47,64 @@
 
             <form action="<?= base_url('admin/configuracion/guardar') ?>" method="POST" id="formConfig">
 
-                <div class="mb-4">
-                    <label for="cotizacion_dolar" class="form-label">
-                        Cotización del dólar <span style="color:#FF0033;">*</span>
+                <div class="mb-6">
+                    <label for="cotizacion_dolar" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">
+                        Cotización del dólar <span class="text-rojo">*</span>
                     </label>
-                    <div class="input-group">
-                        <span class="input-prefix">$</span>
+                    <div class="flex">
+                        <span class="bg-gray-50 border-[1.5px] border-gray-200 border-r-0 rounded-l-[9px] px-[0.85rem] py-[0.6rem] text-[0.9rem] font-semibold text-gray-500">$</span>
                         <input type="number" id="cotizacion_dolar" name="cotizacion_dolar"
-                               class="form-control"
+                               class="<?= $inputCls ?> rounded-none"
                                value="<?= esc($cotizacion_dolar > 0 ? $cotizacion_dolar : '') ?>"
                                min="0" step="0.01"
                                placeholder="Ej: 1250.00"
                                oninput="actualizarPreview()"
                                required>
-                        <span class="input-suffix">ARS / USD</span>
+                        <span class="bg-gray-50 border-[1.5px] border-gray-200 border-l-0 rounded-r-[9px] px-[0.85rem] py-[0.6rem] text-[0.9rem] font-semibold text-gray-500 whitespace-nowrap">ARS / USD</span>
                     </div>
-                    <div class="field-hint">Precio en pesos de 1 dólar.</div>
+                    <div class="text-xs text-gray-400 mt-[0.3rem]">Precio en pesos de 1 dólar.</div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="porcentaje_ganancia" class="form-label">
-                        Porcentaje de ganancia <span style="color:#FF0033;">*</span>
+                <div class="mb-6">
+                    <label for="porcentaje_ganancia" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">
+                        Porcentaje de ganancia <span class="text-rojo">*</span>
                     </label>
-                    <div class="input-group">
+                    <div class="flex">
                         <input type="number" id="porcentaje_ganancia" name="porcentaje_ganancia"
-                               class="form-control"
+                               class="<?= $inputCls ?> rounded-r-none"
                                value="<?= esc($porcentaje_ganancia >= 0 ? $porcentaje_ganancia : '') ?>"
                                min="0" max="999" step="0.1"
                                placeholder="Ej: 30"
                                oninput="actualizarPreview()"
                                required>
-                        <span class="input-suffix">%</span>
+                        <span class="bg-gray-50 border-[1.5px] border-gray-200 border-l-0 rounded-r-[9px] px-[0.85rem] py-[0.6rem] text-[0.9rem] font-semibold text-gray-500">%</span>
                     </div>
-                    <div class="field-hint">Porcentaje de ganancia del negocio sobre el costo en dólares.</div>
+                    <div class="text-xs text-gray-400 mt-[0.3rem]">Porcentaje de ganancia del negocio sobre el costo en dólares.</div>
                 </div>
 
                 <!-- Preview del cálculo -->
-                <div class="calc-preview mb-4">
-                    <div class="calc-titulo">
+                <div class="bg-gradient-to-br from-red-50 to-white border-[1.5px] border-rojo/20 rounded-xl px-6 py-5 mb-6">
+                    <div class="text-[0.78rem] font-bold uppercase tracking-[0.8px] text-rojo mb-[0.9rem] flex items-center gap-[0.4rem]">
                         <i class="fas fa-calculator"></i>
                         Ejemplo de cálculo (producto a USD <span id="prev-ej-usd">100</span>)
                     </div>
-                    <div class="calc-formula">
-                        USD <span class="val" id="prev-usd">100</span>
-                        × $<span class="val" id="prev-cotiz"><?= number_format($cotizacion_dolar, 2, ',', '.') ?></span>
-                        × (1 + <span class="val" id="prev-porc"><?= number_format($porcentaje_ganancia, 1, ',', '.') ?></span>%)
+                    <div class="text-[0.88rem] text-gray-700 leading-[1.7]">
+                        USD <span class="font-bold text-dark bg-rojo/[0.07] rounded px-[6px] py-px" id="prev-usd">100</span>
+                        × $<span class="font-bold text-dark bg-rojo/[0.07] rounded px-[6px] py-px" id="prev-cotiz"><?= number_format($cotizacion_dolar, 2, ',', '.') ?></span>
+                        × (1 + <span class="font-bold text-dark bg-rojo/[0.07] rounded px-[6px] py-px" id="prev-porc"><?= number_format($porcentaje_ganancia, 1, ',', '.') ?></span>%)
                     </div>
-                    <div class="calc-result">
+                    <div class="text-[1.35rem] font-extrabold text-rojo mt-[0.6rem] flex items-baseline gap-[0.4rem]">
                         <span id="prev-resultado">
                             <?php
                                 $ejemplo = 100 * $cotizacion_dolar * (1 + $porcentaje_ganancia / 100);
                                 echo '$' . number_format(round($ejemplo), 0, ',', '.');
                             ?>
                         </span>
-                        <span class="ejemplo-label">precio final estimado</span>
+                        <span class="text-xs font-medium text-gray-400">precio final estimado</span>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-guardar">
+                <button type="submit" class="bg-rojo hover:bg-rojo-dark text-white px-8 py-[0.72rem] rounded-full text-[0.95rem] font-semibold inline-flex items-center gap-[0.45rem] cursor-pointer transition-all hover:-translate-y-px active:translate-y-0">
                     <i class="fas fa-save"></i> Guardar y recalcular precios
                 </button>
 
@@ -226,58 +113,57 @@
     </div>
 
     <!-- ── Columna derecha: tabla de productos afectados ── -->
-    <div class="col-12 col-lg-7">
-        <div class="config-card">
-            <div class="form-section-title">
-                <i class="fas fa-box me-1"></i>
+    <div class="w-full lg:w-7/12">
+        <div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+            <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100">
+                <i class="fas fa-box mr-1"></i>
                 Productos con precio en dólares
                 <?php if (!empty($productosConDolar)): ?>
-                <span style="background:rgba(255,0,51,0.1);color:#FF0033;font-size:0.68rem;
-                             padding:1px 8px;border-radius:50px;margin-left:6px;font-weight:700;">
+                <span class="bg-rojo/10 text-rojo text-[0.68rem] px-2 py-px rounded-full ml-[6px] font-bold">
                     <?= count($productosConDolar) ?>
                 </span>
                 <?php endif; ?>
             </div>
 
             <?php if (empty($productosConDolar)): ?>
-            <div class="empty-state">
-                <i class="fas fa-dollar-sign"></i>
-                <p>Ningún producto tiene precio en dólares cargado aún.<br>
+            <div class="text-center py-10 px-4 text-gray-400">
+                <i class="fas fa-dollar-sign text-[2.5rem] block mb-3 text-gray-200"></i>
+                <p class="text-[0.88rem]">Ningún producto tiene precio en dólares cargado aún.<br>
                 Editá un producto y completá el campo <strong>Precio en USD</strong>.</p>
             </div>
             <?php else: ?>
-            <div class="productos-table-wrap">
-                <table class="productos-table">
+            <div class="overflow-x-auto mt-2 rounded-[10px] border border-gray-200">
+                <table class="w-full border-collapse text-[0.88rem]">
                     <thead>
                         <tr>
-                            <th>Producto</th>
-                            <th>Precio USD</th>
-                            <th>Precio actual (ARS)</th>
-                            <th>Precio nuevo estimado</th>
+                            <th class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-[0.5px] px-4 py-[0.65rem] border-b border-gray-200 whitespace-nowrap text-left">Producto</th>
+                            <th class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-[0.5px] px-4 py-[0.65rem] border-b border-gray-200 whitespace-nowrap text-left">Precio USD</th>
+                            <th class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-[0.5px] px-4 py-[0.65rem] border-b border-gray-200 whitespace-nowrap text-left">Precio actual (ARS)</th>
+                            <th class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-[0.5px] px-4 py-[0.65rem] border-b border-gray-200 whitespace-nowrap text-left">Precio nuevo estimado</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-productos">
                         <?php foreach ($productosConDolar as $p): ?>
-                        <tr data-usd="<?= esc($p['precio_dolar']) ?>">
-                            <td>
-                                <div style="font-weight:600;color:#111827;line-height:1.3;">
+                        <tr class="border-b border-gray-100 last:border-b-0 hover:bg-gray-50" data-usd="<?= esc($p['precio_dolar']) ?>">
+                            <td class="px-4 py-[0.65rem] align-middle">
+                                <div class="font-semibold text-dark leading-[1.3]">
                                     <?= esc($p['nombre']) ?>
                                 </div>
                                 <?php if ($p['modelo']): ?>
-                                <div style="font-size:0.75rem;color:#9CA3AF;"><?= esc($p['modelo']) ?></div>
+                                <div class="text-[0.75rem] text-gray-400"><?= esc($p['modelo']) ?></div>
                                 <?php endif; ?>
                             </td>
-                            <td class="precio-usd">
+                            <td class="px-4 py-[0.65rem] align-middle font-semibold text-emerald-600 whitespace-nowrap">
                                 USD <?= number_format((float)$p['precio_dolar'], 2, ',', '.') ?>
                             </td>
-                            <td>
+                            <td class="px-4 py-[0.65rem] align-middle">
                                 <?php if ($p['precio_texto']): ?>
-                                <span class="precio-ars"><?= esc($p['precio_texto']) ?></span>
+                                <span class="font-bold text-rojo whitespace-nowrap"><?= esc($p['precio_texto']) ?></span>
                                 <?php else: ?>
-                                <span class="sin-precio">Sin precio</span>
+                                <span class="text-gray-300 italic">Sin precio</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="precio-nuevo">
+                            <td class="px-4 py-[0.65rem] align-middle font-bold text-rojo whitespace-nowrap">
                                 <?php
                                     $nuevo = (float)$p['precio_dolar'] * $cotizacion_dolar * (1 + $porcentaje_ganancia / 100);
                                     echo $cotizacion_dolar > 0

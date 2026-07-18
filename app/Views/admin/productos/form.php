@@ -1,212 +1,25 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .form-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        padding: 2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); max-width: 820px;
-    }
-    .form-section-title {
-        font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
-        color: #9CA3AF; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6;
-    }
-    .form-label { font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem; }
-    .form-control, .form-select {
-        border: 1.5px solid #e5e7eb; border-radius: 9px; padding: 0.6rem 0.95rem;
-        font-size: 0.92rem; color: #111827; transition: border-color 0.2s, box-shadow 0.2s;
-        background: #fff;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.1); outline: none;
-    }
-    .form-select:disabled { background: #f9fafb; color: #9CA3AF; cursor: not-allowed; }
-    textarea.form-control { min-height: 95px; resize: vertical; }
-    .field-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 0.2rem; }
-
-    /* ── imágenes actuales ── */
-    .img-grid-actual {
-        display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 0.5rem;
-    }
-    .img-card-actual {
-        width: 140px; border: 1.5px solid #e5e7eb; border-radius: 12px; overflow: hidden;
-        background: #f9fafb; display: flex; flex-direction: column;
-        transition: border-color 0.2s, opacity 0.2s; position: relative;
-    }
-    .img-card-actual.para-eliminar { opacity: 0.35; border-color: #fca5a5; }
-    .img-card-actual .img-thumb {
-        width: 100%; height: 110px; object-fit: cover; display: block;
-    }
-    .img-card-actual .img-thumb-placeholder {
-        width: 100%; height: 110px; display: flex; align-items: center; justify-content: center;
-        color: #d1d5db; font-size: 2rem; background: #f3f4f6;
-    }
-    .img-card-actual .img-card-body {
-        padding: 0.45rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 5px;
-    }
-    .img-badge-principal {
-        display: inline-block; background: rgba(255,0,51,0.1); color: #FF0033;
-        font-size: 0.67rem; font-weight: 700; padding: 2px 7px; border-radius: 50px;
-        text-transform: uppercase; letter-spacing: 0.4px; width: fit-content;
-    }
-    .btn-set-principal {
-        font-size: 0.72rem; font-weight: 600; color: #374151; background: #fff;
-        border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 3px 7px;
-        cursor: pointer; transition: border-color 0.2s, color 0.2s; text-align: center;
-        width: 100%;
-    }
-    .btn-set-principal:hover { border-color: #FF0033; color: #FF0033; }
-    .btn-del-img {
-        font-size: 0.72rem; font-weight: 600; color: #9CA3AF; background: #fff;
-        border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 3px 7px;
-        cursor: pointer; transition: border-color 0.2s, color 0.2s; text-align: center;
-        width: 100%;
-    }
-    .btn-del-img:hover { border-color: #fca5a5; color: #DC2626; }
-    .btn-del-img.activo { color: #DC2626; border-color: #fca5a5; background: #fef2f2; }
-
-    /* ── upload área ── */
-    .img-upload-area {
-        border: 2px dashed #e5e7eb; border-radius: 12px; background: #f9fafb;
-        padding: 1.5rem; text-align: center; cursor: pointer;
-        transition: border-color 0.2s, background 0.2s;
-    }
-    .img-upload-area:hover, .img-upload-area.drag-over { border-color: #FF0033; background: #fff5f5; }
-    .img-upload-area i { font-size: 2rem; color: #d1d5db; display: block; margin-bottom: 0.5rem; }
-    .img-upload-area span { font-size: 0.84rem; color: #9CA3AF; }
-    .img-upload-area strong { color: #374151; }
-
-    /* ── previews nuevas ── */
-    .img-previews-nuevas {
-        display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.9rem;
-    }
-    .img-preview-nueva {
-        width: 100px; height: 100px; border-radius: 10px; overflow: hidden;
-        border: 1.5px solid #e5e7eb; position: relative;
-    }
-    .img-preview-nueva img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .img-preview-nueva .rm-preview {
-        position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.55);
-        color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px;
-        font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        line-height: 1;
-    }
-    .img-delete-check { font-size: 0.82rem; color: #DC2626; }
-
-    .cat-confirmacion {
-        display: none; align-items: center; gap: 0.6rem;
-        background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.25);
-        border-radius: 8px; padding: 0.55rem 0.9rem; margin-top: 0.75rem; font-size: 0.85rem; color: #065f46;
-    }
-    .cat-confirmacion.visible { display: flex; }
-    .cat-confirmacion i { color: #10b981; font-size: 0.9rem; }
-
-    .badge-preview {
-        display: inline-block; background: rgba(255,0,51,0.08); color: #FF0033;
-        padding: 0.15rem 0.6rem; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
-        margin-left: 0.5rem; vertical-align: middle;
-    }
-
-    .btn-guardar {
-        background: #FF0033; color: #fff; border: none; padding: 0.7rem 2rem;
-        border-radius: 50px; font-size: 0.95rem; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer; transition: background 0.2s;
-    }
-    .btn-guardar:hover { background: #cc0028; }
-    .btn-cancelar {
-        color: #6B7280; text-decoration: none; padding: 0.7rem 1.4rem; border-radius: 50px;
-        font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem;
-        border: 1.5px solid #e5e7eb; transition: background 0.15s;
-    }
-    .btn-cancelar:hover { background: #f3f4f6; color: #374151; }
-    .errors-box {
-        background: rgba(255,0,51,0.05); border: 1px solid rgba(255,0,51,0.2); border-radius: 10px;
-        padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: #DC2626;
-    }
-    .errors-box ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
-    .page-header-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .page-header-row h2 { font-size: 1.35rem; font-weight: 700; color: #111827; margin: 0; }
-    .back-link { color: #6B7280; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
-    .back-link:hover { color: #FF0033; }
-
-    .select-arrow { position: relative; }
-    .select-arrow::after {
-        content: ''; position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
-        width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
-        border-top: 5px solid #9CA3AF; pointer-events: none;
-    }
-
-    /* ── secciones de visibilidad ── */
-    .secciones-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 0.75rem;
-    }
-    .seccion-item {
-        border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 0.9rem 0.85rem;
-        cursor: pointer; user-select: none; position: relative;
-        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-        background: #fff;
-    }
-    .seccion-item:hover { border-color: #FF0033; background: #fff8f8; }
-    .seccion-item.activa {
-        border-color: #FF0033; background: rgba(255,0,51,0.04);
-        box-shadow: 0 0 0 3px rgba(255,0,51,0.08);
-    }
-    .seccion-item input[type=checkbox] { display: none; }
-    .seccion-check-box {
-        position: absolute; top: 0.7rem; right: 0.7rem;
-        width: 17px; height: 17px; border: 2px solid #D1D5DB; border-radius: 4px;
-        background: #fff; transition: border-color 0.2s, background 0.2s;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .seccion-item.activa .seccion-check-box {
-        border-color: #FF0033; background: #FF0033;
-    }
-    .seccion-check-box::after {
-        content: ''; display: block; width: 4px; height: 7px;
-        border-right: 2px solid transparent; border-bottom: 2px solid transparent;
-        transform: rotate(45deg) translate(-1px, -1px);
-    }
-    .seccion-item.activa .seccion-check-box::after {
-        border-color: #fff;
-    }
-    .seccion-icon {
-        font-size: 1.4rem; color: #D1D5DB; display: block; margin-bottom: 0.45rem;
-        transition: color 0.2s;
-    }
-    .seccion-item.activa .seccion-icon { color: #FF0033; }
-    .seccion-nombre {
-        font-weight: 600; font-size: 0.84rem; color: #374151; display: block;
-    }
-    .seccion-desc {
-        font-size: 0.72rem; color: #9CA3AF; display: block; margin-top: 0.2rem; line-height: 1.35;
-    }
-    .secciones-hint {
-        font-size: 0.8rem; color: #6B7280; margin-bottom: 0.85rem; line-height: 1.5;
-        background: #f9fafb; border-radius: 8px; padding: 0.6rem 0.9rem;
-        border-left: 3px solid #FF0033;
-    }
-</style>
-
-<div class="page-header-row">
-    <a href="<?= base_url('admin/productos') ?>" class="back-link">
+<div class="flex items-center gap-3 mb-6">
+    <a href="<?= base_url('admin/productos') ?>" class="text-gray-500 no-underline flex items-center gap-1 transition-colors hover:text-rojo">
         <i class="fas fa-arrow-left"></i>
     </a>
-    <h2>
-        <i class="fas fa-<?= $producto ? 'pen' : 'plus-circle' ?> me-2" style="color:#FF0033;font-size:1.05rem;"></i>
+    <h2 class="text-[1.35rem] font-bold text-dark m-0">
+        <i class="fas fa-<?= $producto ? 'pen' : 'plus-circle' ?> mr-2 text-rojo text-[1.05rem]"></i>
         <?= $producto ? 'Editar producto' : 'Agregar nuevo producto' ?>
     </h2>
 </div>
 
 <?php $errors = session()->getFlashdata('errors'); ?>
 <?php if ($errors): ?>
-<div class="errors-box mb-3">
-    <strong><i class="fas fa-exclamation-triangle me-1"></i>Corregí los siguientes errores:</strong>
-    <ul><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
+<div class="bg-rojo/5 border border-rojo/20 rounded-[10px] px-5 py-4 mb-3 text-[0.88rem] text-red-600">
+    <strong><i class="fas fa-exclamation-triangle mr-1"></i>Corregí los siguientes errores:</strong>
+    <ul class="list-disc mt-2 pl-5"><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
 </div>
 <?php endif; ?>
 
-<div class="form-card">
+<div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[820px]">
     <form action="<?= esc($accion) ?>" method="POST" enctype="multipart/form-data">
 
         <!-- Campo oculto con el ID de la categoría seleccionada -->
@@ -214,49 +27,50 @@
                value="<?= esc(old('categoria_id', $producto['categoria_id'] ?? '')) ?>">
 
         <!-- ── SECCIÓN 1: CATEGORÍA ── -->
-        <div class="form-section-title"><i class="fas fa-sitemap me-1"></i>¿A qué categoría pertenece?</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-sitemap mr-1"></i>¿A qué categoría pertenece?</div>
 
-        <div class="row g-3 mb-2">
-            <div class="col-12 col-md-4">
-                <label for="sel_rubro" class="form-label">
-                    Rubro <span style="color:#FF0033;">*</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
+            <div>
+                <label for="sel_rubro" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
+                    Rubro <span class="text-rojo">*</span>
                 </label>
-                <select id="sel_rubro" class="form-select">
+                <select id="sel_rubro" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
                     <option value="">— Seleccioná un rubro —</option>
                 </select>
             </div>
 
-            <div class="col-12 col-md-4">
-                <label for="sel_subrubro" class="form-label">
-                    Subrubro <span style="color:#FF0033;">*</span>
+            <div>
+                <label for="sel_subrubro" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
+                    Subrubro <span class="text-rojo">*</span>
                 </label>
-                <select id="sel_subrubro" class="form-select" disabled>
+                <select id="sel_subrubro" disabled
+                        class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)] disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed">
                     <option value="">— Primero elegí el rubro —</option>
                 </select>
             </div>
 
-            <div class="col-12 col-md-4" id="wrap-subsub" style="display:none;">
-                <label for="sel_subsub" class="form-label">Subcategoría</label>
-                <select id="sel_subsub" class="form-select">
+            <div id="wrap-subsub" class="hidden">
+                <label for="sel_subsub" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Subcategoría</label>
+                <select id="sel_subsub" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
                     <option value="">— Seleccioná —</option>
                 </select>
             </div>
         </div>
 
-        <div class="cat-confirmacion" id="catConfirmacion">
-            <i class="fas fa-check-circle"></i>
+        <div id="catConfirmacion" class="hidden items-center gap-[0.6rem] bg-emerald-500/[0.07] border border-emerald-500/25 rounded-lg px-[0.9rem] py-[0.55rem] mt-3 text-[0.85rem] text-emerald-800">
+            <i class="fas fa-check-circle text-emerald-500 text-[0.9rem]"></i>
             <span>Categoría: <strong id="catNombreTexto"></strong></span>
         </div>
 
         <div class="mb-4"></div>
 
-        <!-- ── SECCIÓN 1b: MARCA ── -->
-        <div class="form-section-title"><i class="fas fa-tag me-1"></i>Marca</div>
+        <!-- ── SECCIÓN 1b: MARCA Y FÁBRICA ── -->
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-tag mr-1"></i>Marca y fábrica</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-md-6">
-                <label for="marca_id" class="form-label">Marca del producto</label>
-                <select id="marca_id" name="marca_id" class="form-select">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <div>
+                <label for="marca_id" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Marca del producto</label>
+                <select id="marca_id" name="marca_id" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
                     <option value="">— Sin marca / Genérico —</option>
                     <?php foreach ($marcas as $m): ?>
                         <option value="<?= $m['id'] ?>"
@@ -265,112 +79,156 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <div class="field-hint">Seleccioná la marca fabricante del producto.</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Seleccioná la marca fabricante del producto.</div>
+            </div>
+
+            <div>
+                <label for="fabrica_id" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
+                    Fábrica <span id="fabrica_requerida" class="text-rojo hidden">*</span>
+                </label>
+                <select id="fabrica_id" name="fabrica_id" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
+                    <option value="">— Sin fábrica —</option>
+                    <?php foreach ($fabricas as $f): ?>
+                        <option value="<?= $f['id'] ?>"
+                            <?= old('fabrica_id', $producto['fabrica_id'] ?? '') == $f['id'] ? 'selected' : '' ?>>
+                            <?= esc($f['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="text-xs text-gray-400 mt-[0.2rem]" id="fabrica_hint">
+                    Obligatorio para productos del rubro Muebles.
+                    <a href="<?= base_url('admin/fabricas/crear') ?>" target="_blank" class="text-rojo">Agregar fábrica</a>.
+                </div>
             </div>
         </div>
 
         <!-- ── SECCIÓN 2: DATOS DEL PRODUCTO ── -->
-        <div class="form-section-title"><i class="fas fa-box me-1"></i>Información del producto</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-box mr-1"></i>Información del producto</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12">
-                <label for="nombre" class="form-label">
-                    Nombre del producto <span style="color:#FF0033;">*</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div class="sm:col-span-2">
+                <label for="nombre" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
+                    Nombre del producto <span class="text-rojo">*</span>
                 </label>
-                <input type="text" id="nombre" name="nombre" class="form-control"
+                <input type="text" id="nombre" name="nombre"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        value="<?= esc(old('nombre', $producto['nombre'] ?? '')) ?>"
                        placeholder="Ej: Teclado Mecánico RGB, Heladera No Frost 420L" required>
             </div>
 
-            <div class="col-12 col-sm-6">
-                <label for="modelo" class="form-label">Modelo / SKU</label>
-                <input type="text" id="modelo" name="modelo" class="form-control"
+            <div>
+                <label for="modelo" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Modelo / SKU</label>
+                <input type="text" id="modelo" name="modelo"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        value="<?= esc(old('modelo', $producto['modelo'] ?? '')) ?>"
                        placeholder="Ej: MX Keys, G915, GTX-3090-TI" maxlength="200">
-                <div class="field-hint">Número de modelo o código del fabricante (opcional).</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Número de modelo o código del fabricante (opcional).</div>
             </div>
 
-            <div class="col-12 col-sm-6">
-                <label for="codigo" class="form-label">
+            <div>
+                <label for="codigo" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
                     Código interno
-                    <span style="background:rgba(99,102,241,0.1);color:#4F46E5;font-size:0.68rem;font-weight:700;
-                                 padding:1px 7px;border-radius:50px;margin-left:6px;vertical-align:middle;">
-                        <i class="fas fa-lock" style="font-size:0.6rem;"></i> Solo admin
+                    <span class="inline-block bg-indigo-500/10 text-indigo-600 text-[0.68rem] font-bold px-[7px] py-px rounded-full ml-1.5 align-middle">
+                        <i class="fas fa-lock text-[0.6rem]"></i> Solo admin
                     </span>
                 </label>
-                <input type="text" id="codigo" name="codigo" class="form-control"
+                <input type="text" id="codigo" name="codigo"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        value="<?= esc(old('codigo', $producto['codigo'] ?? '')) ?>"
                        placeholder="Ej: CIR-0042, PROD-2024-001" maxlength="100">
-                <div class="field-hint">
-                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
+                    <i class="fas fa-lock mr-1 text-gray-400"></i>
                     Código único para identificar el producto internamente. No aparece en el catálogo.
                 </div>
             </div>
 
-            <div class="col-12">
-                <label for="descripcion_corta" class="form-label">Descripción breve</label>
-                <input type="text" id="descripcion_corta" name="descripcion_corta" class="form-control"
+            <div class="sm:col-span-2">
+                <label for="descripcion_corta" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Descripción breve</label>
+                <input type="text" id="descripcion_corta" name="descripcion_corta"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        value="<?= esc(old('descripcion_corta', $producto['descripcion_corta'] ?? '')) ?>"
                        placeholder="Una línea que resume el producto (aparece en las tarjetas del catálogo)"
                        maxlength="500">
-                <div class="field-hint">Máximo 500 caracteres. Se muestra en las tarjetas del catálogo.</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Máximo 500 caracteres. Se muestra en las tarjetas del catálogo.</div>
             </div>
 
-            <div class="col-12">
-                <label for="descripcion" class="form-label">Descripción completa</label>
-                <textarea id="descripcion" name="descripcion" class="form-control"
+            <div class="sm:col-span-2">
+                <label for="descripcion" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Descripción completa</label>
+                <textarea id="descripcion" name="descripcion"
+                          class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)] min-h-[95px] resize-y"
                           placeholder="Características, especificaciones técnicas, materiales, colores disponibles..."><?= esc(old('descripcion', $producto['descripcion'] ?? '')) ?></textarea>
-                <div class="field-hint">Descripción detallada que aparece en la página del producto.</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Descripción detallada que aparece en la página del producto.</div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="url_fabricante" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
+                    Sitio web del fabricante
+                    <span class="inline-block bg-indigo-500/10 text-indigo-600 text-[0.68rem] font-bold px-[7px] py-px rounded-full ml-1.5 align-middle">
+                        <i class="fas fa-lock text-[0.6rem]"></i> Solo admin
+                    </span>
+                </label>
+                <div class="flex">
+                    <span class="flex items-center bg-gray-50 border-[1.5px] border-r-0 border-gray-200 rounded-l-[9px] px-[0.85rem] text-[0.9rem] text-gray-400">
+                        <i class="fas fa-link"></i>
+                    </span>
+                    <input type="url" id="url_fabricante" name="url_fabricante"
+                           class="border-[1.5px] border-gray-200 rounded-r-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full flex-1 focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                           value="<?= esc(old('url_fabricante', $producto['url_fabricante'] ?? '')) ?>"
+                           placeholder="https://www.fabricante.com">
+                </div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
+                    <i class="fas fa-lock mr-1 text-gray-400"></i>
+                    Opcional. URL del sitio oficial del fabricante para consultar especificaciones o soporte. No aparece en el catálogo público.
+                </div>
             </div>
         </div>
 
         <!-- ── SECCIÓN 3: PRECIO Y ESTADO ── -->
-        <div class="form-section-title"><i class="fas fa-tag me-1"></i>Precio y estado</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-tag mr-1"></i>Precio y estado</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-sm-6">
-                <label for="precio_dolar" class="form-label">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div>
+                <label for="precio_dolar" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
                     Precio en dólares (USD)
-                    <span style="background:rgba(5,150,105,0.1);color:#059669;font-size:0.68rem;font-weight:700;
-                                 padding:1px 7px;border-radius:50px;margin-left:6px;vertical-align:middle;">
-                        <i class="fas fa-dollar-sign" style="font-size:0.6rem;"></i> Precio base
+                    <span class="inline-block bg-emerald-600/10 text-emerald-600 text-[0.68rem] font-bold px-[7px] py-px rounded-full ml-1.5 align-middle">
+                        <i class="fas fa-dollar-sign text-[0.6rem]"></i> Precio base
                     </span>
                 </label>
-                <div class="input-group">
-                    <span style="background:#f9fafb;border:1.5px solid #e5e7eb;border-right:none;
-                                 border-radius:9px 0 0 9px;padding:0.6rem 0.85rem;font-size:0.9rem;
-                                 font-weight:600;color:#059669;">USD</span>
+                <div class="flex">
+                    <span class="flex items-center bg-gray-50 border-[1.5px] border-r-0 border-gray-200 rounded-l-[9px] px-[0.85rem] text-[0.9rem] font-semibold text-emerald-600">USD</span>
                     <input type="number" id="precio_dolar" name="precio_dolar"
-                           class="form-control" style="border-radius:0 9px 9px 0;"
+                           class="border-[1.5px] border-gray-200 rounded-r-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full flex-1 focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                            value="<?= esc(old('precio_dolar', $producto['precio_dolar'] ?? '')) ?>"
                            min="0" step="0.01"
                            placeholder="Ej: 150.00">
                 </div>
-                <div class="field-hint">
-                    <i class="fas fa-sync-alt me-1" style="color:#059669;"></i>
-                    Al actualizar la cotización en <a href="<?= base_url('admin/configuracion') ?>" style="color:#FF0033;">Configuración</a>,
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
+                    <i class="fas fa-sync-alt mr-1 text-emerald-600"></i>
+                    Al actualizar la cotización en <a href="<?= base_url('admin/configuracion') ?>" class="text-rojo">Configuración</a>,
                     el precio en pesos se recalcula automáticamente.
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6">
-                <label for="precio_texto" class="form-label">Precio mostrado al público</label>
-                <input type="text" id="precio_texto" name="precio_texto" class="form-control"
+            <div>
+                <label for="precio_texto" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Precio mostrado al público</label>
+                <input type="text" id="precio_texto" name="precio_texto"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        value="<?= esc(old('precio_texto', $producto['precio_texto'] ?? '')) ?>"
                        placeholder="Ej: $85.000  —  o dejalo vacío para 'Consultar precio'">
-                <div class="field-hint">
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
                     Se actualiza automáticamente si tiene precio en USD. También podés editarlo manualmente.
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6">
-                <label for="badge" class="form-label">Etiqueta destacada</label>
+            <div>
+                <label for="badge_select" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Etiqueta destacada</label>
                 <?php
                     $badgeActual = old('badge', $producto['badge'] ?? '');
                     $badgesOpciones = ['', 'Nuevo', 'Destacado', 'Más vendido', 'Oferta', 'Recomendado', 'Premium'];
                     $esPersonalizado = !in_array($badgeActual, $badgesOpciones);
                 ?>
-                <select id="badge_select" class="form-select" onchange="cambiarBadge(this.value)">
+                <select id="badge_select" onchange="cambiarBadge(this.value)"
+                        class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
                     <option value="">Sin etiqueta</option>
                     <option value="Nuevo"        <?= $badgeActual === 'Nuevo'        ? 'selected' : '' ?>>Nuevo</option>
                     <option value="Destacado"    <?= $badgeActual === 'Destacado'    ? 'selected' : '' ?>>Destacado</option>
@@ -381,28 +239,27 @@
                     <option value="_custom"      <?= $esPersonalizado && $badgeActual !== '' ? 'selected' : '' ?>>Personalizada...</option>
                 </select>
                 <input type="hidden" id="badge" name="badge" value="<?= esc($badgeActual) ?>">
-                <input type="text" id="badge_custom" class="form-control mt-2"
+                <input type="text" id="badge_custom"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full mt-2 focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)] <?= ($esPersonalizado && $badgeActual !== '') ? '' : 'hidden' ?>"
                        placeholder="Escribí la etiqueta personalizada"
-                       value="<?= $esPersonalizado && $badgeActual !== '' ? esc($badgeActual) : '' ?>"
-                       style="display:<?= $esPersonalizado && $badgeActual !== '' ? '' : 'none' ?>;">
-                <div class="field-hint">
+                       value="<?= $esPersonalizado && $badgeActual !== '' ? esc($badgeActual) : '' ?>">
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
                     Aparece como una pequeña etiqueta de color sobre la tarjeta del producto.
                     <?php if ($badgeActual): ?>
-                        <span class="badge-preview"><?= esc($badgeActual) ?></span>
+                        <span class="inline-block bg-rojo/[0.08] text-rojo px-[0.6rem] py-[0.15rem] rounded-full text-[0.78rem] font-semibold ml-2 align-middle"><?= esc($badgeActual) ?></span>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <div class="col-12">
-                <div class="form-check form-switch" style="margin:0.25rem 0 0;">
-                    <input class="form-check-input" type="checkbox" id="activo" name="activo" value="1"
+            <div class="sm:col-span-2">
+                <label class="relative inline-flex items-center cursor-pointer mt-1">
+                    <input type="checkbox" id="activo" name="activo" value="1" class="sr-only peer"
                            <?= old('activo', $producto['activo'] ?? 1) ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="activo"
-                           style="font-size:0.9rem;font-weight:600;color:#374151;cursor:pointer;">
-                        Mostrar este producto en el catálogo
-                    </label>
-                </div>
-                <div class="field-hint" style="margin-left:2.5rem;">
+                    <span class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-rojo transition-colors relative
+                                 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></span>
+                    <span class="ml-3 text-[0.9rem] font-semibold text-gray-700">Mostrar este producto en el catálogo</span>
+                </label>
+                <div class="text-xs text-gray-400 mt-[0.2rem] ml-[3.5rem]">
                     Si está desactivado, el producto no aparece para los visitantes del sitio.
                 </div>
             </div>
@@ -410,45 +267,47 @@
         </div>
 
         <!-- ── SECCIÓN 3b: UBICACIÓN FÍSICA Y STOCK ── -->
-        <div class="form-section-title"><i class="fas fa-warehouse me-1"></i>Ubicación física y stock</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-warehouse mr-1"></i>Ubicación física y stock</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-md-6">
-                <label for="ubicacion" class="form-label">¿Dónde está el producto?</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <div>
+                <label for="ubicacion" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">¿Dónde está el producto?</label>
                 <?php $ubicacionActual = old('ubicacion', $producto['ubicacion'] ?? ''); ?>
-                <select id="ubicacion" name="ubicacion" class="form-select">
+                <select id="ubicacion" name="ubicacion"
+                        class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
                     <option value="">— Sin ubicación asignada —</option>
                     <option value="En el negocio"       <?= $ubicacionActual === 'En el negocio'       ? 'selected' : '' ?>>En el negocio</option>
                     <option value="Deposito nuevo local" <?= $ubicacionActual === 'Deposito nuevo local' ? 'selected' : '' ?>>Deposito nuevo local</option>
                     <option value="Deposito quincho"    <?= $ubicacionActual === 'Deposito quincho'    ? 'selected' : '' ?>>Deposito quincho</option>
                     <option value="Deposito casa"       <?= $ubicacionActual === 'Deposito casa'       ? 'selected' : '' ?>>Deposito casa</option>
                 </select>
-                <div class="field-hint">
-                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
+                    <i class="fas fa-lock mr-1 text-gray-400"></i>
                     Solo visible para el administrador. No aparece en el catálogo público.
                 </div>
             </div>
 
-            <div class="col-12 col-md-6">
-                <label for="stock" class="form-label">
+            <div>
+                <label for="stock" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
                     Cantidad en stock
                 </label>
-                <input type="number" id="stock" name="stock" class="form-control"
+                <input type="number" id="stock" name="stock"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                        min="0" step="1"
                        value="<?= esc(old('stock', $producto['stock'] ?? 0)) ?>"
                        placeholder="0">
-                <div class="field-hint">
-                    <i class="fas fa-lock me-1" style="color:#9CA3AF;"></i>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">
+                    <i class="fas fa-lock mr-1 text-gray-400"></i>
                     Solo visible para el administrador. No aparece en el catálogo público.
                 </div>
             </div>
         </div>
 
         <!-- ── SECCIÓN 3c: VISIBILIDAD ── -->
-        <div class="form-section-title"><i class="fas fa-map-marker-alt me-1"></i>¿Dónde destacar este producto?</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-map-marker-alt mr-1"></i>¿Dónde destacar este producto?</div>
 
-        <div class="secciones-hint">
-            <i class="fas fa-info-circle me-1" style="color:#FF0033;"></i>
+        <div class="text-[0.8rem] text-gray-500 mb-[0.85rem] leading-normal bg-gray-50 rounded-lg px-[0.9rem] py-[0.6rem] border-l-[3px] border-rojo">
+            <i class="fas fa-info-circle mr-1 text-rojo"></i>
             <strong>Importante:</strong> la opción "Mostrar en catálogo" de arriba es el interruptor principal — si está desactivado el producto no aparece en ningún lado.
             Estas opciones permiten elegir en qué secciones del sitio se destacará el producto cuando esté activo.
         </div>
@@ -476,10 +335,15 @@
                 'label' => 'Subrubro',
                 'desc'  => 'El producto aparece en la página del subrubro al que pertenece. Ej: si es de Accesorios, se muestra al navegar hasta ahí.',
             ],
+            'carrusel_promo' => [
+                'icono' => 'fas fa-percent',
+                'label' => 'En oferta',
+                'desc'  => 'Aparece en la sección Promociones del inicio y en la página de Promociones.',
+            ],
         ];
         ?>
 
-        <div class="secciones-grid mb-4">
+        <div class="grid gap-3 mb-4" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
             <?php foreach ($secciones as $sec): ?>
             <?php
                 $estaActiva = in_array((int)$sec['id'], $seccionesActivas);
@@ -489,50 +353,57 @@
                     'desc'  => $sec['descripcion'] ?? '',
                 ];
             ?>
-            <label class="seccion-item <?= $estaActiva ? 'activa' : '' ?>"
+            <label class="group relative border-[1.5px] border-gray-200 rounded-[10px] px-[0.85rem] py-[0.9rem] cursor-pointer select-none transition-all bg-white hover:border-rojo hover:bg-red-50 data-[active=true]:border-rojo data-[active=true]:bg-rojo/[0.04] data-[active=true]:shadow-[0_0_0_3px_rgba(255,0,51,0.08)]"
                    id="seccion-label-<?= $sec['id'] ?>"
+                   data-active="<?= $estaActiva ? 'true' : 'false' ?>"
                    onclick="toggleSeccion(<?= $sec['id'] ?>)">
                 <input type="checkbox"
                        name="secciones[]"
                        value="<?= $sec['id'] ?>"
                        id="seccion-check-<?= $sec['id'] ?>"
+                       class="hidden"
                        <?= $estaActiva ? 'checked' : '' ?>>
-                <span class="seccion-check-box"></span>
-                <i class="<?= esc($info['icono']) ?> seccion-icon"></i>
-                <span class="seccion-nombre"><?= esc($info['label']) ?></span>
-                <span class="seccion-desc"><?= esc($info['desc']) ?></span>
+                <span class="absolute top-[0.7rem] right-[0.7rem] w-[17px] h-[17px] border-2 border-gray-300 rounded-[4px] bg-white flex items-center justify-center transition-colors
+                             group-data-[active=true]:border-rojo group-data-[active=true]:bg-rojo
+                             after:content-[''] after:block after:w-1 after:h-[7px] after:border-r-2 after:border-b-2 after:border-transparent after:[transform:rotate(45deg)_translate(-1px,-1px)]
+                             group-data-[active=true]:after:border-white"></span>
+                <i class="<?= esc($info['icono']) ?> block mb-[0.45rem] text-[1.4rem] text-gray-300 transition-colors group-data-[active=true]:text-rojo"></i>
+                <span class="font-semibold text-[0.84rem] text-gray-700 block"><?= esc($info['label']) ?></span>
+                <span class="text-[0.72rem] text-gray-400 block mt-1 leading-[1.35]"><?= esc($info['desc']) ?></span>
             </label>
             <?php endforeach; ?>
         </div>
 
         <!-- ── SECCIÓN 4: IMÁGENES ── -->
-        <div class="form-section-title"><i class="fas fa-images me-1"></i>Imágenes del producto</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-images mr-1"></i>Imágenes del producto</div>
 
         <?php if (!empty($imagenesActuales)): ?>
-        <label class="form-label mb-2">Imágenes actuales</label>
-        <div class="img-grid-actual mb-3" id="img-grid-actual">
+        <label class="text-[0.85rem] font-semibold text-gray-700 mb-2 block">Imágenes actuales</label>
+        <div class="flex flex-wrap gap-[0.85rem] mb-3" id="img-grid-actual">
             <?php foreach ($imagenesActuales as $img): ?>
-            <div class="img-card-actual" id="imgcard-<?= $img['id'] ?>">
+            <div class="w-[140px] border-[1.5px] border-gray-200 rounded-xl overflow-hidden bg-gray-50 flex flex-col relative transition-all data-[marked=true]:opacity-[0.35] data-[marked=true]:border-red-300"
+                 id="imgcard-<?= $img['id'] ?>" data-marked="false">
                 <img src="<?= base_url(esc($img['ruta'])) ?>"
                      alt="<?= esc($img['alt_text'] ?? '') ?>"
-                     class="img-thumb">
-                <div class="img-card-body">
+                     class="w-full h-[110px] object-cover block">
+                <div class="px-2 pb-2 pt-[0.45rem] flex flex-col gap-[5px]">
                     <?php if ($img['es_principal']): ?>
-                    <span class="img-badge-principal">Principal</span>
+                    <span class="img-badge-principal inline-block bg-rojo/10 text-rojo text-[0.67rem] font-bold px-[7px] py-[2px] rounded-full uppercase tracking-[0.4px] w-fit">Principal</span>
                     <?php endif; ?>
 
                     <?php if (!$img['es_principal']): ?>
-                    <button type="button" class="btn-set-principal"
+                    <button type="button" class="btn-set-principal text-[0.72rem] font-semibold text-gray-700 bg-white border-[1.5px] border-gray-200 rounded-md px-[7px] py-[3px] cursor-pointer transition-colors text-center w-full hover:border-rojo hover:text-rojo"
                             onclick="setPrincipal(<?= $img['id'] ?>)">
-                        <i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.65rem;"></i>Principal
+                        <i class="fas fa-star mr-1 text-amber-500 text-[0.65rem]"></i>Principal
                     </button>
                     <?php endif; ?>
 
                     <button type="button"
-                            class="btn-del-img"
+                            class="btn-del-img text-[0.72rem] font-semibold rounded-md px-[7px] py-[3px] cursor-pointer transition-colors text-center w-full border-[1.5px] text-gray-400 bg-white border-gray-200 hover:border-red-300 hover:text-red-600 data-[marked=true]:text-red-600 data-[marked=true]:border-red-300 data-[marked=true]:bg-red-50"
                             id="btn-del-<?= $img['id'] ?>"
+                            data-marked="false"
                             onclick="toggleEliminar(<?= $img['id'] ?>)">
-                        <i class="fas fa-trash me-1"></i>Eliminar
+                        <i class="fas fa-trash mr-1"></i>Eliminar
                     </button>
 
                     <!-- se activa al marcar eliminar -->
@@ -548,26 +419,26 @@
         <input type="hidden" id="imagen_principal_id" name="imagen_principal_id" value="">
         <?php endif; ?>
 
-        <label class="form-label">Agregar imágenes</label>
-        <div class="img-upload-area" id="upload-area" onclick="document.getElementById('imagenesInput').click()">
-            <i class="fas fa-cloud-arrow-up"></i>
-            <span><strong>Hacé clic</strong> o arrastrá las imágenes aquí</span>
-            <div class="field-hint mt-1">JPG, PNG o WebP · Máx. 3 MB por imagen · Podés subir varias a la vez</div>
+        <label class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Agregar imágenes</label>
+        <div class="border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 p-6 text-center cursor-pointer transition-colors hover:border-rojo hover:bg-red-50 data-[drag=true]:border-rojo data-[drag=true]:bg-red-50"
+             id="upload-area" data-drag="false" onclick="document.getElementById('imagenesInput').click()">
+            <i class="fas fa-cloud-arrow-up text-3xl text-gray-300 block mb-2"></i>
+            <span class="text-[0.84rem] text-gray-400"><strong class="text-gray-700">Hacé clic</strong> o arrastrá las imágenes aquí</span>
+            <div class="text-xs text-gray-400 mt-1">JPG, PNG o WebP · Máx. 3 MB por imagen · Podés subir varias a la vez</div>
         </div>
-        <input type="file" id="imagenesInput" name="imagenes[]" multiple accept="image/*"
-               style="display:none;">
+        <input type="file" id="imagenesInput" name="imagenes[]" multiple accept="image/*" class="hidden">
 
-        <div class="img-previews-nuevas" id="img-previews-nuevas"></div>
+        <div class="flex flex-wrap gap-3 mt-[0.9rem]" id="img-previews-nuevas"></div>
 
         <div class="mb-4"></div>
 
         <!-- ── BOTONES ── -->
-        <div class="d-flex align-items-center gap-3 flex-wrap pt-2">
-            <button type="submit" class="btn-guardar">
+        <div class="flex items-center gap-3 flex-wrap pt-2">
+            <button type="submit" class="bg-rojo text-white border-none px-8 py-[0.7rem] rounded-full text-[0.95rem] font-semibold inline-flex items-center gap-[0.45rem] cursor-pointer transition-colors hover:bg-rojo-dark">
                 <i class="fas fa-save"></i>
                 <?= $producto ? 'Guardar cambios' : 'Agregar producto' ?>
             </button>
-            <a href="<?= base_url('admin/productos') ?>" class="btn-cancelar">
+            <a href="<?= base_url('admin/productos') ?>" class="text-gray-500 no-underline px-6 py-[0.7rem] rounded-full text-[0.95rem] font-semibold inline-flex items-center gap-2 border-[1.5px] border-gray-200 transition-colors hover:bg-gray-100 hover:text-gray-700">
                 <i class="fas fa-times"></i> Cancelar
             </a>
         </div>
@@ -582,7 +453,7 @@ function toggleSeccion(seccionId) {
     const checkbox = document.getElementById('seccion-check-' + seccionId);
     if (!label || !checkbox) return;
     checkbox.checked = !checkbox.checked;
-    label.classList.toggle('activa', checkbox.checked);
+    label.dataset.active = checkbox.checked ? 'true' : 'false';
 }
 
 /* ─── Datos de jerarquía desde la BD ─── */
@@ -599,6 +470,8 @@ const selSubSub      = document.getElementById('sel_subsub');
 const wrapSubSub     = document.getElementById('wrap-subsub');
 const catConfirm     = document.getElementById('catConfirmacion');
 const catNombreTxt   = document.getElementById('catNombreTexto');
+const selFabrica     = document.getElementById('fabrica_id');
+const fabricaAsterisco = document.getElementById('fabrica_requerida');
 
 /* ── Poblar el select de rubros ── */
 Object.keys(JERARQUIA).forEach(function (slug) {
@@ -609,15 +482,24 @@ Object.keys(JERARQUIA).forEach(function (slug) {
     selRubro.appendChild(opt);
 });
 
+/* ── Fábrica obligatoria solo para el rubro Muebles ── */
+function actualizarRequeridoFabrica() {
+    const esMuebles = selRubro.value === 'muebles';
+    fabricaAsterisco.classList.toggle('hidden', !esMuebles);
+    selFabrica.required = esMuebles;
+}
+
 function setCategoria(id, label) {
     hiddenCatId.value   = id ? String(id) : '';
     catNombreTxt.textContent = label || '';
-    catConfirm.classList.toggle('visible', !!id);
+    const mostrar = !!id;
+    catConfirm.classList.toggle('hidden', !mostrar);
+    catConfirm.classList.toggle('flex', mostrar);
 }
 
 function resetSubSub() {
     selSubSub.innerHTML  = '<option value="">— Seleccioná —</option>';
-    wrapSubSub.style.display = 'none';
+    wrapSubSub.classList.add('hidden');
 }
 
 function poblarSubrubros(rubroSlug, seleccionarSub) {
@@ -655,7 +537,7 @@ function aplicarSubrubro(rubroSlug, subSlug, seleccionarSubSub) {
 
     if (data.tieneSubSub && data.subSub[subSlug]) {
         /* Este subrubro tiene nivel 3 → mostrar tercer select */
-        wrapSubSub.style.display = '';
+        wrapSubSub.classList.remove('hidden');
         const subData = data.subSub[subSlug];
         subData.keys.forEach(function (key, idx) {
             const opt       = document.createElement('option');
@@ -680,6 +562,7 @@ function aplicarSubrubro(rubroSlug, subSlug, seleccionarSubSub) {
 /* ── Eventos de los selects ── */
 selRubro.addEventListener('change', function () {
     poblarSubrubros(this.value, '');
+    actualizarRequeridoFabrica();
 });
 
 selSubrubro.addEventListener('change', function () {
@@ -696,17 +579,18 @@ selSubSub.addEventListener('change', function () {
 if (initRubro) {
     poblarSubrubros(initRubro, initSub);
 }
+actualizarRequeridoFabrica();
 
 /* ─── Badge: select predefinido + campo personalizado ─── */
 function cambiarBadge(valor) {
     const custom  = document.getElementById('badge_custom');
     const hidden  = document.getElementById('badge');
     if (valor === '_custom') {
-        custom.style.display = '';
+        custom.classList.remove('hidden');
         hidden.value = custom.value;
         custom.focus();
     } else {
-        custom.style.display = 'none';
+        custom.classList.add('hidden');
         hidden.value = valor;
     }
 }
@@ -719,7 +603,7 @@ document.getElementById('badge_custom').addEventListener('input', function () {
 (function () {
     const sel = document.getElementById('badge_select');
     if (sel.value === '_custom') {
-        document.getElementById('badge_custom').style.display = '';
+        document.getElementById('badge_custom').classList.remove('hidden');
     }
 })();
 
@@ -728,26 +612,28 @@ function toggleEliminar(id) {
     const card  = document.getElementById('imgcard-' + id);
     const input = document.getElementById('del-input-' + id);
     const btn   = document.getElementById('btn-del-' + id);
-    const marked = card.classList.toggle('para-eliminar');
+    const marked = card.dataset.marked !== 'true';
+    card.dataset.marked = marked ? 'true' : 'false';
     input.disabled = !marked;
-    btn.classList.toggle('activo', marked);
+    btn.dataset.marked = marked ? 'true' : 'false';
     btn.innerHTML = marked
-        ? '<i class="fas fa-undo me-1"></i>Deshacer'
-        : '<i class="fas fa-trash me-1"></i>Eliminar';
+        ? '<i class="fas fa-undo mr-1"></i>Deshacer'
+        : '<i class="fas fa-trash mr-1"></i>Eliminar';
 }
 
 function setPrincipal(id) {
     document.getElementById('imagen_principal_id').value = id;
-    document.querySelectorAll('.img-card-actual').forEach(function (card) {
+    document.querySelectorAll('[id^="imgcard-"]').forEach(function (card) {
         const badge  = card.querySelector('.img-badge-principal');
         const btnSet = card.querySelector('.btn-set-principal');
         const cardId = parseInt(card.id.replace('imgcard-', ''));
+        const body   = card.querySelector('div.flex.flex-col');
         if (cardId === id) {
             if (!badge) {
                 const b = document.createElement('span');
-                b.className   = 'img-badge-principal';
+                b.className   = 'img-badge-principal inline-block bg-rojo/10 text-rojo text-[0.67rem] font-bold px-[7px] py-[2px] rounded-full uppercase tracking-[0.4px] w-fit';
                 b.textContent = 'Principal';
-                card.querySelector('.img-card-body').prepend(b);
+                body.prepend(b);
             }
             if (btnSet) btnSet.remove();
         } else {
@@ -755,11 +641,11 @@ function setPrincipal(id) {
             if (!btnSet) {
                 const b       = document.createElement('button');
                 b.type        = 'button';
-                b.className   = 'btn-set-principal';
-                b.innerHTML   = '<i class="fas fa-star me-1" style="color:#f59e0b;font-size:0.65rem;"></i>Principal';
+                b.className   = 'btn-set-principal text-[0.72rem] font-semibold text-gray-700 bg-white border-[1.5px] border-gray-200 rounded-md px-[7px] py-[3px] cursor-pointer transition-colors text-center w-full hover:border-rojo hover:text-rojo';
+                b.innerHTML   = '<i class="fas fa-star mr-1 text-amber-500 text-[0.65rem]"></i>Principal';
                 b.onclick     = function () { setPrincipal(cardId); };
                 const delBtn  = card.querySelector('.btn-del-img');
-                card.querySelector('.img-card-body').insertBefore(b, delBtn);
+                body.insertBefore(b, delBtn);
             }
         }
     });
@@ -769,11 +655,11 @@ function setPrincipal(id) {
 (function () {
     const area = document.getElementById('upload-area');
     if (!area) return;
-    area.addEventListener('dragover', function (e) { e.preventDefault(); area.classList.add('drag-over'); });
-    area.addEventListener('dragleave', function () { area.classList.remove('drag-over'); });
+    area.addEventListener('dragover', function (e) { e.preventDefault(); area.dataset.drag = 'true'; });
+    area.addEventListener('dragleave', function () { area.dataset.drag = 'false'; });
     area.addEventListener('drop', function (e) {
         e.preventDefault();
-        area.classList.remove('drag-over');
+        area.dataset.drag = 'false';
         agregarArchivos(e.dataTransfer.files);
     });
 })();
@@ -799,12 +685,12 @@ function agregarArchivos(fileList) {
 function renderPreviewNueva(file, idx) {
     const wrap = document.getElementById('img-previews-nuevas');
     const div  = document.createElement('div');
-    div.className   = 'img-preview-nueva';
+    div.className   = 'w-[100px] h-[100px] rounded-[10px] overflow-hidden border-[1.5px] border-gray-200 relative';
     div.id          = 'prev-nueva-' + idx;
     const reader    = new FileReader();
     reader.onload   = function (e) {
-        div.innerHTML = '<img src="' + e.target.result + '" alt="">'
-            + '<button type="button" class="rm-preview" onclick="quitarPreview(' + idx + ')">'
+        div.innerHTML = '<img src="' + e.target.result + '" alt="" class="w-full h-full object-cover block">'
+            + '<button type="button" class="absolute top-[3px] right-[3px] bg-black/[0.55] text-white border-none rounded-full w-5 h-5 text-[0.65rem] cursor-pointer flex items-center justify-center leading-none" onclick="quitarPreview(' + idx + ')">'
             + '<i class="fas fa-times"></i></button>';
     };
     reader.readAsDataURL(file);

@@ -1,128 +1,49 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .page-header-row {
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
-    }
-    .page-header-row h2 { font-size: 1.4rem; font-weight: 700; color: #111827; margin: 0; }
-
-    .search-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        padding: 1.5rem 1.5rem 1.25rem; margin-bottom: 1.5rem;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .search-card .form-label { font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem; }
-    .search-input {
-        border: 2px solid #e5e7eb; border-radius: 10px; padding: 0.65rem 1rem;
-        font-size: 0.95rem; color: #111827; width: 100%;
-        transition: border-color 0.2s, box-shadow 0.2s; background: #fff;
-    }
-    .search-input:focus { border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.1); outline: none; }
-
-    .tipo-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.85rem; }
-    .tipo-pill {
-        padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.84rem; font-weight: 600;
-        border: 1.5px solid #e5e7eb; background: #fff; color: #6B7280;
-        cursor: pointer; transition: all 0.15s; user-select: none;
-    }
-    .tipo-pill:hover { border-color: #FF0033; color: #FF0033; }
-    .tipo-pill.activo { background: #FF0033; border-color: #FF0033; color: #fff; }
-
-    .btn-buscar {
-        background: #FF0033; color: #fff; border: none;
-        padding: 0.65rem 1.75rem; border-radius: 50px;
-        font-size: 0.92rem; font-weight: 600; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        transition: background 0.2s; white-space: nowrap;
-    }
-    .btn-buscar:hover { background: #cc0028; }
-
-    .results-header {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;
-    }
-    .results-header h5 { font-size: 0.95rem; font-weight: 700; color: #374151; margin: 0; }
-    .count-badge {
-        background: rgba(255,0,51,0.08); color: #FF0033;
-        padding: 0.2rem 0.75rem; border-radius: 50px; font-size: 0.82rem; font-weight: 600;
-    }
-
-    .tabla-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .table { margin: 0; font-size: 0.88rem; }
-    .table thead th {
-        background: #f9fafb; color: #374151; font-weight: 700;
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
-        border-bottom: 2px solid #e5e7eb; padding: 0.85rem 1rem; white-space: nowrap;
-    }
-    .table tbody td { vertical-align: middle; padding: 0.75rem 1rem; border-color: #f3f4f6; color: #374151; }
-    .table tbody tr:hover { background: #fafafa; }
-
-    .badge-activo   { background: rgba(16,185,129,0.12); color: #059669; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .badge-inactivo { background: rgba(239,68,68,0.1);  color: #DC2626;  padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .btn-accion { padding: 0.3rem 0.7rem; font-size: 0.78rem; border-radius: 7px; font-weight: 600; }
-    .cat-path { background: #f3f4f6; color: #6B7280; padding: 0.15rem 0.55rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .codigo-badge {
-        background: rgba(99,102,241,0.1); color: #4F46E5;
-        padding: 0.15rem 0.55rem; border-radius: 50px;
-        font-size: 0.78rem; font-weight: 700; font-family: monospace;
-    }
-
-    .empty-state { text-align: center; padding: 4rem 2rem; color: #9CA3AF; }
-    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; color: #D1D5DB; }
-    .empty-state h5 { color: #374151; font-weight: 600; margin-bottom: 0.5rem; }
-    .empty-state p  { font-size: 0.9rem; }
-
-    .highlight { background: rgba(255,0,51,0.12); border-radius: 3px; padding: 0 2px; }
-</style>
-
-<div class="page-header-row">
-    <h2><i class="fas fa-search me-2" style="color:#FF0033;font-size:1.05rem;"></i>Buscar producto</h2>
-    <a href="<?= base_url('admin/productos') ?>" style="color:#6B7280;text-decoration:none;font-size:0.88rem;font-weight:600;">
-        <i class="fas fa-arrow-left me-1"></i> Ver todos los productos
+<div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <h2 class="text-[1.4rem] font-bold text-dark m-0"><i class="fas fa-search mr-2 text-rojo text-[1.05rem]"></i>Buscar producto</h2>
+    <a href="<?= base_url('admin/productos') ?>" class="text-gray-500 no-underline text-[0.88rem] font-semibold hover:text-gray-700">
+        <i class="fas fa-arrow-left mr-1"></i> Ver todos los productos
     </a>
 </div>
 
 <!-- Formulario de búsqueda -->
-<div class="search-card">
+<div class="bg-white border border-gray-200 rounded-[14px] px-6 pt-6 pb-5 mb-6 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <form method="GET" action="<?= base_url('admin/productos/buscar') ?>" id="formBuscar">
         <input type="hidden" name="tipo" id="tipoHidden" value="<?= esc($tipo) ?>">
 
-        <label class="form-label" for="q">¿Qué estás buscando?</label>
-        <div class="d-flex gap-2 align-items-start flex-wrap">
-            <div style="flex:1;min-width:220px;">
+        <label class="text-[0.85rem] font-semibold text-gray-700 mb-1 block" for="q">¿Qué estás buscando?</label>
+        <div class="flex gap-2 items-start flex-wrap">
+            <div class="flex-1 min-w-[220px]">
                 <input
                     type="text"
                     id="q"
                     name="q"
-                    class="search-input"
+                    class="border-2 border-gray-200 rounded-[10px] px-4 py-[0.65rem] text-[0.95rem] text-dark w-full bg-white transition-colors outline-none focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
                     value="<?= esc($q) ?>"
                     placeholder="Escribí el código, nombre o cualquier referencia..."
                     autocomplete="off"
                     autofocus>
             </div>
-            <button type="submit" class="btn-buscar">
+            <button type="submit" class="bg-rojo text-white border-none px-7 py-[0.65rem] rounded-full text-[0.92rem] font-semibold cursor-pointer inline-flex items-center gap-[0.4rem] whitespace-nowrap transition-colors hover:bg-rojo-dark">
                 <i class="fas fa-search"></i> Buscar
             </button>
         </div>
 
-        <div class="tipo-pills">
-            <span class="tipo-pill <?= $tipo === 'todos'   ? 'activo' : '' ?>" onclick="setTipo('todos')">
-                <i class="fas fa-th-list me-1"></i>Todo
+        <div class="flex gap-2 flex-wrap mt-[0.85rem]">
+            <span class="tipo-pill" data-tipo="todos" onclick="setTipo('todos')">
+                <i class="fas fa-th-list mr-1"></i>Todo
             </span>
-            <span class="tipo-pill <?= $tipo === 'codigo'  ? 'activo' : '' ?>" onclick="setTipo('codigo')">
-                <i class="fas fa-barcode me-1"></i>Por código
+            <span class="tipo-pill" data-tipo="codigo" onclick="setTipo('codigo')">
+                <i class="fas fa-barcode mr-1"></i>Por código
             </span>
-            <span class="tipo-pill <?= $tipo === 'nombre'  ? 'activo' : '' ?>" onclick="setTipo('nombre')">
-                <i class="fas fa-font me-1"></i>Por nombre
+            <span class="tipo-pill" data-tipo="nombre" onclick="setTipo('nombre')">
+                <i class="fas fa-font mr-1"></i>Por nombre
             </span>
         </div>
-        <div style="font-size:0.78rem;color:#9CA3AF;margin-top:0.6rem;">
-            <i class="fas fa-info-circle me-1"></i>
+        <div class="text-[0.78rem] text-gray-400 mt-[0.6rem]">
+            <i class="fas fa-info-circle mr-1"></i>
             <strong>Todo</strong>: busca en código, nombre, modelo y marca.
             <strong>Por código</strong>: busca solo en el código interno del producto.
             <strong>Por nombre</strong>: busca solo en el nombre del producto.
@@ -132,84 +53,82 @@
 
 <!-- Resultados -->
 <?php if ($q !== ''): ?>
-<div class="results-header">
-    <h5>
+<div class="flex items-center justify-between mb-[0.85rem] flex-wrap gap-2">
+    <h5 class="text-[0.95rem] font-bold text-gray-700 m-0">
         Resultados para
-        <span style="color:#FF0033;">"<?= esc($q) ?>"</span>
+        <span class="text-rojo">"<?= esc($q) ?>"</span>
         <?php if ($tipo !== 'todos'): ?>
-            <span style="color:#9CA3AF;font-weight:400;font-size:0.85rem;">
+            <span class="text-gray-400 font-normal text-[0.85rem]">
                 — buscando por <?= $tipo === 'codigo' ? 'código' : 'nombre' ?>
             </span>
         <?php endif; ?>
     </h5>
-    <span class="count-badge"><?= count($resultados) ?> resultado<?= count($resultados) !== 1 ? 's' : '' ?></span>
+    <span class="bg-rojo/[0.08] text-rojo px-3 py-[0.2rem] rounded-full text-[0.82rem] font-semibold"><?= count($resultados) ?> resultado<?= count($resultados) !== 1 ? 's' : '' ?></span>
 </div>
 
 <?php if (!empty($resultados)): ?>
-<div class="tabla-card">
-    <div class="table-responsive">
-        <table class="table table-hover">
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="overflow-x-auto">
+        <table class="w-full text-[0.88rem] border-collapse">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Categoría</th>
-                    <th>Nombre del producto</th>
-                    <th>Marca / Modelo</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Activo</th>
-                    <th>Acciones</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Código</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Categoría</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre del producto</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Marca / Modelo</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Precio</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Stock</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Activo</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($resultados as $p): ?>
-                <tr>
-                    <td>
+                <tr class="border-t border-gray-100 hover:bg-gray-50">
+                    <td class="align-middle px-4 py-3">
                         <?php if (!empty($p['codigo'])): ?>
-                            <span class="codigo-badge"><?= esc($p['codigo']) ?></span>
+                            <span class="bg-indigo-500/10 text-indigo-600 px-[0.55rem] py-[0.15rem] rounded-full text-[0.78rem] font-bold font-mono"><?= esc($p['codigo']) ?></span>
                         <?php else: ?>
-                            <span style="color:#D1D5DB;font-size:0.8rem;">—</span>
+                            <span class="text-gray-300 text-[0.8rem]">—</span>
                         <?php endif; ?>
                     </td>
-                    <td>
-                        <span class="cat-path"><?= esc($p['categoria_path'] ?? '—') ?></span>
+                    <td class="align-middle px-4 py-3">
+                        <span class="bg-gray-100 text-gray-500 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold"><?= esc($p['categoria_path'] ?? '—') ?></span>
                     </td>
-                    <td>
-                        <div style="font-weight:600;color:#111827;"><?= esc($p['nombre']) ?></div>
+                    <td class="align-middle px-4 py-3">
+                        <div class="font-semibold text-dark"><?= esc($p['nombre']) ?></div>
                         <?php if (!empty($p['descripcion_corta'])): ?>
-                            <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">
-                                <?= esc(mb_substr($p['descripcion_corta'], 0, 70)) ?>...
-                            </div>
+                            <div class="text-[0.78rem] text-gray-400 mt-0.5"><?= esc(mb_substr($p['descripcion_corta'], 0, 70)) ?>...</div>
                         <?php endif; ?>
                     </td>
-                    <td style="font-size:0.85rem;">
+                    <td class="align-middle px-4 py-3 text-[0.85rem]">
                         <?php if (!empty($p['marca_nombre'])): ?>
-                            <div style="font-weight:600;"><?= esc($p['marca_nombre']) ?></div>
+                            <div class="font-semibold"><?= esc($p['marca_nombre']) ?></div>
                         <?php endif; ?>
                         <?php if (!empty($p['modelo'])): ?>
-                            <div style="color:#9CA3AF;font-size:0.78rem;"><?= esc($p['modelo']) ?></div>
+                            <div class="text-gray-400 text-[0.78rem]"><?= esc($p['modelo']) ?></div>
                         <?php endif; ?>
                         <?php if (empty($p['marca_nombre']) && empty($p['modelo'])): ?>
-                            <span style="color:#D1D5DB;">—</span>
+                            <span class="text-gray-300">—</span>
                         <?php endif; ?>
                     </td>
-                    <td style="font-size:0.85rem;"><?= esc($p['precio_texto'] ?? '—') ?></td>
-                    <td>
-                        <span style="font-weight:700;color:<?= (int)($p['stock'] ?? 0) > 0 ? '#059669' : '#9CA3AF' ?>;">
+                    <td class="align-middle px-4 py-3 text-[0.85rem]"><?= esc($p['precio_texto'] ?? '—') ?></td>
+                    <td class="align-middle px-4 py-3">
+                        <span class="font-bold <?= (int)($p['stock'] ?? 0) > 0 ? 'text-emerald-600' : 'text-gray-400' ?>">
                             <?= (int)($p['stock'] ?? 0) ?>
                         </span>
                     </td>
-                    <td>
+                    <td class="align-middle px-4 py-3">
                         <?php if ($p['activo']): ?>
-                            <span class="badge-activo"><i class="fas fa-check me-1"></i>Sí</span>
+                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Sí</span>
                         <?php else: ?>
-                            <span class="badge-inactivo"><i class="fas fa-times me-1"></i>No</span>
+                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>No</span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td class="align-middle px-4 py-3">
                         <a href="<?= base_url("admin/productos/{$p['id']}/editar") ?>"
-                           class="btn btn-outline-primary btn-accion">
-                            <i class="fas fa-pen me-1"></i>Editar
+                           class="inline-flex items-center border border-blue-500 text-blue-500 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-blue-500 hover:text-white">
+                            <i class="fas fa-pen mr-1"></i>Editar
                         </a>
                     </td>
                 </tr>
@@ -220,32 +139,35 @@
 </div>
 
 <?php else: ?>
-<div class="tabla-card">
-    <div class="empty-state">
-        <i class="fas fa-search"></i>
-        <h5>Sin resultados</h5>
-        <p>No se encontró ningún producto que coincida con "<?= esc($q) ?>". Probá con otro término.</p>
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="text-center px-8 py-16 text-gray-400">
+        <i class="fas fa-search text-5xl mb-4 block text-gray-300"></i>
+        <h5 class="text-gray-700 font-semibold mb-2">Sin resultados</h5>
+        <p class="text-[0.9rem]">No se encontró ningún producto que coincida con "<?= esc($q) ?>". Probá con otro término.</p>
     </div>
 </div>
 <?php endif; ?>
 
 <?php else: ?>
-<div class="tabla-card">
-    <div class="empty-state">
-        <i class="fas fa-search" style="color:#D1D5DB;"></i>
-        <h5>Ingresá un término para buscar</h5>
-        <p>Podés buscar por código interno, nombre del producto, modelo o marca.</p>
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="text-center px-8 py-16 text-gray-400">
+        <i class="fas fa-search text-5xl mb-4 block text-gray-300"></i>
+        <h5 class="text-gray-700 font-semibold mb-2">Ingresá un término para buscar</h5>
+        <p class="text-[0.9rem]">Podés buscar por código interno, nombre del producto, modelo o marca.</p>
     </div>
 </div>
 <?php endif; ?>
 
 <script>
+const PILL_BASE     = 'tipo-pill px-4 py-[0.35rem] rounded-full text-[0.84rem] font-semibold border-[1.5px] cursor-pointer select-none transition-colors';
+const PILL_ACTIVE   = PILL_BASE + ' bg-rojo border-rojo text-white';
+const PILL_INACTIVE = PILL_BASE + ' bg-white border-gray-200 text-gray-500 hover:border-rojo hover:text-rojo';
+
 function setTipo(valor) {
     document.getElementById('tipoHidden').value = valor;
     document.querySelectorAll('.tipo-pill').forEach(function (el) {
-        el.classList.remove('activo');
+        el.className = (el.dataset.tipo === valor) ? PILL_ACTIVE : PILL_INACTIVE;
     });
-    event.currentTarget.classList.add('activo');
 }
 
 /* Enviar con Enter en el input */
@@ -255,6 +177,9 @@ document.getElementById('q').addEventListener('keydown', function (e) {
         document.getElementById('formBuscar').submit();
     }
 });
+
+/* Reflejar el tipo de búsqueda actual (server-side) en los pills */
+setTipo('<?= esc($tipo) ?>');
 </script>
 
 <?= $this->endSection() ?>

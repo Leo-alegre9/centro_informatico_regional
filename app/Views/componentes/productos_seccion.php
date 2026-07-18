@@ -1,96 +1,4 @@
-<style>
-    .sec-productos-section {
-        background: #f8f9fa;
-        padding: 3.5rem 0 4rem;
-        border-top: 1px solid #e9ecef;
-    }
-    .sec-productos-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-top: 1.5rem;
-    }
-    .sec-prod-card {
-        background: #fff;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1.5px solid #f0f0f0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        display: flex;
-        flex-direction: column;
-        cursor: pointer;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .sec-prod-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-    }
-    .sec-prod-img {
-        height: 150px;
-        background: #1a232e;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        position: relative;
-        flex-shrink: 0;
-    }
-    .sec-prod-img img {
-        width: 100%; height: 100%; object-fit: cover;
-        transition: transform 0.35s ease;
-    }
-    .sec-prod-card:hover .sec-prod-img img { transform: scale(1.05); }
-    .sec-prod-img-icon { color: rgba(255,255,255,0.18); font-size: 2.2rem; }
-    .sec-prod-badge {
-        position: absolute; top: 9px; right: 9px;
-        background: #FF0033; color: #fff;
-        font-size: 0.67rem; font-weight: 700;
-        padding: 3px 9px; border-radius: 50px;
-        letter-spacing: 0.4px;
-    }
-    .sec-prod-body {
-        padding: 1rem 1.1rem 1.1rem;
-        flex: 1; display: flex; flex-direction: column;
-    }
-    .sec-prod-cat {
-        font-size: 0.7rem; font-weight: 700; color: rgba(255,0,51,0.7);
-        text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.25rem;
-    }
-    .sec-prod-nombre {
-        font-weight: 700; color: #111827; font-size: 0.9rem;
-        line-height: 1.35; margin-bottom: 0.35rem;
-        display: -webkit-box; -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .sec-prod-desc {
-        font-size: 0.8rem; color: #6B7280; line-height: 1.5;
-        flex: 1; margin-bottom: 0.8rem;
-        display: -webkit-box; -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .sec-prod-footer {
-        display: flex; align-items: center;
-        justify-content: space-between; gap: 6px; flex-wrap: wrap;
-    }
-    .sec-prod-precio {
-        font-weight: 700; color: #FF0033; font-size: 0.88rem;
-    }
-    .sec-prod-btn {
-        display: inline-flex; align-items: center; gap: 5px;
-        background: #25D366; color: #fff;
-        padding: 0.4rem 0.9rem; border-radius: 50px;
-        font-weight: 700; font-size: 0.75rem;
-        text-decoration: none; transition: background 0.2s;
-        white-space: nowrap;
-    }
-    .sec-prod-btn:hover { background: #1ebe5a; color: #fff; }
-
-    @media (max-width: 1199px) { .sec-productos-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 767px)  { .sec-productos-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 479px)  { .sec-productos-grid { grid-template-columns: 1fr; } }
-</style>
-
-<section class="sec-productos-section">
+<section class="bg-[#f8f9fa] pt-14 pb-16 border-t border-[#e9ecef]">
     <div class="container">
         <div class="text-center mb-1">
             <span class="section-eyebrow">Selección especial</span>
@@ -98,13 +6,13 @@
         </div>
         <div class="section-divider"></div>
 
-        <div class="sec-productos-grid" id="sec-productos-grid">
+        <div class="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[1.2rem] mt-6" id="sec-productos-grid">
             <?php foreach ($productosSeccion as $sp): ?>
             <?php
                 $imgUrl  = $sp['imagen_ruta'] ?? '';
                 $imgAlt  = $sp['imagen_alt']  ?? $sp['nombre'];
             ?>
-            <div class="sec-prod-card"
+            <div class="sec-prod-card group bg-white rounded-[14px] overflow-hidden border-[1.5px] border-[#f0f0f0] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col cursor-pointer transition-all duration-[250ms] ease hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)]"
                  data-nombre="<?= esc($sp['nombre']) ?>"
                  data-precio="<?= esc($sp['precio_texto']) ?>"
                  data-descripcion="<?= esc($sp['descripcion'] ?? $sp['descripcion_corta'] ?? '') ?>"
@@ -113,36 +21,37 @@
                  data-imagen="<?= esc($imgUrl) ?>"
                  data-imagenes="[]"
                  data-categoria="<?= esc($sp['categoria_nombre'] ?? '') ?>">
-                <div class="sec-prod-img">
+                <div class="h-[150px] bg-[#1a232e] flex items-center justify-center overflow-hidden relative shrink-0">
                     <?php if (!empty($imgUrl)): ?>
                         <img src="<?= base_url(esc($imgUrl)) ?>"
                              alt="<?= esc($imgAlt) ?>"
                              loading="lazy"
-                             onerror="this.parentElement.innerHTML='<span class=\'sec-prod-img-icon\'><i class=\'fas fa-box\'></i></span>'">
+                             class="w-full h-full object-cover transition-transform duration-[350ms] ease group-hover:scale-105"
+                             onerror="this.parentElement.innerHTML='<span class=\'text-white/[0.18] text-[2.2rem]\'><i class=\'fas fa-box\'></i></span>'">
                     <?php else: ?>
-                        <span class="sec-prod-img-icon">
+                        <span class="text-white/[0.18] text-[2.2rem]">
                             <i class="<?= esc($sp['icono'] ?? 'fas fa-box') ?>"></i>
                         </span>
                     <?php endif; ?>
                     <?php if (!empty($sp['badge'])): ?>
-                        <span class="sec-prod-badge"><?= esc($sp['badge']) ?></span>
+                        <span class="absolute top-[9px] right-[9px] bg-rojo text-white text-[0.67rem] font-bold px-[9px] py-[3px] rounded-full tracking-[0.4px]"><?= esc($sp['badge']) ?></span>
                     <?php endif; ?>
                 </div>
-                <div class="sec-prod-body">
+                <div class="px-[1.1rem] pt-4 pb-[1.1rem] flex-1 flex flex-col">
                     <?php if (!empty($sp['categoria_nombre'])): ?>
-                        <div class="sec-prod-cat"><?= esc($sp['categoria_nombre']) ?></div>
+                        <div class="text-[0.7rem] font-bold text-[rgba(255,0,51,0.7)] uppercase tracking-[0.6px] mb-1"><?= esc($sp['categoria_nombre']) ?></div>
                     <?php endif; ?>
-                    <div class="sec-prod-nombre"><?= esc($sp['nombre']) ?></div>
+                    <div class="font-bold text-dark text-[0.9rem] leading-[1.35] mb-[0.35rem] line-clamp-2"><?= esc($sp['nombre']) ?></div>
                     <?php if (!empty($sp['descripcion_corta'])): ?>
-                        <div class="sec-prod-desc"><?= esc($sp['descripcion_corta']) ?></div>
+                        <div class="text-[0.8rem] text-gris leading-[1.5] flex-1 mb-[0.8rem] line-clamp-2"><?= esc($sp['descripcion_corta']) ?></div>
                     <?php endif; ?>
-                    <div class="sec-prod-footer">
-                        <span class="sec-prod-precio">
+                    <div class="flex items-center justify-between gap-[6px] flex-wrap">
+                        <span class="font-bold text-rojo text-[0.88rem]">
                             <?= !empty($sp['precio_texto']) ? esc($sp['precio_texto']) : 'Consultar precio' ?>
                         </span>
                         <a href="https://wa.me/5493704616482?text=Hola!%20Quiero%20consultar%20por%20<?= rawurlencode($sp['nombre']) ?>"
                            target="_blank" rel="noopener"
-                           class="sec-prod-btn"
+                           class="sec-prod-btn inline-flex items-center gap-[5px] bg-[#25D366] text-white px-[0.9rem] py-[0.4rem] rounded-full font-bold text-[0.75rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a] hover:text-white"
                            onclick="event.stopPropagation();">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>

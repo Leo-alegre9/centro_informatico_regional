@@ -1,109 +1,37 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .page-header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    .page-header-row h2 { font-size: 1.4rem; font-weight: 700; color: #111827; margin: 0; }
-    .btn-rojo {
-        background: #FF0033; color: #fff; border: none;
-        padding: 0.55rem 1.25rem; border-radius: 50px;
-        font-size: 0.9rem; font-weight: 600; text-decoration: none;
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        transition: background 0.2s; white-space: nowrap;
-    }
-    .btn-rojo:hover { background: #cc0028; color: #fff; }
-
-    .filtros-bar {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
-        padding: 1rem 1.25rem; margin-bottom: 1.25rem;
-        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-    }
-    .filtros-bar label { font-size: 0.85rem; font-weight: 600; color: #374151; margin: 0; }
-    .filtros-bar input {
-        border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 0.4rem 0.9rem;
-        font-size: 0.88rem; color: #374151; background: #f9fafb; outline: none;
-        transition: border-color 0.2s; flex: 1; min-width: 180px;
-    }
-    .filtros-bar input:focus { border-color: #FF0033; }
-    .count-badge {
-        background: rgba(255,0,51,0.08); color: #FF0033; border-radius: 50px;
-        padding: 0.2rem 0.7rem; font-size: 0.8rem; font-weight: 600; margin-left: auto;
-    }
-    .tabla-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .table { margin: 0; font-size: 0.88rem; }
-    .table thead th {
-        background: #f9fafb; color: #374151; font-weight: 700;
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
-        border-bottom: 2px solid #e5e7eb; padding: 0.85rem 1rem; white-space: nowrap;
-    }
-    .table tbody td { vertical-align: middle; padding: 0.75rem 1rem; border-color: #f3f4f6; color: #374151; }
-    .table tbody tr:hover { background: #fafafa; }
-    .badge-activo   { background: rgba(16,185,129,0.12); color: #059669; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .badge-inactivo { background: rgba(239,68,68,0.1);  color: #DC2626;  padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .btn-star { background: none; border: none; cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 6px; transition: background 0.15s; font-size: 1rem; line-height: 1; }
-    .btn-star:hover { background: rgba(245,158,11,0.12); }
-    .btn-star .fa-star { color: #f59e0b; }
-    .btn-star .fa-star-o, .btn-star .empty-star { color: #D1D5DB; }
-    .cat-path { background: #f3f4f6; color: #6B7280; padding: 0.15rem 0.55rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-    .btn-accion { padding: 0.3rem 0.7rem; font-size: 0.78rem; border-radius: 7px; font-weight: 600; }
-    .empty-state { text-align: center; padding: 4rem 2rem; color: #9CA3AF; }
-    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; color: #D1D5DB; }
-    .empty-state h5 { color: #374151; font-weight: 600; margin-bottom: 0.5rem; }
-    .empty-state p  { font-size: 0.9rem; margin-bottom: 1.5rem; }
-
-    .sec-dot {
-        display: inline-flex; align-items: center; gap: 3px;
-        font-size: 0.68rem; font-weight: 600; padding: 0.12rem 0.45rem;
-        border-radius: 50px; white-space: nowrap;
-    }
-    .sec-dot.inicio      { background: rgba(239,68,68,0.1);   color: #DC2626; }
-    .sec-dot.catalogo    { background: rgba(59,130,246,0.1);  color: #2563EB; }
-    .sec-dot.rubro       { background: rgba(245,158,11,0.1);  color: #D97706; }
-    .sec-dot.subrubro    { background: rgba(16,185,129,0.1);  color: #059669; }
-    .sec-dot.destacado   { background: rgba(139,92,246,0.1);  color: #7C3AED; }
-    .sec-dot.carrusel_promo { background: rgba(236,72,153,0.1); color: #BE185D; }
-    .secciones-cell { display: flex; flex-wrap: wrap; gap: 3px; min-width: 120px; }
-</style>
-
-<div class="page-header-row">
-    <h2><i class="fas fa-box me-2" style="color:#FF0033;font-size:1.1rem;"></i>Gestión de Productos</h2>
-    <a href="<?= base_url('admin/productos/crear') ?>" class="btn-rojo">
+<div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <h2 class="text-[1.4rem] font-bold text-dark m-0"><i class="fas fa-box mr-2 text-rojo text-[1.1rem]"></i>Gestión de Productos</h2>
+    <a href="<?= base_url('admin/productos/crear') ?>" class="bg-rojo text-white border-none px-5 py-[0.55rem] rounded-full text-sm font-semibold no-underline inline-flex items-center gap-[0.4rem] whitespace-nowrap transition-colors hover:bg-rojo-dark hover:text-white">
         <i class="fas fa-plus"></i> Nuevo Producto
     </a>
 </div>
 
-<div class="filtros-bar">
-    <label for="filtroBuscar"><i class="fas fa-search me-1"></i>Buscar:</label>
-    <input type="text" id="filtroBuscar" placeholder="Nombre, categoría o badge..." oninput="filtrarTabla(this.value)">
-    <span class="count-badge" id="countVisible"><?= count($productos) ?> productos</span>
+<div class="bg-white border border-gray-200 rounded-xl px-5 py-4 mb-5 flex items-center gap-4 flex-wrap">
+    <label for="filtroBuscar" class="text-[0.85rem] font-semibold text-gray-700 m-0"><i class="fas fa-search mr-1"></i>Buscar:</label>
+    <input type="text" id="filtroBuscar"
+           class="border-[1.5px] border-gray-200 rounded-lg px-[0.9rem] py-[0.4rem] text-[0.88rem] text-gray-700 bg-gray-50 outline-none transition-colors flex-1 min-w-[180px] focus:border-rojo"
+           placeholder="Nombre, categoría o badge..." oninput="filtrarTabla(this.value)">
+    <span class="bg-rojo/[0.08] text-rojo rounded-full px-[0.7rem] py-[0.2rem] text-[0.8rem] font-semibold ml-auto" id="countVisible"><?= count($productos) ?> productos</span>
 </div>
 
 <?php if (!empty($productos)): ?>
-<div class="tabla-card">
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="overflow-x-auto">
+        <table class="w-full text-[0.88rem] border-collapse">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Código</th>
-                    <th>Categoría</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Badge</th>
-                    <th>Activo</th>
-                    <th>Secciones</th>
-                    <th title="Carrusel destacado (catálogo)"><i class="fas fa-star" style="color:#f59e0b;"></i></th>
-                    <th>Acciones</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">#</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Código</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Categoría</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Precio</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Badge</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Activo</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Secciones</th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left" title="Carrusel destacado (catálogo)"><i class="fas fa-star text-amber-500"></i></th>
+                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody id="tablaBody">
@@ -117,52 +45,60 @@
                         'destacado'      => ['icono' => 'fa-star',       'label' => 'Dest.'],
                         'carrusel_promo' => ['icono' => 'fa-bullhorn',   'label' => 'Promo'],
                     ];
+                    $secDotClases = [
+                        'inicio'         => 'bg-red-500/10 text-red-600',
+                        'catalogo'       => 'bg-blue-500/10 text-blue-600',
+                        'rubro'          => 'bg-amber-500/10 text-amber-600',
+                        'subrubro'       => 'bg-emerald-500/10 text-emerald-600',
+                        'destacado'      => 'bg-violet-500/10 text-violet-600',
+                        'carrusel_promo' => 'bg-pink-500/10 text-pink-700',
+                    ];
                 ?>
-                <tr data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge']) . ' ' . esc($p['codigo'] ?? '')) ?>">
-                    <td style="color:#9CA3AF;font-size:0.8rem;"><?= $i + 1 ?></td>
-                    <td>
+                <tr class="border-t border-gray-100 hover:bg-gray-50" data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge']) . ' ' . esc($p['codigo'] ?? '')) ?>">
+                    <td class="align-middle px-4 py-3 text-gray-400 text-[0.8rem]"><?= $i + 1 ?></td>
+                    <td class="align-middle px-4 py-3">
                         <?php if (!empty($p['codigo'])): ?>
-                            <span style="background:rgba(99,102,241,0.1);color:#4F46E5;padding:0.15rem 0.55rem;border-radius:50px;font-size:0.75rem;font-weight:700;font-family:monospace;">
+                            <span class="bg-indigo-500/10 text-indigo-600 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-bold font-mono">
                                 <?= esc($p['codigo']) ?>
                             </span>
                         <?php else: ?>
-                            <span style="color:#D1D5DB;font-size:0.8rem;">—</span>
+                            <span class="text-gray-300 text-[0.8rem]">—</span>
                         <?php endif; ?>
                     </td>
-                    <td>
-                        <span class="cat-path"><?= esc($p['categoria_path'] ?? '—') ?></span>
+                    <td class="align-middle px-4 py-3">
+                        <span class="bg-gray-100 text-gray-500 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold"><?= esc($p['categoria_path'] ?? '—') ?></span>
                     </td>
-                    <td>
-                        <div style="font-weight:600;color:#111827;"><?= esc($p['nombre']) ?></div>
+                    <td class="align-middle px-4 py-3">
+                        <div class="font-semibold text-dark"><?= esc($p['nombre']) ?></div>
                         <?php if (!empty($p['descripcion_corta'])): ?>
-                        <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">
-                            <i class="<?= esc($p['icono']) ?> me-1"></i><?= esc(mb_substr($p['descripcion_corta'], 0, 60)) ?>...
+                        <div class="text-[0.78rem] text-gray-400 mt-0.5">
+                            <i class="<?= esc($p['icono']) ?> mr-1"></i><?= esc(mb_substr($p['descripcion_corta'], 0, 60)) ?>...
                         </div>
                         <?php endif; ?>
                     </td>
-                    <td style="font-size:0.85rem;"><?= esc($p['precio_texto']) ?></td>
-                    <td>
+                    <td class="align-middle px-4 py-3 text-[0.85rem]"><?= esc($p['precio_texto']) ?></td>
+                    <td class="align-middle px-4 py-3">
                         <?php if ($p['badge']): ?>
-                            <span style="background:rgba(255,0,51,0.08);color:#FF0033;padding:0.15rem 0.5rem;border-radius:50px;font-size:0.75rem;font-weight:600;">
+                            <span class="bg-rojo/[0.08] text-rojo px-[0.5rem] py-[0.15rem] rounded-full text-xs font-semibold">
                                 <?= esc($p['badge']) ?>
                             </span>
                         <?php else: ?>
-                            <span style="color:#D1D5DB;">—</span>
+                            <span class="text-gray-300">—</span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td class="align-middle px-4 py-3">
                         <?php if ($p['activo']): ?>
-                            <span class="badge-activo"><i class="fas fa-check me-1"></i>Sí</span>
+                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Sí</span>
                         <?php else: ?>
-                            <span class="badge-inactivo"><i class="fas fa-times me-1"></i>No</span>
+                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>No</span>
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td class="align-middle px-4 py-3">
                         <?php if (!empty($p['secciones_slugs'])): ?>
-                        <div class="secciones-cell">
+                        <div class="flex flex-wrap gap-[3px] min-w-[120px]">
                             <?php foreach ($p['secciones_slugs'] as $slug): ?>
                             <?php if (isset($secIconos[$slug])): ?>
-                            <span class="sec-dot <?= $slug ?>" title="<?= $secIconos[$slug]['label'] ?>">
+                            <span class="inline-flex items-center gap-[3px] text-[0.68rem] font-semibold px-[0.45rem] py-[0.12rem] rounded-full whitespace-nowrap <?= $secDotClases[$slug] ?? '' ?>" title="<?= $secIconos[$slug]['label'] ?>">
                                 <i class="fas <?= $secIconos[$slug]['icono'] ?>"></i>
                                 <?= $secIconos[$slug]['label'] ?>
                             </span>
@@ -170,31 +106,31 @@
                             <?php endforeach; ?>
                         </div>
                         <?php else: ?>
-                            <span style="color:#D1D5DB;font-size:0.8rem;">Sin secciones</span>
+                            <span class="text-gray-300 text-[0.8rem]">Sin secciones</span>
                         <?php endif; ?>
                     </td>
-                    <td>
-                        <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/destacado") ?>" style="display:inline;">
-                            <button type="submit" class="btn-star"
+                    <td class="align-middle px-4 py-3">
+                        <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/destacado") ?>" class="inline">
+                            <button type="submit" class="bg-transparent border-none cursor-pointer px-[0.4rem] py-[0.2rem] rounded-md text-base leading-none transition-colors hover:bg-amber-500/[0.12]"
                                     title="<?= $p['destacado'] ? 'Quitar de destacados' : 'Marcar como destacado' ?>">
                                 <?php if ($p['destacado']): ?>
-                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star text-amber-500"></i>
                                 <?php else: ?>
-                                    <i class="fas fa-star empty-star"></i>
+                                    <i class="fas fa-star text-gray-300"></i>
                                 <?php endif; ?>
                             </button>
                         </form>
                     </td>
-                    <td>
-                        <div class="d-flex gap-1 flex-wrap">
+                    <td class="align-middle px-4 py-3">
+                        <div class="flex gap-1 flex-wrap">
                             <a href="<?= base_url("admin/productos/{$p['id']}/editar") ?>"
-                               class="btn btn-outline-primary btn-accion">
-                                <i class="fas fa-pen me-1"></i>Editar
+                               class="inline-flex items-center border border-blue-500 text-blue-500 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-blue-500 hover:text-white">
+                                <i class="fas fa-pen mr-1"></i>Editar
                             </a>
-                            <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/eliminar") ?>" style="display:inline;">
-                                <button type="button" class="btn btn-outline-danger btn-accion"
+                            <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/eliminar") ?>" class="inline">
+                                <button type="button" class="inline-flex items-center border border-red-500 text-red-500 bg-transparent rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold cursor-pointer transition-colors hover:bg-red-500 hover:text-white"
                                         onclick="confirmarEliminar(this, '<?= esc($p['nombre']) ?>')">
-                                    <i class="fas fa-trash me-1"></i>Eliminar
+                                    <i class="fas fa-trash mr-1"></i>Eliminar
                                 </button>
                             </form>
                         </div>
@@ -207,13 +143,13 @@
 </div>
 
 <?php else: ?>
-<div class="tabla-card">
-    <div class="empty-state">
-        <i class="fas fa-box-open"></i>
-        <h5>No hay productos cargados</h5>
-        <p>Todavía no agregaste ningún producto al catálogo.</p>
-        <a href="<?= base_url('admin/productos/crear') ?>" class="btn-rojo">
-            <i class="fas fa-plus me-1"></i>Agregar primer producto
+<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+    <div class="text-center px-8 py-16 text-gray-400">
+        <i class="fas fa-box-open text-5xl mb-4 block text-gray-300"></i>
+        <h5 class="text-gray-700 font-semibold mb-2">No hay productos cargados</h5>
+        <p class="text-[0.9rem] mb-6">Todavía no agregaste ningún producto al catálogo.</p>
+        <a href="<?= base_url('admin/productos/crear') ?>" class="bg-rojo text-white border-none px-5 py-[0.55rem] rounded-full text-sm font-semibold no-underline inline-flex items-center gap-[0.4rem] transition-colors hover:bg-rojo-dark hover:text-white">
+            <i class="fas fa-plus mr-1"></i>Agregar primer producto
         </a>
     </div>
 </div>

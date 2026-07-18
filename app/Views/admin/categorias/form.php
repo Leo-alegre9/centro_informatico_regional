@@ -1,69 +1,26 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('contenido') ?>
 
-<style>
-    .form-card {
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-        padding: 2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); max-width: 700px;
-    }
-    .form-section-title {
-        font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
-        color: #9CA3AF; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6;
-    }
-    .form-label { font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.3rem; }
-    .form-control, .form-select {
-        border: 1.5px solid #e5e7eb; border-radius: 9px; padding: 0.6rem 0.95rem;
-        font-size: 0.92rem; color: #111827; transition: border-color 0.2s, box-shadow 0.2s; background: #fff;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: #FF0033; box-shadow: 0 0 0 3px rgba(255,0,51,0.1); outline: none;
-    }
-    .form-select:disabled { background: #f9fafb; color: #9CA3AF; cursor: not-allowed; }
-    textarea.form-control { min-height: 90px; resize: vertical; }
-    .field-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 0.2rem; }
-    .btn-guardar {
-        background: #FF0033; color: #fff; border: none; padding: 0.7rem 2rem;
-        border-radius: 50px; font-size: 0.95rem; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer; transition: background 0.2s;
-    }
-    .btn-guardar:hover { background: #cc0028; }
-    .btn-cancelar {
-        color: #6B7280; text-decoration: none; padding: 0.7rem 1.4rem; border-radius: 50px;
-        font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem;
-        border: 1.5px solid #e5e7eb; transition: background 0.15s;
-    }
-    .btn-cancelar:hover { background: #f3f4f6; color: #374151; }
-    .errors-box {
-        background: rgba(255,0,51,0.05); border: 1px solid rgba(255,0,51,0.2); border-radius: 10px;
-        padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: #DC2626;
-    }
-    .errors-box ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
-    .page-header-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .page-header-row h2 { font-size: 1.35rem; font-weight: 700; color: #111827; margin: 0; }
-    .back-link { color: #6B7280; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; transition: color 0.15s; }
-    .back-link:hover { color: #FF0033; }
-    .icon-preview { font-size: 1.4rem; color: var(--rojo,#FF0033); width: 36px; text-align: center; }
-    .nivel-hint {
-        font-size: 0.78rem; background: #f3f4f6; border-radius: 8px; padding: 0.5rem 0.75rem;
-        color: #6B7280; margin-top: 0.4rem;
-    }
-</style>
+<?php
+$inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none';
+$selectDisabledCls = 'disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed';
+?>
 
-<div class="page-header-row">
-    <a href="<?= base_url('admin/categorias') ?>" class="back-link">
+<div class="flex items-center gap-3 mb-6">
+    <a href="<?= base_url('admin/categorias') ?>" class="text-gray-500 hover:text-rojo no-underline flex items-center gap-[0.3rem] transition-colors">
         <i class="fas fa-arrow-left"></i>
     </a>
-    <h2>
-        <i class="fas fa-<?= $categoria ? 'pen' : 'plus-circle' ?> me-2" style="color:#FF0033;font-size:1.05rem;"></i>
+    <h2 class="text-[1.35rem] font-bold text-dark m-0">
+        <i class="fas fa-<?= $categoria ? 'pen' : 'plus-circle' ?> mr-2 text-rojo text-[1.05rem]"></i>
         <?= $categoria ? 'Editar categoría' : 'Nueva categoría' ?>
     </h2>
 </div>
 
 <?php $errors = session()->getFlashdata('errors'); ?>
 <?php if ($errors): ?>
-<div class="errors-box mb-3">
-    <strong><i class="fas fa-exclamation-triangle me-1"></i>Corregí los siguientes errores:</strong>
-    <ul><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
+<div class="bg-rojo/5 border border-rojo/20 rounded-[10px] px-5 py-4 mb-4 text-[0.88rem] text-red-600">
+    <strong><i class="fas fa-exclamation-triangle mr-1"></i>Corregí los siguientes errores:</strong>
+    <ul class="mt-2 pl-5 list-disc"><?php foreach ($errors as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul>
 </div>
 <?php endif; ?>
 
@@ -75,16 +32,16 @@ $nivelActual     = old('nivel', $categoria['nivel'] ?? '');
 $parentIdActual  = old('parent_id', $categoria['parent_id'] ?? '');
 ?>
 
-<div class="form-card">
+<div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[700px]">
     <form action="<?= esc($accion) ?>" method="POST">
         <?= csrf_field() ?>
 
-        <div class="form-section-title"><i class="fas fa-layer-group me-1"></i>Jerarquía</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-layer-group mr-1"></i>Jerarquía</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-md-4">
-                <label for="nivel" class="form-label">Nivel <span style="color:#FF0033;">*</span></label>
-                <select id="nivel" name="nivel" class="form-select" onchange="actualizarNivel(this.value)" required>
+        <div class="flex flex-wrap gap-4 mb-6">
+            <div class="w-full md:w-1/3">
+                <label for="nivel" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Nivel <span class="text-rojo">*</span></label>
+                <select id="nivel" name="nivel" class="<?= $inputCls ?> <?= $selectDisabledCls ?>" onchange="actualizarNivel(this.value)" required>
                     <option value="">— Elegí el nivel —</option>
                     <option value="1" <?= $nivelActual == 1 ? 'selected' : '' ?>>Nivel 1 — Rubro</option>
                     <option value="2" <?= $nivelActual == 2 ? 'selected' : '' ?>>Nivel 2 — Categoría</option>
@@ -92,66 +49,66 @@ $parentIdActual  = old('parent_id', $categoria['parent_id'] ?? '');
                 </select>
             </div>
 
-            <div class="col-12 col-md-8" id="wrapParent" style="display:<?= $nivelActual > 1 ? 'block' : 'none' ?>;">
-                <label for="parent_id" class="form-label">Categoría padre <span style="color:#FF0033;">*</span></label>
-                <select id="parent_id" name="parent_id" class="form-select">
+            <div class="w-full md:w-2/3" id="wrapParent" style="display:<?= $nivelActual > 1 ? 'block' : 'none' ?>;">
+                <label for="parent_id" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Categoría padre <span class="text-rojo">*</span></label>
+                <select id="parent_id" name="parent_id" class="<?= $inputCls ?>">
                     <option value="">— Seleccioná el padre —</option>
                 </select>
-                <div class="nivel-hint" id="nivelHint" style="display:none;"></div>
+                <div class="hidden text-[0.78rem] bg-gray-100 rounded-lg px-3 py-2 text-gray-500 mt-[0.4rem]" id="nivelHint"></div>
             </div>
         </div>
 
-        <div class="form-section-title"><i class="fas fa-info-circle me-1"></i>Datos de la categoría</div>
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-info-circle mr-1"></i>Datos de la categoría</div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-md-7">
-                <label for="nombre" class="form-label">Nombre <span style="color:#FF0033;">*</span></label>
-                <input type="text" id="nombre" name="nombre" class="form-control"
+        <div class="flex flex-wrap gap-4 mb-6">
+            <div class="w-full md:w-7/12">
+                <label for="nombre" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Nombre <span class="text-rojo">*</span></label>
+                <input type="text" id="nombre" name="nombre" class="<?= $inputCls ?>"
                        value="<?= esc(old('nombre', $categoria['nombre'] ?? '')) ?>"
                        placeholder="Ej: Procesadores, Gaming, Heladeras" required
                        oninput="autoSlug(this.value)">
             </div>
 
-            <div class="col-12 col-md-5">
-                <label for="slug" class="form-label">Slug (URL) <span style="color:#FF0033;">*</span></label>
-                <input type="text" id="slug" name="slug" class="form-control"
+            <div class="w-full md:w-5/12">
+                <label for="slug" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Slug (URL) <span class="text-rojo">*</span></label>
+                <input type="text" id="slug" name="slug" class="<?= $inputCls ?>"
                        value="<?= esc(old('slug', $categoria['slug'] ?? '')) ?>"
                        placeholder="procesadores" required>
-                <div class="field-hint">Solo letras minúsculas, números y guiones.</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Solo letras minúsculas, números y guiones.</div>
             </div>
 
-            <div class="col-12 col-md-8">
-                <label for="icono" class="form-label">Ícono (Font Awesome)</label>
-                <div class="d-flex gap-2 align-items-center">
-                    <span class="icon-preview"><i id="iconPreview" class="<?= esc(old('icono', $categoria['icono'] ?? 'fas fa-folder')) ?>"></i></span>
-                    <input type="text" id="icono" name="icono" class="form-control"
+            <div class="w-full md:w-2/3">
+                <label for="icono" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Ícono (Font Awesome)</label>
+                <div class="flex gap-2 items-center">
+                    <span class="text-[1.4rem] text-rojo w-9 text-center"><i id="iconPreview" class="<?= esc(old('icono', $categoria['icono'] ?? 'fas fa-folder')) ?>"></i></span>
+                    <input type="text" id="icono" name="icono" class="<?= $inputCls ?>"
                            value="<?= esc(old('icono', $categoria['icono'] ?? 'fas fa-folder')) ?>"
                            placeholder="fas fa-folder"
                            oninput="document.getElementById('iconPreview').className = this.value || 'fas fa-folder'">
                 </div>
-                <div class="field-hint">Clase de Font Awesome 6. Ej: fas fa-microchip, fas fa-chair</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Clase de Font Awesome 6. Ej: fas fa-microchip, fas fa-chair</div>
             </div>
 
-            <div class="col-12 col-md-4">
-                <label for="orden" class="form-label">Orden</label>
-                <input type="number" id="orden" name="orden" class="form-control" min="0"
+            <div class="w-full md:w-1/3">
+                <label for="orden" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Orden</label>
+                <input type="number" id="orden" name="orden" class="<?= $inputCls ?>" min="0"
                        value="<?= esc(old('orden', $categoria['orden'] ?? 0)) ?>"
                        placeholder="0">
-                <div class="field-hint">Menor número = aparece primero.</div>
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Menor número = aparece primero.</div>
             </div>
 
-            <div class="col-12">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea id="descripcion" name="descripcion" class="form-control"
+            <div class="w-full">
+                <label for="descripcion" class="block text-[0.85rem] font-semibold text-gray-700 mb-[0.3rem]">Descripción</label>
+                <textarea id="descripcion" name="descripcion" class="<?= $inputCls ?> min-h-[90px] resize-y"
                           placeholder="Breve descripción de esta categoría..."><?= esc(old('descripcion', $categoria['descripcion'] ?? '')) ?></textarea>
             </div>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
-            <button type="submit" class="btn-guardar">
+        <div class="flex items-center gap-3">
+            <button type="submit" class="bg-rojo hover:bg-rojo-dark text-white px-8 py-[0.7rem] rounded-full text-[0.95rem] font-semibold inline-flex items-center gap-[0.45rem] cursor-pointer transition-colors">
                 <i class="fas fa-save"></i> <?= $categoria ? 'Guardar cambios' : 'Crear categoría' ?>
             </button>
-            <a href="<?= base_url('admin/categorias') ?>" class="btn-cancelar">
+            <a href="<?= base_url('admin/categorias') ?>" class="text-gray-500 hover:bg-gray-100 hover:text-gray-700 no-underline px-[1.4rem] py-[0.7rem] rounded-full text-[0.95rem] font-semibold inline-flex items-center gap-[0.4rem] border-[1.5px] border-gray-200 transition-colors">
                 <i class="fas fa-times"></i> Cancelar
             </a>
         </div>

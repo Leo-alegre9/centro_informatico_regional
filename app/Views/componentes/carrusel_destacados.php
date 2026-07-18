@@ -1,188 +1,38 @@
-<style>
-    .carrusel-section {
-        background: #0c1117;
-        padding: 3.5rem 0 4rem;
-    }
-    .carrusel-section .section-heading { color: #fff; }
-    .carrusel-track-wrap {
-        overflow: hidden;
-        position: relative;
-    }
-    .carrusel-track {
-        display: flex;
-        gap: 1.25rem;
-        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        will-change: transform;
-    }
-    .dest-card {
-        flex: 0 0 calc(25% - 1rem);
-        background: #111a27;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.06);
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .dest-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-        border-color: rgba(255,0,51,0.2);
-    }
-    .dest-img {
-        height: 160px;
-        background: #0d1520;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        flex-shrink: 0;
-    }
-    .dest-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.85;
-        transition: opacity 0.3s, transform 0.4s;
-    }
-    .dest-card:hover .dest-img img { opacity: 1; transform: scale(1.04); }
-    .dest-img-placeholder {
-        color: rgba(255,255,255,0.12);
-        font-size: 2.5rem;
-    }
-    .dest-body {
-        padding: 1rem 1.1rem 1.2rem;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-    .dest-marca {
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: rgba(255,0,51,0.7);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 0.25rem;
-    }
-    .dest-nombre {
-        color: #fff;
-        font-size: 0.95rem;
-        font-weight: 700;
-        line-height: 1.35;
-        margin-bottom: 0.4rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .dest-modelo {
-        font-size: 0.78rem;
-        color: rgba(255,255,255,0.35);
-        margin-bottom: 0.6rem;
-    }
-    .dest-precio {
-        margin-top: auto;
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--rojo, #FF0033);
-    }
-    .dest-badge {
-        display: inline-block;
-        background: rgba(255,0,51,0.1);
-        color: var(--rojo, #FF0033);
-        font-size: 0.68rem;
-        font-weight: 700;
-        padding: 2px 8px;
-        border-radius: 50px;
-        margin-bottom: 0.5rem;
-        width: fit-content;
-    }
-    .carrusel-nav {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.6rem;
-        margin-top: 2rem;
-    }
-    .carrusel-btn {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        border: 1.5px solid rgba(255,255,255,0.12);
-        background: rgba(255,255,255,0.05);
-        color: rgba(255,255,255,0.6);
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-    .carrusel-btn:hover:not(:disabled) {
-        background: rgba(255,0,51,0.15);
-        border-color: rgba(255,0,51,0.4);
-        color: #fff;
-    }
-    .carrusel-btn:disabled { opacity: 0.3; cursor: default; }
-    .carrusel-dots {
-        display: flex;
-        gap: 5px;
-    }
-    .carrusel-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.2);
-        cursor: pointer;
-        transition: background 0.2s, transform 0.2s;
-    }
-    .carrusel-dot.activo {
-        background: var(--rojo, #FF0033);
-        transform: scale(1.3);
-    }
-
-    @media (max-width: 991px) {
-        .dest-card { flex: 0 0 calc(50% - 0.65rem); }
-    }
-    @media (max-width: 575px) {
-        .dest-card { flex: 0 0 calc(85%); }
-    }
-</style>
-
-<section class="carrusel-section">
-    <div class="container-xxl px-3 px-lg-5">
+<section class="bg-[#0c1117] pt-14 pb-16">
+    <div class="container lg:px-12">
         <div class="text-center mb-2">
             <span class="section-eyebrow">Selección especial</span>
-            <h2 class="section-heading">Productos Destacados</h2>
+            <h2 class="section-heading !text-white">Productos Destacados</h2>
         </div>
         <div class="section-divider"></div>
 
-        <div class="carrusel-track-wrap" id="destTrackWrap">
-            <div class="carrusel-track" id="destTrack">
+        <div class="overflow-hidden relative" id="destTrackWrap">
+            <div class="flex gap-5 transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94)] will-change-transform" id="destTrack">
                 <?php foreach ($destacados as $dest): ?>
-                <div class="dest-card">
-                    <div class="dest-img">
+                <div class="dest-card shrink-0 grow-0 w-[85%] sm:w-[calc(50%-0.65rem)] lg:w-[calc(25%-1rem)] bg-[#111a27] rounded-[14px] overflow-hidden border border-white/[0.06] flex flex-col transition-all duration-300 ease hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:border-[rgba(255,0,51,0.2)]">
+                    <div class="group h-40 bg-[#0d1520] flex items-center justify-center overflow-hidden shrink-0">
                         <?php if (!empty($dest['imagen_ruta'])): ?>
                             <img src="<?= base_url(esc($dest['imagen_ruta'])) ?>"
                                  alt="<?= esc($dest['nombre']) ?>"
                                  loading="lazy"
-                                 onerror="this.parentElement.innerHTML='<span class=\'dest-img-placeholder\'><i class=\'fas fa-image\'></i></span>'">
+                                 class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] [transition:opacity_0.3s,transform_0.4s]"
+                                 onerror="this.parentElement.innerHTML='<span class=\'text-white/[0.12] text-[2.5rem]\'><i class=\'fas fa-image\'></i></span>'">
                         <?php else: ?>
-                            <span class="dest-img-placeholder"><i class="fas fa-image"></i></span>
+                            <span class="text-white/[0.12] text-[2.5rem]"><i class="fas fa-image"></i></span>
                         <?php endif; ?>
                     </div>
-                    <div class="dest-body">
+                    <div class="px-[1.1rem] pt-4 pb-[1.2rem] flex flex-col flex-1">
                         <?php if (!empty($dest['marca_nombre'])): ?>
-                            <div class="dest-marca"><?= esc($dest['marca_nombre']) ?></div>
+                            <div class="text-[0.72rem] font-bold text-[rgba(255,0,51,0.7)] uppercase tracking-[0.8px] mb-1"><?= esc($dest['marca_nombre']) ?></div>
                         <?php endif; ?>
                         <?php if (!empty($dest['badge'])): ?>
-                            <span class="dest-badge"><?= esc($dest['badge']) ?></span>
+                            <span class="inline-block bg-[rgba(255,0,51,0.1)] text-rojo text-[0.68rem] font-bold px-2 py-[2px] rounded-full mb-2 w-fit"><?= esc($dest['badge']) ?></span>
                         <?php endif; ?>
-                        <div class="dest-nombre"><?= esc($dest['nombre']) ?></div>
+                        <div class="text-white text-[0.95rem] font-bold leading-[1.35] mb-[0.4rem] line-clamp-2"><?= esc($dest['nombre']) ?></div>
                         <?php if (!empty($dest['modelo'])): ?>
-                            <div class="dest-modelo"><?= esc($dest['modelo']) ?></div>
+                            <div class="text-[0.78rem] text-white/[0.35] mb-[0.6rem]"><?= esc($dest['modelo']) ?></div>
                         <?php endif; ?>
-                        <div class="dest-precio">
+                        <div class="mt-auto text-[0.9rem] font-bold text-rojo">
                             <?= !empty($dest['precio_texto']) ? esc($dest['precio_texto']) : 'Consultar precio' ?>
                         </div>
                     </div>
@@ -191,10 +41,10 @@
             </div>
         </div>
 
-        <div class="carrusel-nav">
-            <button class="carrusel-btn" id="destPrev" title="Anterior"><i class="fas fa-chevron-left"></i></button>
-            <div class="carrusel-dots" id="destDots"></div>
-            <button class="carrusel-btn" id="destNext" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
+        <div class="flex items-center justify-center gap-[0.6rem] mt-8">
+            <button class="w-[38px] h-[38px] rounded-full border-[1.5px] border-white/[0.12] bg-white/5 text-white/60 text-[0.85rem] cursor-pointer flex items-center justify-center transition-colors duration-200 hover:enabled:bg-[rgba(255,0,51,0.15)] hover:enabled:border-[rgba(255,0,51,0.4)] hover:enabled:text-white disabled:opacity-30 disabled:cursor-default" id="destPrev" title="Anterior"><i class="fas fa-chevron-left"></i></button>
+            <div class="flex gap-[5px]" id="destDots"></div>
+            <button class="w-[38px] h-[38px] rounded-full border-[1.5px] border-white/[0.12] bg-white/5 text-white/60 text-[0.85rem] cursor-pointer flex items-center justify-center transition-colors duration-200 hover:enabled:bg-[rgba(255,0,51,0.15)] hover:enabled:border-[rgba(255,0,51,0.4)] hover:enabled:text-white disabled:opacity-30 disabled:cursor-default" id="destNext" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 </section>
@@ -212,6 +62,8 @@
     var current     = 0;
     var visibles    = 4;
 
+    var DOT_BASE = 'w-[6px] h-[6px] rounded-full bg-white/20 cursor-pointer transition-all duration-200';
+
     function getVisibles() {
         var w = wrap.offsetWidth;
         if (w < 576) return 1;
@@ -228,7 +80,7 @@
         var p = pages();
         for (var i = 0; i < p; i++) {
             var d = document.createElement('button');
-            d.className = 'carrusel-dot' + (i === current ? ' activo' : '');
+            d.className = DOT_BASE + (i === current ? ' !bg-rojo scale-[1.3]' : '');
             d.setAttribute('data-i', i);
             d.addEventListener('click', function () { goTo(parseInt(this.getAttribute('data-i'))); });
             dotsWrap.appendChild(d);

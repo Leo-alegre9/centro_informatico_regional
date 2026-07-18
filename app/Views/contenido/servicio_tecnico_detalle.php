@@ -1,302 +1,52 @@
-<style>
-    /* ── Hero ── */
-    .st-hero {
-        background: var(--dark);
-        padding: 3.5rem 0 2.8rem;
-        text-align: center;
-    }
-    .st-hero .eyebrow {
-        display: inline-block;
-        background: rgba(255,0,51,0.12);
-        color: var(--rojo);
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 1.2px;
-        text-transform: uppercase;
-        padding: 0.35rem 1rem;
-        border-radius: 50px;
-        margin-bottom: 1.1rem;
-    }
-    .st-hero h1 {
-        color: #fff;
-        font-size: clamp(1.8rem, 4vw, 2.6rem);
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 0.9rem;
-    }
-    .st-hero h1 span { color: var(--rojo); }
-    .st-hero p {
-        color: rgba(255,255,255,0.65);
-        font-size: 1.05rem;
-        max-width: 540px;
-        margin: 0 auto;
-        line-height: 1.75;
-    }
-
-    /* ── Layout principal ── */
-    .st-body { background: var(--fondo); padding: 3.5rem 0 4rem; }
-
-    /* ── Técnicos ── */
-    .tecnico-card {
-        background: #fff;
-        border-radius: 20px;
-        border: 1.5px solid #e5e7eb;
-        padding: 2rem 1.75rem;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .tecnico-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 14px 40px rgba(0,0,0,0.1);
-    }
-    .tecnico-avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: var(--dark-2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.25rem;
-        border: 3px solid var(--rojo);
-        flex-shrink: 0;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(255,0,51,0.18);
-    }
-    .tecnico-avatar i { color: rgba(255,255,255,0.75); font-size: 2.2rem; }
-    .tecnico-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top center;
-        display: block;
-        border-radius: 50%;
-    }
-    .tecnico-nombre {
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: var(--dark-2);
-        margin-bottom: 0.2rem;
-    }
-    .tecnico-rol {
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: var(--rojo);
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        margin-bottom: 0.85rem;
-    }
-    .tecnico-desc {
-        font-size: 0.9rem;
-        color: var(--gris);
-        line-height: 1.7;
-        flex: 1;
-        margin-bottom: 1.4rem;
-    }
-    .btn-tecnico-wsp {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: #25D366;
-        color: #fff;
-        font-weight: 700;
-        font-size: 0.9rem;
-        padding: 0.75rem 1.4rem;
-        border-radius: 50px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: background 0.2s;
-        width: 100%;
-    }
-    .btn-tecnico-wsp:hover { background: #1ebe5a; color: #fff; }
-    .btn-tecnico-wsp:disabled {
-        background: #9CA3AF;
-        cursor: not-allowed;
-    }
-
-    /* ── Formulario ── */
-    .st-form-card {
-        background: #fff;
-        border-radius: 20px;
-        border: 1.5px solid #e5e7eb;
-        padding: 2rem 2rem 2.2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        position: sticky;
-        top: 90px;
-    }
-    .st-form-title {
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: var(--dark-2);
-        margin-bottom: 0.25rem;
-    }
-    .st-form-subtitle {
-        font-size: 0.85rem;
-        color: var(--gris);
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
-    }
-    .st-label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.3rem;
-        display: block;
-    }
-    .st-input, .st-select, .st-textarea {
-        width: 100%;
-        border: 1.5px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 0.65rem 1rem;
-        font-size: 0.92rem;
-        color: #111827;
-        background: #fff;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        font-family: inherit;
-    }
-    .st-input:focus, .st-select:focus, .st-textarea:focus {
-        border-color: var(--rojo);
-        box-shadow: 0 0 0 3px rgba(255,0,51,0.1);
-        outline: none;
-    }
-    .st-textarea { min-height: 120px; resize: vertical; }
-    .st-input.error, .st-select.error, .st-textarea.error {
-        border-color: #DC2626;
-    }
-    .st-error-msg {
-        font-size: 0.78rem;
-        color: #DC2626;
-        margin-top: 0.2rem;
-        display: none;
-    }
-    .st-error-msg.visible { display: block; }
-    .st-hint { font-size: 0.76rem; color: #9CA3AF; margin-top: 0.2rem; }
-
-    .st-divider {
-        border: none;
-        border-top: 1.5px dashed #e5e7eb;
-        margin: 1.5rem 0;
-    }
-    .st-contact-label {
-        font-size: 0.82rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: #9CA3AF;
-        margin-bottom: 0.85rem;
-        display: block;
-    }
-
-    /* ── Info chips debajo de técnico ── */
-    .tecnico-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 1rem;
-    }
-    .tecnico-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: #f3f4f6;
-        color: #374151;
-        font-size: 0.76rem;
-        font-weight: 600;
-        padding: 0.28rem 0.7rem;
-        border-radius: 50px;
-    }
-    .tecnico-chip i { color: var(--rojo); font-size: 0.72rem; }
-
-    /* ── Breadcrumb ── */
-    .st-breadcrumb {
-        padding: 0.85rem 0;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        margin-bottom: 0;
-        background: var(--dark);
-    }
-    .st-breadcrumb a, .st-breadcrumb span {
-        font-size: 0.83rem;
-        color: rgba(255,255,255,0.5);
-        text-decoration: none;
-    }
-    .st-breadcrumb a:hover { color: rgba(255,255,255,0.85); }
-    .st-breadcrumb .sep { margin: 0 0.5rem; }
-    .st-breadcrumb .current { color: rgba(255,255,255,0.85); }
-
-    @media (max-width: 991px) {
-        .st-form-card { position: static; }
-    }
-</style>
-
 <!-- ── BREADCRUMB ── -->
-<div class="st-breadcrumb">
+<div class="mb-0 border-b border-white/[0.08] bg-dark py-[0.85rem]">
     <div class="container">
-        <a href="<?= base_url() ?>">Inicio</a>
-        <span class="sep">/</span>
-        <span class="current">Servicio Técnico</span>
+        <a href="<?= base_url() ?>" class="text-[0.83rem] text-white/50 no-underline hover:text-white/85">Inicio</a>
+        <span class="mx-2 text-[0.83rem] text-white/50">/</span>
+        <span class="text-[0.83rem] text-white/85">Servicio Técnico</span>
     </div>
 </div>
 
 <!-- ── HERO ── -->
-<div class="st-hero">
+<div class="bg-dark pt-14 pb-[2.8rem] text-center">
     <div class="container">
-        <span class="eyebrow"><i class="fas fa-tools me-1"></i> Soporte profesional</span>
-        <h1>Solicitá tu <span>Servicio Técnico</span></h1>
-        <p>Completá el formulario con los datos de tu equipo y contactá directamente con nuestros técnicos por WhatsApp. El mensaje llegará con toda la información lista.</p>
+        <span class="mb-[1.1rem] inline-block rounded-full bg-rojo/[0.12] px-4 py-[0.35rem] text-[0.78rem] font-bold tracking-[1.2px] text-rojo uppercase"><i class="fas fa-tools mr-1"></i> Soporte profesional</span>
+        <h1 class="mb-[0.9rem] text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.2] font-extrabold text-white">Solicitá tu <span class="text-rojo">Servicio Técnico</span></h1>
+        <p class="mx-auto max-w-[540px] text-[1.05rem] leading-[1.75] text-white/65">Completá el formulario con los datos de tu equipo y contactá directamente con nuestros técnicos por WhatsApp. El mensaje llegará con toda la información lista.</p>
     </div>
 </div>
 
 <!-- ── BODY ── -->
-<div class="st-body">
+<div class="bg-fondo pt-14 pb-16">
     <div class="container">
-        <div class="row g-4 align-items-start">
+        <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
 
             <!-- ── COLUMNA IZQUIERDA: Técnicos ── -->
-            <div class="col-lg-5">
-                <div class="row g-4">
+            <div class="lg:col-span-5">
+                <div class="grid grid-cols-1 gap-6">
 
                     <!-- Técnico 1 -->
-                    <div class="col-12">
-                        <div class="tecnico-card">
-                            <div class="tecnico-avatar">
-                                <i class="fas fa-user-tie"></i>
+                    <div>
+                        <div class="flex items-center gap-[1.1rem] rounded-2xl border-[1.5px] border-gray-200 bg-white p-[1.1rem_1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-[250ms] hover:-translate-y-[2px] hover:shadow-[0_10px_30px_rgba(0,0,0,0.1)]">
+                            <div class="flex h-[62px] w-[62px] flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-[2.5px] border-rojo bg-dark-2 shadow-[0_3px_12px_rgba(255,0,51,0.16)]">
+                                <img src="<?= base_url('assets/img/perfiles/hernan.png') ?>" alt="Hernán Medero" class="block h-full w-full object-cover object-top">
                             </div>
-                            <div class="tecnico-nombre">Hernán Medero</div>
-                            <div class="tecnico-rol">Técnico en Hardware &amp; Redes</div>
-                            <div class="tecnico-chips">
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Reparación de PC</span>
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Redes</span>
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Notebooks</span>
-                            </div>
-                            <div class="tecnico-desc">
-                                Especialista en reparación de hardware, diagnóstico de fallas, instalación de redes y configuración de sistemas. Más de 8 años de experiencia en soporte técnico profesional.
+                            <div class="flex flex-col gap-[2px]">
+                                <div class="text-base leading-[1.2] font-extrabold text-dark-2">Hernán Medero</div>
+                                <div class="text-[0.76rem] font-semibold tracking-[0.5px] text-rojo uppercase">Técnico en Informática</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Técnico 2 -->
-                    <div class="col-12">
-                        <div class="tecnico-card">
-                            <div class="tecnico-avatar">
-                                <img src="<?= base_url('assets/img/perfiles/perfil_pilito.jpeg') ?>"
-                                     alt="Hugo Díaz"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <i class="fas fa-user-tie" style="display:none;"></i>
+                    <div>
+                        <div class="flex items-center gap-[1.1rem] rounded-2xl border-[1.5px] border-gray-200 bg-white p-[1.1rem_1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-[250ms] hover:-translate-y-[2px] hover:shadow-[0_10px_30px_rgba(0,0,0,0.1)]">
+                            <div class="flex h-[62px] w-[62px] flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-[2.5px] border-rojo bg-dark-2 shadow-[0_3px_12px_rgba(255,0,51,0.16)]">
+                                <img src="<?= base_url('assets/img/perfiles/pilito.jpeg') ?>" alt="Hugo Díaz" class="block h-full w-full object-cover object-top">
                             </div>
-                            <div class="tecnico-nombre">Hugo Díaz</div>
-                            <div class="tecnico-rol">Técnico en Software &amp; Sistemas</div>
-                            <div class="tecnico-chips">
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Software</span>
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Sistemas</span>
-                                <span class="tecnico-chip"><i class="fas fa-check-circle"></i> Recuperación</span>
-                            </div>
-                            <div class="tecnico-desc">
-                                Experto en resolución de problemas de software, instalación y configuración de sistemas operativos, recuperación de datos y soporte en sitio para empresas y particulares.
+                            <div class="flex flex-col gap-[2px]">
+                                <div class="text-base leading-[1.2] font-extrabold text-dark-2">Hugo Díaz</div>
+                                <div class="text-[0.76rem] font-semibold tracking-[0.5px] text-rojo uppercase">Técnico en Informática</div>
                             </div>
                         </div>
                     </div>
@@ -305,20 +55,20 @@
             </div>
 
             <!-- ── COLUMNA DERECHA: Formulario ── -->
-            <div class="col-lg-7">
-                <div class="st-form-card">
-                    <div class="st-form-title"><i class="fas fa-clipboard-list me-2" style="color:var(--rojo);"></i>Describirme tu problema</div>
-                    <div class="st-form-subtitle">Completá estos datos para que el técnico ya sepa con qué necesitás ayuda cuando lo contactes.</div>
+            <div class="lg:col-span-7">
+                <div class="static rounded-[20px] border-[1.5px] border-gray-200 bg-white p-[2rem_2rem_2.2rem] shadow-[0_4px_20px_rgba(0,0,0,0.06)] lg:sticky lg:top-[90px]">
+                    <div class="mb-1 text-[1.1rem] font-extrabold text-dark-2"><i class="fas fa-clipboard-list mr-2 text-rojo"></i>Describirme tu problema</div>
+                    <div class="mb-6 text-[0.85rem] leading-[1.5] text-gris">Completá estos datos para que el técnico ya sepa con qué necesitás ayuda cuando lo contactes.</div>
 
-                    <div class="mb-3">
-                        <label class="st-label" for="st-nombre">Tu nombre <span style="color:var(--rojo);">*</span></label>
-                        <input type="text" id="st-nombre" class="st-input" placeholder="Ej: Juan Rodríguez">
-                        <div class="st-error-msg" id="err-nombre">Por favor ingresá tu nombre.</div>
+                    <div class="mb-4">
+                        <label class="mb-[0.3rem] block text-[0.85rem] font-semibold text-gray-700" for="st-nombre">Tu nombre <span class="text-rojo">*</span></label>
+                        <input type="text" id="st-nombre" class="w-full rounded-[10px] border-[1.5px] border-gray-200 px-4 py-[0.65rem] font-sans text-[0.92rem] text-dark transition-colors duration-200 focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none" placeholder="Ej: Juan Rodríguez">
+                        <div class="mt-[0.2rem] hidden text-[0.78rem] text-[#DC2626]" id="err-nombre">Por favor ingresá tu nombre.</div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="st-label" for="st-equipo">Tipo de equipo <span style="color:var(--rojo);">*</span></label>
-                        <select id="st-equipo" class="st-select">
+                    <div class="mb-4">
+                        <label class="mb-[0.3rem] block text-[0.85rem] font-semibold text-gray-700" for="st-equipo">Tipo de equipo <span class="text-rojo">*</span></label>
+                        <select id="st-equipo" class="w-full rounded-[10px] border-[1.5px] border-gray-200 px-4 py-[0.65rem] font-sans text-[0.92rem] text-dark transition-colors duration-200 focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none">
                             <option value="">— Seleccioná el tipo de equipo —</option>
                             <option value="PC de escritorio">PC de escritorio</option>
                             <option value="Notebook / Laptop">Notebook / Laptop</option>
@@ -331,25 +81,25 @@
                             <option value="Equipo de red (router/switch)">Equipo de red (router/switch)</option>
                             <option value="Otro">Otro</option>
                         </select>
-                        <div class="st-error-msg" id="err-equipo">Seleccioná el tipo de equipo.</div>
+                        <div class="mt-[0.2rem] hidden text-[0.78rem] text-[#DC2626]" id="err-equipo">Seleccioná el tipo de equipo.</div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="st-label" for="st-marca">Marca y modelo <span style="color:#9CA3AF;font-weight:400;">(opcional)</span></label>
-                        <input type="text" id="st-marca" class="st-input" placeholder="Ej: HP Pavilion 15, Samsung Galaxy A54...">
-                        <div class="st-hint">Si no lo sabés, dejalo en blanco.</div>
+                    <div class="mb-4">
+                        <label class="mb-[0.3rem] block text-[0.85rem] font-semibold text-gray-700" for="st-marca">Marca y modelo <span class="font-normal text-[#9CA3AF]">(opcional)</span></label>
+                        <input type="text" id="st-marca" class="w-full rounded-[10px] border-[1.5px] border-gray-200 px-4 py-[0.65rem] font-sans text-[0.92rem] text-dark transition-colors duration-200 focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none" placeholder="Ej: HP Pavilion 15, Samsung Galaxy A54...">
+                        <div class="mt-[0.2rem] text-[0.76rem] text-[#9CA3AF]">Si no lo sabés, dejalo en blanco.</div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="st-label" for="st-problema">Descripción del problema <span style="color:var(--rojo);">*</span></label>
-                        <textarea id="st-problema" class="st-textarea"
+                    <div class="mb-4">
+                        <label class="mb-[0.3rem] block text-[0.85rem] font-semibold text-gray-700" for="st-problema">Descripción del problema <span class="text-rojo">*</span></label>
+                        <textarea id="st-problema" class="min-h-[120px] w-full resize-y rounded-[10px] border-[1.5px] border-gray-200 px-4 py-[0.65rem] font-sans text-[0.92rem] text-dark transition-colors duration-200 focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none"
                             placeholder="Describí qué está pasando con tu equipo. Por ejemplo: no enciende, pantalla negra, hace ruido, está lento, tiene virus, no conecta al WiFi..."></textarea>
-                        <div class="st-error-msg" id="err-problema">Describí el problema para que el técnico pueda ayudarte mejor.</div>
+                        <div class="mt-[0.2rem] hidden text-[0.78rem] text-[#DC2626]" id="err-problema">Describí el problema para que el técnico pueda ayudarte mejor.</div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="st-label" for="st-urgencia">Urgencia</label>
-                        <select id="st-urgencia" class="st-select">
+                    <div class="mb-4">
+                        <label class="mb-[0.3rem] block text-[0.85rem] font-semibold text-gray-700" for="st-urgencia">Urgencia</label>
+                        <select id="st-urgencia" class="w-full rounded-[10px] border-[1.5px] border-gray-200 px-4 py-[0.65rem] font-sans text-[0.92rem] text-dark transition-colors duration-200 focus:border-rojo focus:ring-[3px] focus:ring-rojo/10 focus:outline-none">
                             <option value="Sin urgencia particular">Sin urgencia particular</option>
                             <option value="Puede esperar unos días">Puede esperar unos días</option>
                             <option value="Lo antes posible">Lo antes posible</option>
@@ -357,22 +107,22 @@
                         </select>
                     </div>
 
-                    <hr class="st-divider">
+                    <hr class="my-6 border-0 border-t-[1.5px] border-dashed border-gray-200">
 
-                    <span class="st-contact-label"><i class="fab fa-whatsapp me-1" style="color:#25D366;"></i> Elegí con quién querés hablar</span>
+                    <span class="mb-[0.85rem] block text-[0.82rem] font-bold tracking-[0.8px] text-[#9CA3AF] uppercase"><i class="fab fa-whatsapp mr-1 text-[#25D366]"></i> Elegí con quién querés hablar</span>
 
-                    <div class="d-flex flex-column flex-sm-row gap-3">
-                        <button type="button" class="btn-tecnico-wsp flex-fill"
+                    <div class="flex flex-col gap-4 sm:flex-row">
+                        <button type="button" class="inline-flex flex-1 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-none bg-[#25D366] px-[1.4rem] py-3 font-sans text-[0.9rem] font-bold text-white no-underline transition-colors duration-200 hover:bg-[#1ebe5a] hover:text-white"
                                 onclick="contactarTecnico('543731448928', 'Hernán')">
                             <i class="fab fa-whatsapp"></i> Enviar a Hernán
                         </button>
-                        <button type="button" class="btn-tecnico-wsp flex-fill"
+                        <button type="button" class="inline-flex flex-1 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-none bg-[#25D366] px-[1.4rem] py-3 font-sans text-[0.9rem] font-bold text-white no-underline transition-colors duration-200 hover:bg-[#1ebe5a] hover:text-white"
                                 onclick="contactarTecnico('5493704661520', 'Hugo')">
                             <i class="fab fa-whatsapp"></i> Enviar a Hugo
                         </button>
                     </div>
 
-                    <div class="st-hint mt-2 text-center">
+                    <div class="mt-2 text-center text-[0.76rem] text-[#9CA3AF]">
                         Se abrirá WhatsApp con el mensaje ya redactado listo para enviar.
                     </div>
                 </div>
@@ -392,29 +142,28 @@ function contactarTecnico(numero, nombreTec) {
 
     var valid = true;
 
-    var errNombre = document.getElementById('err-nombre');
-    var inputNombre = document.getElementById('st-nombre');
-    if (!nombre) {
-        errNombre.classList.add('visible'); inputNombre.classList.add('error'); valid = false;
-    } else {
-        errNombre.classList.remove('visible'); inputNombre.classList.remove('error');
+    function marcarError(inputId, errId, ok) {
+        var input = document.getElementById(inputId);
+        var err = document.getElementById(errId);
+        if (!ok) {
+            err.classList.remove('hidden');
+            input.classList.remove('border-gray-200');
+            input.classList.add('border-[#DC2626]');
+        } else {
+            err.classList.add('hidden');
+            input.classList.remove('border-[#DC2626]');
+            input.classList.add('border-gray-200');
+        }
     }
 
-    var errEquipo = document.getElementById('err-equipo');
-    var inputEquipo = document.getElementById('st-equipo');
-    if (!equipo) {
-        errEquipo.classList.add('visible'); inputEquipo.classList.add('error'); valid = false;
-    } else {
-        errEquipo.classList.remove('visible'); inputEquipo.classList.remove('error');
-    }
+    marcarError('st-nombre', 'err-nombre', !!nombre);
+    if (!nombre) valid = false;
 
-    var errProblema = document.getElementById('err-problema');
-    var inputProblema = document.getElementById('st-problema');
-    if (!problema) {
-        errProblema.classList.add('visible'); inputProblema.classList.add('error'); valid = false;
-    } else {
-        errProblema.classList.remove('visible'); inputProblema.classList.remove('error');
-    }
+    marcarError('st-equipo', 'err-equipo', !!equipo);
+    if (!equipo) valid = false;
+
+    marcarError('st-problema', 'err-problema', !!problema);
+    if (!problema) valid = false;
 
     if (!valid) return;
 
@@ -454,10 +203,11 @@ function contactarTecnico(numero, nombreTec) {
 ['st-nombre', 'st-equipo', 'st-problema'].forEach(function(id) {
     var el = document.getElementById(id);
     el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function() {
-        this.classList.remove('error');
+        this.classList.remove('border-[#DC2626]');
+        this.classList.add('border-gray-200');
         var errId = 'err-' + id.replace('st-', '');
         var errEl = document.getElementById(errId);
-        if (errEl) errEl.classList.remove('visible');
+        if (errEl) errEl.classList.add('hidden');
     });
 });
 </script>

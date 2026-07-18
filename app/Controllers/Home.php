@@ -13,6 +13,7 @@ class Home extends BaseController
         $catModel      = new CategoriaModel();
 
         $productosDestacados = $productoModel->getParaInicio();
+        $productosOferta     = $productoModel->getBySeccion('carrusel_promo', 8);
 
         foreach ($productosDestacados as &$p) {
             $slugPath = $catModel->getSlugPath((int) $p['categoria_id']);
@@ -25,8 +26,20 @@ class Home extends BaseController
         }
         unset($p);
 
+        foreach ($productosOferta as &$p) {
+            $slugPath = $catModel->getSlugPath((int) $p['categoria_id']);
+            $parts    = array_filter([
+                $slugPath['rubro'],
+                $slugPath['subrubro'],
+                $slugPath['sub_subrubro'],
+            ]);
+            $p['catalog_url'] = base_url('catalogo/' . implode('/', $parts));
+        }
+        unset($p);
+
         return view('inicio', [
             'productosDestacados' => $productosDestacados,
+            'productosOferta'     => $productosOferta,
         ]);
     }
 }

@@ -1,126 +1,43 @@
-<style>
-    .contacto-hero {
-        background: linear-gradient(135deg, #070c1a 0%, var(--dark-2) 55%, #180a10 100%);
-        padding: 4.5rem 0 3.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    .contacto-hero-glow {
-        position: absolute;
-        width: 500px; height: 500px;
-        background: radial-gradient(circle, rgba(255,0,51,0.12) 0%, transparent 70%);
-        top: -150px; right: -100px;
-        border-radius: 50%;
-        pointer-events: none;
-    }
-    .contacto-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255,0,51,0.12);
-        border: 1px solid rgba(255,0,51,0.4);
-        color: var(--rojo);
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-        padding: 7px 18px;
-        border-radius: 50px;
-        margin-bottom: 1.2rem;
-    }
-    .contacto-hero h1 {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 900;
-        color: #fff;
-        margin-bottom: 0.9rem;
-        line-height: 1.15;
-    }
-    .contacto-hero h1 span { color: var(--rojo); }
-    .contacto-hero-desc {
-        color: rgba(255,255,255,0.62);
-        font-size: 1.05rem;
-        line-height: 1.8;
-        max-width: 520px;
-    }
-    .contacto-quick-card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 14px;
-        padding: 1.1rem 1.4rem;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        transition: border-color 0.2s;
-    }
-    .contacto-quick-card:hover { border-color: rgba(255,0,51,0.3); }
-    .contacto-quick-icon {
-        width: 44px; height: 44px;
-        background: rgba(255,0,51,0.13);
-        border: 1px solid rgba(255,0,51,0.25);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--rojo);
-        font-size: 1rem;
-        flex-shrink: 0;
-    }
-    .contacto-quick-label {
-        color: rgba(255,255,255,0.45);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        display: block;
-        margin-bottom: 2px;
-    }
-    .contacto-quick-value {
-        color: #fff;
-        font-size: 0.93rem;
-        font-weight: 600;
-        margin: 0;
-    }
-</style>
-
 <!-- ═══════════════════════════════════════════════
      CONTACTO HERO
 ═══════════════════════════════════════════════ -->
-<div class="contacto-hero">
-    <div class="contacto-hero-glow"></div>
-    <div class="container position-relative" style="z-index:1;">
-        <div class="row align-items-center g-5">
+<div class="relative overflow-hidden bg-[linear-gradient(135deg,#070c1a_0%,#1F2937_55%,#180a10_100%)] pt-[4.5rem] pb-14">
+    <div class="pointer-events-none absolute -top-[150px] -right-[100px] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,0,51,0.12)_0%,transparent_70%)]"></div>
+    <div class="container relative z-[1]">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 
-            <div class="col-lg-6">
-                <div class="contacto-badge">
+            <div>
+                <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-rojo/40 bg-rojo/[0.12] px-[18px] py-[7px] text-[0.75rem] font-bold tracking-[2.5px] text-rojo uppercase">
                     <i class="fas fa-headset"></i>
                     Estamos para ayudarte
                 </div>
-                <h1>Ponete en <span>Contacto</span></h1>
-                <p class="contacto-hero-desc">
+                <h1 class="mb-[0.9rem] text-[clamp(2rem,4vw,3rem)] leading-[1.15] font-black text-white">Ponete en <span class="text-rojo">Contacto</span></h1>
+                <p class="max-w-[520px] text-[1.05rem] leading-[1.8] text-white/[0.62]">
                     Respondemos consultas, presupuestos y solicitudes de servicio técnico. Escribinos y te responderemos a la brevedad.
                 </p>
             </div>
 
-            <div class="col-lg-6">
-                <div class="d-flex flex-column gap-3">
-                    <div class="contacto-quick-card">
-                        <div class="contacto-quick-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-[14px] rounded-2xl border border-white/[0.08] bg-white/5 px-[1.4rem] py-[1.1rem] transition-colors duration-200 hover:border-rojo/30">
+                        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-rojo/25 bg-rojo/[0.13] text-base text-rojo"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
-                            <span class="contacto-quick-label">Dirección</span>
-                            <p class="contacto-quick-value">Sarmiento 177, El Colorado, Formosa</p>
+                            <span class="mb-[2px] block text-[0.72rem] tracking-[1.2px] text-white/45 uppercase">Dirección</span>
+                            <p class="m-0 text-[0.93rem] font-semibold text-white">Sarmiento 177, El Colorado, Formosa</p>
                         </div>
                     </div>
-                    <div class="contacto-quick-card">
-                        <div class="contacto-quick-icon"><i class="fas fa-phone"></i></div>
+                    <div class="flex items-center gap-[14px] rounded-2xl border border-white/[0.08] bg-white/5 px-[1.4rem] py-[1.1rem] transition-colors duration-200 hover:border-rojo/30">
+                        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-rojo/25 bg-rojo/[0.13] text-base text-rojo"><i class="fas fa-phone"></i></div>
                         <div>
-                            <span class="contacto-quick-label">Teléfono / WhatsApp</span>
-                            <p class="contacto-quick-value">(+54) 370 461-6482</p>
+                            <span class="mb-[2px] block text-[0.72rem] tracking-[1.2px] text-white/45 uppercase">Teléfono / WhatsApp</span>
+                            <p class="m-0 text-[0.93rem] font-semibold text-white">(+54) 370 461-6482</p>
                         </div>
                     </div>
-                    <div class="contacto-quick-card">
-                        <div class="contacto-quick-icon"><i class="fas fa-clock"></i></div>
+                    <div class="flex items-center gap-[14px] rounded-2xl border border-white/[0.08] bg-white/5 px-[1.4rem] py-[1.1rem] transition-colors duration-200 hover:border-rojo/30">
+                        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-rojo/25 bg-rojo/[0.13] text-base text-rojo"><i class="fas fa-clock"></i></div>
                         <div>
-                            <span class="contacto-quick-label">Horario de atención</span>
-                            <p class="contacto-quick-value">Lun–Vie: 8–12 y 16–20 hs &nbsp;·&nbsp; Sáb: 8–12 hs</p>
+                            <span class="mb-[2px] block text-[0.72rem] tracking-[1.2px] text-white/45 uppercase">Horario de atención</span>
+                            <p class="m-0 text-[0.93rem] font-semibold text-white">Lun–Vie: 8–12 y 16–20 hs &nbsp;·&nbsp; Sáb: 8–12 hs</p>
                         </div>
                     </div>
                 </div>

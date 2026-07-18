@@ -8,8 +8,8 @@ class ProductoModel extends Model
 {
     protected $table         = 'productos';
     protected $allowedFields = [
-        'categoria_id', 'marca_id', 'codigo', 'nombre', 'modelo', 'descripcion_corta',
-        'descripcion', 'precio_texto', 'precio_numero', 'precio_dolar', 'badge', 'icono', 'activo', 'destacado', 'orden', 'ubicacion', 'stock',
+        'categoria_id', 'marca_id', 'fabrica_id', 'codigo', 'nombre', 'modelo', 'descripcion_corta',
+        'descripcion', 'url_fabricante', 'precio_texto', 'precio_numero', 'precio_dolar', 'badge', 'icono', 'activo', 'destacado', 'orden', 'ubicacion', 'stock',
     ];
     protected $useTimestamps = true;
 
@@ -105,6 +105,29 @@ class ProductoModel extends Model
             ->orderBy('productos.orden', 'ASC')
             ->orderBy('productos.nombre', 'ASC')
             ->limit(30)
+            ->findAll();
+    }
+
+    public function buscarGlobal(string $q, int $limit = 30): array
+    {
+        if ($q === '') {
+            return [];
+        }
+        return $this
+            ->select('productos.*, pi.ruta AS imagen_ruta, marcas.nombre AS marca_nombre, categorias.nombre AS categoria_nombre')
+            ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+            ->where('productos.activo', 1)
+            ->groupStart()
+                ->like('productos.nombre', $q)
+                ->orLike('productos.modelo', $q)
+                ->orLike('productos.descripcion_corta', $q)
+                ->orLike('marcas.nombre', $q)
+            ->groupEnd()
+            ->orderBy('productos.orden', 'ASC')
+            ->orderBy('productos.nombre', 'ASC')
+            ->limit($limit)
             ->findAll();
     }
 

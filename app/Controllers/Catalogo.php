@@ -182,53 +182,98 @@ class Catalogo extends BaseController
         ]);
     }
 
-    // ── Búsqueda contextual AJAX (/catalogo/buscar) ───────────────────────────
+    // ── Búsqueda (/catalogo/buscar) ──────────────────────────────────────────
 
-    public function buscar(): \CodeIgniter\HTTP\ResponseInterface
+    public function buscar()
     {
         $q      = trim((string) $this->request->getGet('q'));
         $rubro  = trim((string) $this->request->getGet('rubro'));
         $sub    = trim((string) $this->request->getGet('sub'));
         $subSub = trim((string) $this->request->getGet('subsub'));
 
-        if ($q === '') {
-            return $this->response->setJSON(['resultados' => [], 'total' => 0]);
-        }
-
-        if ($rubro !== '') {
-            $dbCat = $this->catModel->findBySlugPath(
-                $rubro,
-                $sub !== '' ? $sub : null,
-                $subSub !== '' ? $subSub : null
-            );
-            if (!$dbCat) {
+        // ── Petición AJAX: mantener comportamiento JSON ──
+        if ($this->request->isAJAX()) {
+            if ($q === '') {
                 return $this->response->setJSON(['resultados' => [], 'total' => 0]);
             }
-            $catIds = $this->catModel->getDescendantIds((int) $dbCat['id']);
-            if (empty($catIds)) {
-                $catIds = [(int) $dbCat['id']];
+
+            if ($rubro !== '') {
+                $dbCat = $this->catModel->findBySlugPath(
+                    $rubro,
+                    $sub !== '' ? $sub : null,
+                    $subSub !== '' ? $subSub : null
+                );
+                if (!$dbCat) {
+                    return $this->response->setJSON(['resultados' => [], 'total' => 0]);
+                }
+                $catIds = $this->catModel->getDescendantIds((int) $dbCat['id']);
+                if (empty($catIds)) {
+                    $catIds = [(int) $dbCat['id']];
+                }
+            } else {
+                $catIds = [];
             }
-        } else {
-            // Sin contexto de categoría: buscar en todos los productos
-            $catIds = [];
+
+            $resultados = $this->productoModel->buscarEnCategoria($catIds, $q);
+
+            $out = array_map(fn($p) => [
+                'id'          => $p['id'],
+                'nombre'      => $p['nombre'],
+                'modelo'      => $p['modelo'] ?? '',
+                'precio'      => $p['precio_texto'],
+                'badge'       => $p['badge'],
+                'imagen_url'  => $p['imagen_ruta'] ?? null,
+                'icono'       => $p['icono'] ?? 'fas fa-box',
+                'descripcion' => $p['descripcion_corta'] ?? $p['descripcion'] ?? '',
+                'marca'       => $p['marca_nombre'] ?? '',
+                'categoria'   => $p['categoria_nombre'] ?? '',
+            ], $resultados);
+
+            return $this->response->setJSON(['resultados' => $out, 'total' => count($out)]);
         }
 
-        $resultados = $this->productoModel->buscarEnCategoria($catIds, $q);
+        // ── Petición normal (formulario del header): renderizar vista ──
+        if ($q === '') {
+            return redirect()->to(base_url('catalogo'));
+        }
 
-        $out = array_map(fn($p) => [
-            'id'          => $p['id'],
-            'nombre'      => $p['nombre'],
-            'modelo'      => $p['modelo'] ?? '',
-            'precio'      => $p['precio_texto'],
-            'badge'       => $p['badge'],
-            'imagen_url'  => $p['imagen_ruta'] ?? null,
-            'icono'       => $p['icono'] ?? 'fas fa-box',
-            'descripcion' => $p['descripcion_corta'] ?? $p['descripcion'] ?? '',
-            'marca'       => $p['marca_nombre'] ?? '',
-            'categoria'   => $p['categoria_nombre'] ?? '',
-        ], $resultados);
+        $resultados = $this->productoModel->buscarGlobal($q);
 
-        return $this->response->setJSON(['resultados' => $out, 'total' => count($out)]);
+        $productos = array_map(function ($p) {
+            $slugPath = $this->catModel->getSlugPath((int) $p['categoria_id']);
+
+            $urlPath = 'catalogo';
+            if ($slugPath['rubro'] !== '') {
+                $urlPath .= '/' . $slugPath['rubro'];
+                if ($slugPath['subrubro'] !== '') {
+                    $urlPath .= '/' . $slugPath['subrubro'];
+                    if ($slugPath['sub_subrubro'] !== '') {
+                        $urlPath .= '/' . $slugPath['sub_subrubro'];
+                    }
+                }
+            }
+
+            return [
+                'id'           => $p['id'],
+                'nombre'       => $p['nombre'],
+                'modelo'       => $p['modelo'] ?? '',
+                'precio'       => $p['precio_texto'],
+                'badge'        => $p['badge'],
+                'imagen_url'   => $p['imagen_ruta'] ?? null,
+                'icono'        => $p['icono'] ?? 'fas fa-box',
+                'descripcion'  => $p['descripcion_corta'] ?? '',
+                'marca'        => $p['marca_nombre'] ?? '',
+                'categoria'    => $p['categoria_nombre'] ?? '',
+                'url_catalogo' => base_url($urlPath) . '#producto-' . $p['id'],
+            ];
+        }, $resultados);
+
+        return view('catalogo_buscar', [
+            'titulo'    => 'Resultados para "' . esc($q) . '" | Centro Informático Regional',
+            'query'     => $q,
+            'productos' => $productos,
+            'total'     => count($productos),
+        ]);
     }
 
     // ── Helpers privados ───────────────────────────────────────────────────────
