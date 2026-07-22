@@ -8,10 +8,73 @@ class ProductoModel extends Model
 {
     protected $table         = 'productos';
     protected $allowedFields = [
-        'categoria_id', 'marca_id', 'fabrica_id', 'codigo', 'nombre', 'modelo', 'descripcion_corta',
+        'categoria_id', 'marca_id', 'fabrica_id', 'codigo', 'nombre', 'slug', 'modelo', 'descripcion_corta',
         'descripcion', 'url_fabricante', 'precio_texto', 'precio_numero', 'precio_dolar', 'badge', 'icono', 'activo', 'destacado', 'orden', 'ubicacion', 'stock',
+        'ancho', 'alto', 'profundidad', 'unidad_medida', 'material',
     ];
     protected $useTimestamps = true;
+
+    // ── Slug ───────────────────────────────────────────────────────────────────
+
+    /** Genera un slug único a partir del nombre, desambiguando con sufijo -2, -3... si ya existe. */
+    public function generarSlugUnico(string $nombre, ?int $excludeId = null): string
+    {
+        $base = mb_strtolower(trim($nombre), 'UTF-8');
+        $base = strtr($base, [
+            'á' => 'a', 'à' => 'a', 'ä' => 'a', 'é' => 'e', 'è' => 'e', 'ë' => 'e',
+            'í' => 'i', 'ì' => 'i', 'ï' => 'i', 'ó' => 'o', 'ò' => 'o', 'ö' => 'o',
+            'ú' => 'u', 'ù' => 'u', 'ü' => 'u', 'ñ' => 'n',
+        ]);
+        $base = preg_replace('/[^a-z0-9]+/', '-', $base);
+        $base = trim($base, '-');
+        if ($base === '') {
+            $base = 'producto';
+        }
+        $base = mb_substr($base, 0, 200);
+
+        $slug     = $base;
+        $sufijo   = 2;
+        while (true) {
+            $builder = $this->where('slug', $slug);
+            if ($excludeId !== null) {
+                $builder->where('id !=', $excludeId);
+            }
+            if (!$builder->first()) {
+                return $slug;
+            }
+            $slug = $base . '-' . $sufijo;
+            $sufijo++;
+        }
+    }
+
+    /**
+     * Busca un producto para la página de detalle, primero por slug y, si no matchea
+     * y el valor es numérico, hace fallback por id (compatibilidad con enlaces viejos).
+     */
+    public function getBySlugOrId(string $valor): ?array
+    {
+        $producto = $this
+            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, categorias.nombre AS categoria_nombre')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+            ->where('productos.activo', 1)
+            ->where('productos.slug', $valor)
+            ->first();
+
+        if (!$producto && ctype_digit($valor)) {
+            $producto = $this
+                ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, categorias.nombre AS categoria_nombre')
+                ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+                ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+                ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+                ->where('productos.activo', 1)
+                ->where('productos.id', (int) $valor)
+                ->first();
+        }
+
+        return $producto ?: null;
+    }
 
     // ── Consultas sin secciones (backward compat) ─────────────────────────────
 

@@ -11,6 +11,8 @@ use App\Models\FabricaModel;
 use App\Models\SeccionModel;
 use App\Models\ProductoSeccionModel;
 use App\Models\ConfiguracionModel;
+use App\Models\ColorModel;
+use App\Models\CaracteristicaModel;
 
 class Productos extends BaseController
 {
@@ -21,6 +23,8 @@ class Productos extends BaseController
     private FabricaModel        $fabricaModel;
     private SeccionModel        $seccionModel;
     private ProductoSeccionModel $prodSeccionModel;
+    private ColorModel          $colorModel;
+    private CaracteristicaModel $caractModel;
 
     public function __construct()
     {
@@ -31,6 +35,8 @@ class Productos extends BaseController
         $this->fabricaModel     = new FabricaModel();
         $this->seccionModel     = new SeccionModel();
         $this->prodSeccionModel = new ProductoSeccionModel();
+        $this->colorModel       = new ColorModel();
+        $this->caractModel      = new CaracteristicaModel();
     }
 
     public function index()
@@ -55,16 +61,18 @@ class Productos extends BaseController
     public function crear()
     {
         return view('admin/productos/form', [
-            'titulo'            => 'Nuevo producto | CIR Admin',
-            'producto'          => null,
-            'catPath'           => null,
-            'accion'            => base_url('admin/productos/crear'),
-            'jerarquia'         => $this->catModel->buildJerarquia(),
-            'imagenesActuales'  => [],
-            'marcas'            => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
-            'fabricas'          => $this->fabricaModel->getActivas(),
-            'secciones'         => $this->getSeccionesFormulario(),
-            'seccionesActivas'  => [],
+            'titulo'                 => 'Nuevo producto | CIR Admin',
+            'producto'               => null,
+            'catPath'                => null,
+            'accion'                 => base_url('admin/productos/crear'),
+            'jerarquia'              => $this->catModel->buildJerarquia(),
+            'imagenesActuales'       => [],
+            'marcas'                 => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
+            'fabricas'               => $this->fabricaModel->getActivas(),
+            'secciones'              => $this->getSeccionesFormulario(),
+            'seccionesActivas'       => [],
+            'coloresActuales'        => '',
+            'caracteristicasActuales' => [],
         ]);
     }
 
@@ -105,12 +113,16 @@ class Productos extends BaseController
             $precioTexto = $this->calcularPrecioARS($precioDolar) ?? $precioTexto;
         }
 
+        $slug = trim((string) $this->request->getPost('slug'));
+        $slug = $this->model->generarSlugUnico($slug !== '' ? $slug : $nombre);
+
         $id = $this->model->insert([
             'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
             'codigo'            => $codigo,
             'nombre'            => $nombre,
+            'slug'              => $slug,
             'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
@@ -124,9 +136,16 @@ class Productos extends BaseController
             'orden'             => 0,
             'ubicacion'         => $ubicacion,
             'stock'             => max(0, (int) $this->request->getPost('stock')),
+            'ancho'             => $this->request->getPost('ancho') ?: null,
+            'alto'              => $this->request->getPost('alto') ?: null,
+            'profundidad'       => $this->request->getPost('profundidad') ?: null,
+            'unidad_medida'     => $this->request->getPost('unidad_medida') ?: 'cm',
+            'material'          => $this->request->getPost('material') ?: null,
         ]);
 
         $this->prodSeccionModel->sincronizar((int) $id, $seccionIds);
+        $this->colorModel->sincronizarProducto((int) $id, $this->parseColores($this->request->getPost('colores') ?? ''));
+        $this->caractModel->sincronizarProducto((int) $id, $this->parseCaracteristicas($this->request->getPost('caracteristicas') ?? []));
 
         $esPrincipal = true;
         foreach ($this->getArchivosSubidos() as $archivo) {
@@ -146,16 +165,18 @@ class Productos extends BaseController
         }
 
         return view('admin/productos/form', [
-            'titulo'            => 'Editar producto | CIR Admin',
-            'producto'          => $producto,
-            'catPath'           => $this->catModel->getSlugPath((int) $producto['categoria_id']),
-            'accion'            => base_url("admin/productos/{$id}/editar"),
-            'jerarquia'         => $this->catModel->buildJerarquia(),
-            'imagenesActuales'  => $this->imgModel->getByProducto($id),
-            'marcas'            => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
-            'fabricas'          => $this->fabricaModel->getActivas(),
-            'secciones'         => $this->getSeccionesFormulario(),
-            'seccionesActivas'  => $this->prodSeccionModel->getSeccionIdsDeProducto($id),
+            'titulo'                 => 'Editar producto | CIR Admin',
+            'producto'               => $producto,
+            'catPath'                => $this->catModel->getSlugPath((int) $producto['categoria_id']),
+            'accion'                 => base_url("admin/productos/{$id}/editar"),
+            'jerarquia'              => $this->catModel->buildJerarquia(),
+            'imagenesActuales'       => $this->imgModel->getByProducto($id),
+            'marcas'                 => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
+            'fabricas'               => $this->fabricaModel->getActivas(),
+            'secciones'              => $this->getSeccionesFormulario(),
+            'seccionesActivas'       => $this->prodSeccionModel->getSeccionIdsDeProducto($id),
+            'coloresActuales'        => implode(', ', array_column($this->colorModel->getByProducto($id), 'nombre')),
+            'caracteristicasActuales' => $this->caractModel->getByProducto($id),
         ]);
     }
 
@@ -204,12 +225,16 @@ class Productos extends BaseController
             $precioTexto = $this->calcularPrecioARS($precioDolar) ?? $precioTexto;
         }
 
+        $slugNuevo = trim((string) $this->request->getPost('slug'));
+        $slug      = $this->model->generarSlugUnico($slugNuevo !== '' ? $slugNuevo : $nombre, $id);
+
         $this->model->update($id, [
             'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
             'codigo'            => $codigoNuevo,
             'nombre'            => $nombre,
+            'slug'              => $slug,
             'modelo'            => $this->request->getPost('modelo') ?: null,
             'descripcion_corta' => $this->request->getPost('descripcion_corta') ?: null,
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
@@ -221,9 +246,16 @@ class Productos extends BaseController
             'destacado'         => $esDestacado ? 1 : 0,
             'ubicacion'         => $this->request->getPost('ubicacion') ?: null,
             'stock'             => max(0, (int) $this->request->getPost('stock')),
+            'ancho'             => $this->request->getPost('ancho') ?: null,
+            'alto'              => $this->request->getPost('alto') ?: null,
+            'profundidad'       => $this->request->getPost('profundidad') ?: null,
+            'unidad_medida'     => $this->request->getPost('unidad_medida') ?: 'cm',
+            'material'          => $this->request->getPost('material') ?: null,
         ]);
 
         $this->prodSeccionModel->sincronizar($id, $seccionIds);
+        $this->colorModel->sincronizarProducto($id, $this->parseColores($this->request->getPost('colores') ?? ''));
+        $this->caractModel->sincronizarProducto($id, $this->parseCaracteristicas($this->request->getPost('caracteristicas') ?? []));
 
         // Eliminar imágenes marcadas
         foreach ($this->request->getPost('eliminar_imagenes') ?? [] as $imgId) {
@@ -388,6 +420,24 @@ class Productos extends BaseController
         }
         $sec = $this->seccionModel->where('slug', $slug)->first();
         return $sec && in_array((int) $sec['id'], $seccionIds, true);
+    }
+
+    /** Convierte el input "Blanco, Gris, Negro" en un array de nombres de color. */
+    private function parseColores(string $valor): array
+    {
+        return array_filter(array_map('trim', explode(',', $valor)), fn($n) => $n !== '');
+    }
+
+    /** Convierte los arrays paralelos caracteristicas[clave][]/[valor][] en filas ['clave'=>,'valor'=>]. */
+    private function parseCaracteristicas(array $post): array
+    {
+        $claves = $post['clave'] ?? [];
+        $valores = $post['valor'] ?? [];
+        $filas = [];
+        foreach ($claves as $i => $clave) {
+            $filas[] = ['clave' => $clave, 'valor' => $valores[$i] ?? ''];
+        }
+        return $filas;
     }
 
     private function getArchivosSubidos(): array

@@ -72,7 +72,9 @@
       "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"SHOW TABLES LIKE '%admin%';\")",
       "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e ' *)",
       "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"DELETE FROM fabricas WHERE slug='fabrica-de-prueba';\")",
-      "Bash(rm \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\app\\\\Commands\\\\TestFabricasTemp.php\")"
+      "Bash(rm \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\app\\\\Commands\\\\TestFabricasTemp.php\")",
+      "Bash(curl.exe -sv --max-time 5 \"ftp://ftp://195.35.41.177/publico_html/test.txt\")",
+      "Bash(echo \"EXIT:$?\")"
     ]
   }
 }

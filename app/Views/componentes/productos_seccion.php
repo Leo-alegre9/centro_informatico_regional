@@ -9,18 +9,11 @@
         <div class="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[1.2rem] mt-6" id="sec-productos-grid">
             <?php foreach ($productosSeccion as $sp): ?>
             <?php
-                $imgUrl  = $sp['imagen_ruta'] ?? '';
-                $imgAlt  = $sp['imagen_alt']  ?? $sp['nombre'];
+                $imgUrl      = $sp['imagen_ruta'] ?? '';
+                $imgAlt      = $sp['imagen_alt']  ?? $sp['nombre'];
+                $urlProducto = base_url('producto/' . ($sp['slug'] ?? '' ?: $sp['id']));
             ?>
-            <div class="sec-prod-card group bg-white rounded-[14px] overflow-hidden border-[1.5px] border-[#f0f0f0] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col cursor-pointer transition-all duration-[250ms] ease hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)]"
-                 data-nombre="<?= esc($sp['nombre']) ?>"
-                 data-precio="<?= esc($sp['precio_texto']) ?>"
-                 data-descripcion="<?= esc($sp['descripcion'] ?? $sp['descripcion_corta'] ?? '') ?>"
-                 data-badge="<?= esc($sp['badge'] ?? '') ?>"
-                 data-icono="<?= esc($sp['icono'] ?? 'fas fa-box') ?>"
-                 data-imagen="<?= esc($imgUrl) ?>"
-                 data-imagenes="[]"
-                 data-categoria="<?= esc($sp['categoria_nombre'] ?? '') ?>">
+            <div class="sec-prod-card group relative bg-white rounded-[14px] overflow-hidden border-[1.5px] border-[#f0f0f0] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col transition-all duration-[250ms] ease hover:-translate-y-1 hover:shadow-[0_12px_35px_rgba(0,0,0,0.12)]">
                 <div class="h-[150px] bg-[#1a232e] flex items-center justify-center overflow-hidden relative shrink-0">
                     <?php if (!empty($imgUrl)): ?>
                         <img src="<?= base_url(esc($imgUrl)) ?>"
@@ -41,18 +34,21 @@
                     <?php if (!empty($sp['categoria_nombre'])): ?>
                         <div class="text-[0.7rem] font-bold text-[rgba(255,0,51,0.7)] uppercase tracking-[0.6px] mb-1"><?= esc($sp['categoria_nombre']) ?></div>
                     <?php endif; ?>
-                    <div class="font-bold text-dark text-[0.9rem] leading-[1.35] mb-[0.35rem] line-clamp-2"><?= esc($sp['nombre']) ?></div>
+                    <div class="font-bold text-dark text-[0.9rem] leading-[1.35] mb-[0.35rem] line-clamp-2">
+                        <a href="<?= esc($urlProducto) ?>" class="text-dark no-underline hover:text-rojo transition-colors duration-150 after:absolute after:inset-0 after:content-['']"><?= esc($sp['nombre']) ?></a>
+                    </div>
                     <?php if (!empty($sp['descripcion_corta'])): ?>
                         <div class="text-[0.8rem] text-gris leading-[1.5] flex-1 mb-[0.8rem] line-clamp-2"><?= esc($sp['descripcion_corta']) ?></div>
+                    <?php else: ?>
+                        <div class="flex-1 mb-[0.8rem]"></div>
                     <?php endif; ?>
-                    <div class="flex items-center justify-between gap-[6px] flex-wrap">
+                    <div class="relative z-[2] flex items-center justify-between gap-[6px] flex-wrap">
                         <span class="font-bold text-rojo text-[0.88rem]">
                             <?= !empty($sp['precio_texto']) ? esc($sp['precio_texto']) : 'Consultar precio' ?>
                         </span>
                         <a href="https://wa.me/5493704616482?text=Hola!%20Quiero%20consultar%20por%20<?= rawurlencode($sp['nombre']) ?>"
                            target="_blank" rel="noopener"
-                           class="sec-prod-btn inline-flex items-center gap-[5px] bg-[#25D366] text-white px-[0.9rem] py-[0.4rem] rounded-full font-bold text-[0.75rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a] hover:text-white"
-                           onclick="event.stopPropagation();">
+                           class="sec-prod-btn inline-flex items-center gap-[5px] bg-[#25D366] text-white px-[0.9rem] py-[0.4rem] rounded-full font-bold text-[0.75rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a] hover:text-white">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>
                     </div>

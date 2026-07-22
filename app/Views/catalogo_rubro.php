@@ -18,9 +18,6 @@
         <?php endif; ?>
     <?php endif; ?>
 
-    <?php /* Modal único para todas las tarjetas de producto de la página */ ?>
-    <?= $this->include('componentes/modal_producto') ?>
-
     <?php if (!empty($destacados)): ?>
         <?= $this->include('componentes/carrusel_destacados') ?>
     <?php endif; ?>

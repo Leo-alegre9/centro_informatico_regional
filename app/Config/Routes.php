@@ -79,6 +79,8 @@ $routes->post('contacto', 'Contacto::enviar');
 $routes->get('politica-privacidad', 'Pages::politicaPrivacidad');
 $routes->get('condiciones-servicio', 'Pages::condicionesServicio');
 
+$routes->get('producto/(:segment)', 'Producto::detalle/$1');
+
 $routes->get('catalogo/buscar', 'Catalogo::buscar');
 $routes->get('catalogo/(:segment)/(:segment)/(:segment)', 'Catalogo::browse/$1/$2/$3');
 $routes->get('catalogo/(:segment)/(:segment)', 'Catalogo::browse/$1/$2');

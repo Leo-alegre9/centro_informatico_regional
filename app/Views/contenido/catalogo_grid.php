@@ -72,30 +72,22 @@
         <div class="grid grid-cols-3 gap-[1.3rem] max-[991px]:grid-cols-2 max-[575px]:grid-cols-1" id="productos-grid">
             <?php foreach ($current['productos'] as $producto): ?>
             <?php
-                $imgUrl   = $producto['imagen_url'] ?? '';
-                $imgJson  = isset($producto['imagenes'])
-                    ? htmlspecialchars(json_encode($producto['imagenes'], JSON_UNESCAPED_UNICODE), ENT_QUOTES)
-                    : '[]';
-                $descFull = $producto['descripcion_full'] ?? $producto['descripcion'] ?? '';
                 $marcaNombre = $producto['marca'] ?? '';
+                $urlProducto = base_url('producto/' . ($producto['slug'] ?: $producto['id']));
             ?>
-            <div class="producto-card bg-white rounded-2xl overflow-hidden flex flex-col shadow-[0_3px_16px_rgba(0,0,0,0.07)] border-[1.5px] border-[#f0f0f0] transition-all duration-[280ms] ease-out cursor-pointer hover:-translate-y-[5px] hover:shadow-[0_16px_45px_rgba(0,0,0,0.13)]"
+            <div class="producto-card relative bg-white rounded-2xl overflow-hidden flex flex-col shadow-[0_3px_16px_rgba(0,0,0,0.07)] border-[1.5px] border-[#f0f0f0] transition-all duration-[280ms] ease-out hover:-translate-y-[5px] hover:shadow-[0_16px_45px_rgba(0,0,0,0.13)]"
                  id="producto-<?= (int)$producto['id'] ?>"
                  data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'] . ' ' . $marcaNombre)) ?>"
                  data-nombre="<?= esc($producto['nombre']) ?>"
                  data-precio="<?= esc($producto['precio']) ?>"
                  data-precio-num="<?= esc($producto['precio_num'] ?? '') ?>"
-                 data-descripcion="<?= esc($descFull) ?>"
                  data-badge="<?= esc($producto['badge'] ?? '') ?>"
-                 data-marca="<?= esc($marcaNombre) ?>"
-                 data-icono="<?= esc($producto['icono'] ?? 'fas fa-box') ?>"
-                 data-imagen="<?= esc($imgUrl) ?>"
-                 data-imagenes="<?= $imgJson ?>"
-                 data-categoria="<?= esc($current['nombre'] ?? '') ?>">
-                <div class="bg-dark-2 p-[2.2rem_2rem] flex items-center justify-center min-h-[160px] relative overflow-hidden">
+                 data-marca="<?= esc($marcaNombre) ?>">
+                <div class="bg-dark-2 flex items-center justify-center h-[180px] relative overflow-hidden">
                     <?php if (!empty($producto['imagen_url'])): ?>
                     <img src="<?= base_url(esc($producto['imagen_url'])) ?>"
                          alt="<?= esc($producto['nombre']) ?>"
+                         loading="lazy"
                          class="absolute top-0 left-0 w-full h-full object-cover">
                     <?php else: ?>
                     <i class="<?= esc($producto['icono']) ?> text-white/[0.22] text-[3rem]"></i>
@@ -108,16 +100,28 @@
                     <?php if (!empty($marcaNombre)): ?>
                     <div class="text-[0.72rem] font-bold text-rojo/65 uppercase tracking-[0.5px] mb-[0.2rem]"><?= esc($marcaNombre) ?></div>
                     <?php endif; ?>
-                    <div class="font-extrabold text-dark-2 text-[0.97rem] mb-[0.45rem] leading-[1.4]"><?= esc($producto['nombre']) ?></div>
-                    <div class="text-gris text-[0.84rem] leading-[1.6] flex-1 mb-[1.15rem]"><?= esc($producto['descripcion']) ?></div>
-                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <h3 class="font-extrabold text-dark-2 text-[0.97rem] mb-[0.45rem] leading-[1.4]">
+                        <a href="<?= esc($urlProducto) ?>" class="text-dark-2 no-underline hover:text-rojo transition-colors duration-150 after:absolute after:inset-0 after:content-['']"><?= esc($producto['nombre']) ?></a>
+                    </h3>
+                    <?php if (!empty($producto['descripcion'])): ?>
+                    <div class="text-gris text-[0.84rem] leading-[1.6] flex-1 mb-[1.15rem] line-clamp-2"><?= esc($producto['descripcion']) ?></div>
+                    <?php else: ?>
+                    <div class="flex-1 mb-[1.15rem]"></div>
+                    <?php endif; ?>
+                    <div class="relative z-[2] flex items-center justify-between gap-2 flex-wrap">
                         <span class="font-bold text-gris text-[0.85rem]"><?= esc($producto['precio']) ?></span>
-                        <a href="https://wa.me/5493704616482?text=Hola!%20Quiero%20consultar%20por%20<?= rawurlencode($producto['nombre']) ?>"
-                           target="_blank" rel="noopener"
-                           class="inline-flex items-center gap-[6px] bg-[#25D366] text-white px-[1.1rem] py-[0.48rem] rounded-full font-bold text-[0.8rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a] hover:text-white"
-                           onclick="event.stopPropagation();">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
+                        <div class="flex items-center gap-[0.5rem]">
+                            <a href="<?= esc($urlProducto) ?>"
+                               class="inline-flex items-center gap-[6px] border-[1.5px] border-rojo text-rojo px-[1rem] py-[0.46rem] rounded-full font-bold text-[0.8rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-rojo hover:text-white">
+                                Ver producto
+                            </a>
+                            <a href="https://wa.me/5493704616482?text=Hola!%20Quiero%20consultar%20por%20<?= rawurlencode($producto['nombre']) ?>"
+                               target="_blank" rel="noopener"
+                               class="inline-flex items-center gap-[6px] bg-[#25D366] text-white px-[0.85rem] py-[0.48rem] rounded-full font-bold text-[0.8rem] no-underline transition-colors duration-200 whitespace-nowrap hover:bg-[#1ebe5a] hover:text-white"
+                               aria-label="Consultar por WhatsApp sobre <?= esc($producto['nombre']) ?>">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

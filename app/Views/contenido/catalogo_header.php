@@ -150,15 +150,10 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
 
             const waUrl = 'https://wa.me/5493704616482?text=' + encodeURIComponent('Hola! Quiero consultar por ' + p.nombre);
 
+            const urlProducto = BURL + 'producto/' + encodeURIComponent(p.slug || p.id);
+
             html += '<div class="cat-srp-card group bg-white rounded-[14px] border-[1.5px] border-[#f0f0f0] shadow-[0_2px_10px_rgba(0,0,0,0.06)] overflow-hidden cursor-pointer transition-all duration-[220ms] flex flex-col hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.11)]" '
-                + 'data-nombre="' + escAttr(p.nombre) + '" '
-                + 'data-precio="' + escAttr(p.precio || 'Consultar precio') + '" '
-                + 'data-descripcion="' + escAttr(p.descripcion || '') + '" '
-                + 'data-badge="' + escAttr(p.badge || '') + '" '
-                + 'data-icono="' + escAttr(p.icono || 'fas fa-box') + '" '
-                + 'data-imagen="' + escAttr(p.imagen_url ? BURL + p.imagen_url : '') + '" '
-                + 'data-imagenes="[]" '
-                + 'data-categoria="' + escAttr(p.categoria || '') + '" '
+                + 'data-url="' + escAttr(urlProducto) + '" '
                 + 'data-wa="' + escAttr(waUrl) + '">'
                 + '<div class="h-[130px] bg-[#1a232e] flex items-center justify-center relative overflow-hidden flex-shrink-0 [&>i]:text-white/20 [&>i]:text-[2.2rem]">' + imgHtml
                 + (p.badge ? '<span class="absolute top-2 right-2 bg-rojo text-white text-[0.65rem] font-bold px-2 py-[2px] rounded-full tracking-[0.3px]">' + escHtml(p.badge) + '</span>' : '')
@@ -180,22 +175,11 @@ $contextNombreJs = addslashes($current['nombre'] ?? 'el catálogo');
         html += '</div>';
         srpBody.innerHTML = html;
 
-        // Vincular click → modal
+        // Vincular click → página de detalle del producto
         srpBody.querySelectorAll('.cat-srp-card').forEach(function (card) {
             card.addEventListener('click', function (e) {
                 if (e.target.closest('.cat-srp-wa')) return;
-                if (typeof window.mpAbrir === 'function') {
-                    window.mpAbrir({
-                        nombre:      card.dataset.nombre      || '',
-                        precio:      card.dataset.precio      || 'Consultar precio',
-                        descripcion: card.dataset.descripcion || '',
-                        badge:       card.dataset.badge       || '',
-                        icono:       card.dataset.icono       || 'fas fa-box',
-                        imagen:      card.dataset.imagen      || '',
-                        imagenes:    [],
-                        categoria:   card.dataset.categoria   || '',
-                    });
-                }
+                if (card.dataset.url) window.location.href = card.dataset.url;
             });
         });
 

@@ -138,6 +138,7 @@ class Catalogo extends BaseController
             $current['productos'] = array_map(function ($p) use ($imgsByProd) {
                 return [
                     'id'               => $p['id'],
+                    'slug'             => $p['slug'] ?? '',
                     'nombre'           => $p['nombre'],
                     'descripcion'      => $p['descripcion_corta'] ?? '',
                     'descripcion_full' => $p['descripcion'] ?? $p['descripcion_corta'] ?? '',
@@ -218,6 +219,7 @@ class Catalogo extends BaseController
 
             $out = array_map(fn($p) => [
                 'id'          => $p['id'],
+                'slug'        => $p['slug'] ?? '',
                 'nombre'      => $p['nombre'],
                 'modelo'      => $p['modelo'] ?? '',
                 'precio'      => $p['precio_texto'],
@@ -240,19 +242,6 @@ class Catalogo extends BaseController
         $resultados = $this->productoModel->buscarGlobal($q);
 
         $productos = array_map(function ($p) {
-            $slugPath = $this->catModel->getSlugPath((int) $p['categoria_id']);
-
-            $urlPath = 'catalogo';
-            if ($slugPath['rubro'] !== '') {
-                $urlPath .= '/' . $slugPath['rubro'];
-                if ($slugPath['subrubro'] !== '') {
-                    $urlPath .= '/' . $slugPath['subrubro'];
-                    if ($slugPath['sub_subrubro'] !== '') {
-                        $urlPath .= '/' . $slugPath['sub_subrubro'];
-                    }
-                }
-            }
-
             return [
                 'id'           => $p['id'],
                 'nombre'       => $p['nombre'],
@@ -264,7 +253,7 @@ class Catalogo extends BaseController
                 'descripcion'  => $p['descripcion_corta'] ?? '',
                 'marca'        => $p['marca_nombre'] ?? '',
                 'categoria'    => $p['categoria_nombre'] ?? '',
-                'url_catalogo' => base_url($urlPath) . '#producto-' . $p['id'],
+                'url_producto' => base_url('producto/' . ($p['slug'] ?: $p['id'])),
             ];
         }, $resultados);
 

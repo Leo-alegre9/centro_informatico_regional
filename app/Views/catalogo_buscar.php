@@ -93,8 +93,8 @@
                             <?php else: ?>
                                 <span></span>
                             <?php endif; ?>
-                            <a href="<?= esc($p['url_catalogo']) ?>" class="inline-flex items-center gap-[6px] bg-rojo text-white text-[0.78rem] font-bold px-4 py-[0.44rem] rounded-full no-underline whitespace-nowrap transition-colors duration-200 hover:bg-rojo-dark hover:text-white">
-                                Ver en catálogo <i class="fas fa-arrow-right text-[0.7rem]"></i>
+                            <a href="<?= esc($p['url_producto']) ?>" class="inline-flex items-center gap-[6px] bg-rojo text-white text-[0.78rem] font-bold px-4 py-[0.44rem] rounded-full no-underline whitespace-nowrap transition-colors duration-200 hover:bg-rojo-dark hover:text-white">
+                                Ver producto <i class="fas fa-arrow-right text-[0.7rem]"></i>
                             </a>
                         </div>
                     </div>

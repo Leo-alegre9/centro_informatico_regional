@@ -30,7 +30,7 @@ $_megaData  = $_megaModel->getMegaMenu();
    togglea en tiempo real). */
 $hnavLinkBase = 'relative inline-flex items-center gap-[5px] text-[#374151] font-inter text-[0.84rem] font-medium px-4 no-underline whitespace-nowrap cursor-pointer select-none transition-colors duration-[180ms] border-b-2 border-transparent hover:text-rojo hover:no-underline '
     . 'after:content-[\'\'] after:absolute after:-bottom-px after:left-0 after:right-0 after:h-[2px] after:bg-rojo after:rounded-t-[2px] after:origin-center after:scale-x-0 after:transition-transform after:duration-[220ms] after:ease-[cubic-bezier(.4,0,.2,1)] hover:after:scale-x-100 '
-    . '[&.active]:text-rojo [&.active]:font-semibold [&.active]:after:scale-x-100 [&.mega-open]:text-rojo [&.mega-open]:after:scale-x-100';
+    . '[&.active]:text-rojo [&.active]:font-semibold [&.active]:after:scale-x-100 [&.mega-open]:text-rojo [&.mega-open]:bg-[#FFF5F7] [&.mega-open]:rounded-[6px]';
 
 $mobLnkBase = 'flex items-center gap-[10px] text-[#374151] font-inter text-[0.9rem] font-medium py-[0.72rem] px-[1.2rem] no-underline border-b border-[#F3F4F6] transition-colors duration-150 hover:text-rojo hover:bg-[#FFF5F7] [&.active]:text-rojo [&.active]:font-semibold';
 ?>

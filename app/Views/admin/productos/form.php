@@ -160,6 +160,15 @@
                 <div class="text-xs text-gray-400 mt-[0.2rem]">Descripción detallada que aparece en la página del producto.</div>
             </div>
 
+            <div>
+                <label for="slug" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">URL amigable (slug)</label>
+                <input type="text" id="slug" name="slug"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('slug', $producto['slug'] ?? '')) ?>"
+                       placeholder="Se genera automáticamente si lo dejás vacío" maxlength="220">
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Define la URL pública: <?= esc(base_url('producto/')) ?>&lt;slug&gt;. Si lo dejás vacío se genera solo a partir del nombre.</div>
+            </div>
+
             <div class="sm:col-span-2">
                 <label for="url_fabricante" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">
                     Sitio web del fabricante
@@ -182,6 +191,83 @@
                 </div>
             </div>
         </div>
+
+        <!-- ── SECCIÓN 2b: MEDIDAS, MATERIAL Y COLORES ── -->
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-ruler-combined mr-1"></i>Medidas, material y colores</div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-4">
+            <div>
+                <label for="ancho" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Ancho</label>
+                <input type="number" id="ancho" name="ancho" min="0" step="0.01"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('ancho', $producto['ancho'] ?? '')) ?>" placeholder="Ej: 60">
+            </div>
+            <div>
+                <label for="alto" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Alto</label>
+                <input type="number" id="alto" name="alto" min="0" step="0.01"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('alto', $producto['alto'] ?? '')) ?>" placeholder="Ej: 55">
+            </div>
+            <div>
+                <label for="profundidad" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Profundidad</label>
+                <input type="number" id="profundidad" name="profundidad" min="0" step="0.01"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('profundidad', $producto['profundidad'] ?? '')) ?>" placeholder="Ej: 45">
+            </div>
+            <div>
+                <label for="unidad_medida" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Unidad</label>
+                <?php $unidadActual = old('unidad_medida', $producto['unidad_medida'] ?? 'cm'); ?>
+                <select id="unidad_medida" name="unidad_medida"
+                        class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]">
+                    <option value="cm" <?= $unidadActual === 'cm' ? 'selected' : '' ?>>cm</option>
+                    <option value="mm" <?= $unidadActual === 'mm' ? 'selected' : '' ?>>mm</option>
+                    <option value="m"  <?= $unidadActual === 'm'  ? 'selected' : '' ?>>m</option>
+                    <option value="in" <?= $unidadActual === 'in' ? 'selected' : '' ?>>in</option>
+                </select>
+            </div>
+            <div class="text-xs text-gray-400 -mt-2 sm:col-span-4">Dejá estos campos vacíos si el producto no tiene medidas relevantes (no se muestran en la ficha si están vacíos).</div>
+
+            <div class="sm:col-span-2">
+                <label for="material" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Material</label>
+                <input type="text" id="material" name="material"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('material', $producto['material'] ?? '')) ?>" placeholder="Ej: Melamina 15mm, Aluminio, Plástico ABS" maxlength="150">
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="colores" class="text-[0.85rem] font-semibold text-gray-700 mb-1 block">Colores disponibles</label>
+                <input type="text" id="colores" name="colores"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6rem] text-[0.92rem] text-dark bg-white transition-colors outline-none w-full focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       value="<?= esc(old('colores', $coloresActuales ?? '')) ?>" placeholder="Blanco, Gris Macadán, Negro">
+                <div class="text-xs text-gray-400 mt-[0.2rem]">Separá los colores con comas. Se crean automáticamente si no existen todavía.</div>
+            </div>
+        </div>
+
+        <!-- ── SECCIÓN 2c: CARACTERÍSTICAS TÉCNICAS ── -->
+        <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-list-ul mr-1"></i>Características técnicas</div>
+
+        <div id="caract-filas" class="flex flex-col gap-2 mb-3">
+            <?php $caracteristicasActuales = $caracteristicasActuales ?? []; ?>
+            <?php if (empty($caracteristicasActuales)): $caracteristicasActuales = [['clave' => '', 'valor' => '']]; endif; ?>
+            <?php foreach ($caracteristicasActuales as $car): ?>
+            <div class="caract-fila flex gap-2 items-center">
+                <input type="text" name="caracteristicas[clave][]" value="<?= esc($car['clave']) ?>"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.85rem] py-[0.5rem] text-[0.88rem] text-dark bg-white outline-none w-[38%] focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       placeholder="Ej: Color, Peso, Garantía">
+                <input type="text" name="caracteristicas[valor][]" value="<?= esc($car['valor']) ?>"
+                       class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.85rem] py-[0.5rem] text-[0.88rem] text-dark bg-white outline-none flex-1 focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]"
+                       placeholder="Ej: Gris, 2.5kg, 12 meses">
+                <button type="button" class="btn-quitar-caract text-gray-400 hover:text-red-600 transition-colors w-9 h-9 flex items-center justify-center shrink-0" title="Quitar fila" onclick="this.closest('.caract-fila').remove()">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <button type="button" id="btn-agregar-caract" class="text-[0.82rem] font-semibold text-rojo bg-rojo/[0.06] border-[1.5px] border-rojo/20 rounded-full px-4 py-[0.4rem] cursor-pointer transition-colors hover:bg-rojo/10">
+            <i class="fas fa-plus mr-1"></i> Agregar característica
+        </button>
+
+        <div class="mb-4"></div>
 
         <!-- ── SECCIÓN 3: PRECIO Y ESTADO ── -->
         <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-tag mr-1"></i>Precio y estado</div>
@@ -580,6 +666,40 @@ if (initRubro) {
     poblarSubrubros(initRubro, initSub);
 }
 actualizarRequeridoFabrica();
+
+/* ─── Slug: autocompletar a partir del nombre, editable a mano ─── */
+(function () {
+    var nombreInput = document.getElementById('nombre');
+    var slugInput   = document.getElementById('slug');
+    if (!nombreInput || !slugInput) return;
+
+    function slugify(text) {
+        text = text.toLowerCase();
+        text = text.replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
+                   .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n');
+        return text.replace(/[^a-z0-9\s\-]/g,'').replace(/[\s]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+    }
+
+    nombreInput.addEventListener('input', function () {
+        if (slugInput.dataset.manual === 'true') return;
+        slugInput.value = slugify(this.value);
+    });
+    slugInput.addEventListener('input', function () {
+        this.dataset.manual = 'true';
+    });
+})();
+
+/* ─── Características técnicas: filas dinámicas ─── */
+document.getElementById('btn-agregar-caract').addEventListener('click', function () {
+    var wrap = document.getElementById('caract-filas');
+    var fila = document.createElement('div');
+    fila.className = 'caract-fila flex gap-2 items-center';
+    fila.innerHTML =
+        '<input type="text" name="caracteristicas[clave][]" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.85rem] py-[0.5rem] text-[0.88rem] text-dark bg-white outline-none w-[38%] focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]" placeholder="Ej: Color, Peso, Garantía">' +
+        '<input type="text" name="caracteristicas[valor][]" class="border-[1.5px] border-gray-200 rounded-[9px] px-[0.85rem] py-[0.5rem] text-[0.88rem] text-dark bg-white outline-none flex-1 focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.1)]" placeholder="Ej: Gris, 2.5kg, 12 meses">' +
+        '<button type="button" class="btn-quitar-caract text-gray-400 hover:text-red-600 transition-colors w-9 h-9 flex items-center justify-center shrink-0" title="Quitar fila" onclick="this.closest(\'.caract-fila\').remove()"><i class="fas fa-trash"></i></button>';
+    wrap.appendChild(fila);
+});
 
 /* ─── Badge: select predefinido + campo personalizado ─── */
 function cambiarBadge(valor) {
