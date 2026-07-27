@@ -55,6 +55,10 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
                     </td>
                     <td class="align-middle px-4 py-3">
                         <div class="flex items-center gap-1">
+                            <a href="<?= base_url("admin/fabricas/{$fabrica['id']}/lineas") ?>"
+                               class="<?= $btnSecondary ?>" title="Líneas de esta fábrica">
+                                <i class="fas fa-stream"></i> Líneas
+                            </a>
                             <a href="<?= base_url("admin/fabricas/{$fabrica['id']}/editar") ?>"
                                class="<?= $btnSecondary ?>">
                                 <i class="fas fa-pen"></i>

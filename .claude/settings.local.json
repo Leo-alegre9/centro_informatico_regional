@@ -74,7 +74,22 @@
       "Bash(/c/xampp/mysql/bin/mysql.exe -u root cir2 -e \"DELETE FROM fabricas WHERE slug='fabrica-de-prueba';\")",
       "Bash(rm \"C:\\\\xampp\\\\htdocs\\\\centro_informatico\\\\app\\\\Commands\\\\TestFabricasTemp.php\")",
       "Bash(curl.exe -sv --max-time 5 \"ftp://ftp://195.35.41.177/publico_html/test.txt\")",
-      "Bash(echo \"EXIT:$?\")"
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT id, producto_id, nombre FROM producto_color_variantes;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT slug FROM productos WHERE id=7; SELECT * FROM producto_color_imagenes;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT p.id, p.slug FROM productos p LEFT JOIN producto_color_variantes v ON v.producto_id=p.id WHERE v.id IS NULL LIMIT 1;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT COUNT\\(*\\) FROM productos; SELECT COUNT\\(DISTINCT producto_id\\) FROM producto_color_variantes;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT * FROM secciones; SELECT * FROM producto_secciones;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT id FROM productos LIMIT 1;\")",
+      "Bash(grep -n \"Desactivar\\\\|Activar</\\\\|fa-toggle\" /tmp/idx.html)",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT id, activo FROM productos WHERE id=7;\")",
+      "Bash(grep -oP 'name=\"csrf_test_name\" value=\"\\\\K[a-f0-9]+' /tmp/notas.html)",
+      "Bash(echo csrf=__CMDSUB_OUTPUT__)",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT id, autor, contenido FROM notas;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT COUNT\\(*\\) FROM notas;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT COUNT\\(*\\) AS contacto_rows FROM contacto_mensajes WHERE nombre='Juan Test'; SELECT COUNT\\(*\\) AS servicio_rows FROM consultas_servicio WHERE nombre_cliente='Maria Test';\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"UPDATE productos SET precio_interno=55000.50 WHERE id=7;\")",
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"UPDATE productos SET precio_interno=NULL WHERE id=7;\")"
     ]
   }
 }

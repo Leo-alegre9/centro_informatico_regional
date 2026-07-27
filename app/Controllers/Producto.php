@@ -6,7 +6,8 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\ProductoModel;
 use App\Models\ProductoImagenModel;
 use App\Models\CategoriaModel;
-use App\Models\ColorModel;
+use App\Models\ColorVarianteModel;
+use App\Models\ColorImagenModel;
 use App\Models\CaracteristicaModel;
 
 class Producto extends BaseController
@@ -20,12 +21,30 @@ class Producto extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $imgModel    = new ProductoImagenModel();
-        $colorModel  = new ColorModel();
-        $caractModel = new CaracteristicaModel();
+        $imgModel      = new ProductoImagenModel();
+        $varianteModel = new ColorVarianteModel();
+        $colorImgModel = new ColorImagenModel();
+        $caractModel   = new CaracteristicaModel();
 
-        $imagenes       = $imgModel->getByProducto((int) $producto['id']);
-        $colores        = $colorModel->getByProducto((int) $producto['id']);
+        $imagenesGenerales = $imgModel->getByProducto((int) $producto['id']);
+        $variantesColor    = $varianteModel->getActivasByProducto((int) $producto['id']);
+        $galeriasPorColor  = $colorImgModel->getActivasAgrupadasPorProducto((int) $producto['id']);
+
+        // Cada color muestra su propia galería; si no tiene imágenes cargadas, usa la galería general del producto.
+        foreach ($variantesColor as &$v) {
+            $v['estilo']   = ColorVarianteModel::estiloSwatch($v);
+            $propias       = $galeriasPorColor[$v['id']] ?? [];
+            $v['imagenes'] = $propias !== []
+                ? array_map(static fn (array $img): array => [
+                    'ruta'     => $img['imagen'],
+                    'alt_text' => $img['texto_alternativo'] ?: $v['nombre'],
+                ], $propias)
+                : $imagenesGenerales;
+        }
+        unset($v);
+
+        // La ficha siempre arranca con la galería general del producto; el color se elige aparte.
+        $imagenes        = $imagenesGenerales;
         $caracteristicas = $caractModel->getByProducto((int) $producto['id']);
 
         $catModel   = new CategoriaModel();
@@ -40,7 +59,7 @@ class Producto extends BaseController
             'metaDescripcion' => $producto['descripcion_corta'] ?? '',
             'producto'        => $producto,
             'imagenes'        => $imagenes,
-            'colores'         => $colores,
+            'variantesColor'  => $variantesColor,
             'caracteristicas' => $caracteristicas,
             'breadcrumb'      => $breadcrumb,
             'urlProducto'     => $urlProducto,

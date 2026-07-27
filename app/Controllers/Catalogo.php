@@ -147,6 +147,8 @@ class Catalogo extends BaseController
                     'badge'            => $p['badge'],
                     'icono'            => $p['icono'],
                     'marca'            => $p['marca_nombre'] ?? '',
+                    'fabrica'          => $p['fabrica_nombre'] ?? '',
+                    'linea'            => $p['linea_nombre'] ?? '',
                     'imagen_url'       => !empty($imgsByProd[$p['id']]) ? $imgsByProd[$p['id']][0]['ruta'] : null,
                     'imagenes'         => $imgsByProd[$p['id']] ?? [],
                 ];

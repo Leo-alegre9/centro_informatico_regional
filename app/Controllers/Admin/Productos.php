@@ -8,10 +8,12 @@ use App\Models\CategoriaModel;
 use App\Models\ProductoImagenModel;
 use App\Models\MarcaModel;
 use App\Models\FabricaModel;
+use App\Models\LineaModel;
 use App\Models\SeccionModel;
 use App\Models\ProductoSeccionModel;
 use App\Models\ConfiguracionModel;
-use App\Models\ColorModel;
+use App\Models\ColorVarianteModel;
+use App\Models\ColorImagenModel;
 use App\Models\CaracteristicaModel;
 
 class Productos extends BaseController
@@ -21,9 +23,11 @@ class Productos extends BaseController
     private ProductoImagenModel $imgModel;
     private MarcaModel          $marcaModel;
     private FabricaModel        $fabricaModel;
+    private LineaModel          $lineaModel;
     private SeccionModel        $seccionModel;
     private ProductoSeccionModel $prodSeccionModel;
-    private ColorModel          $colorModel;
+    private ColorVarianteModel  $varianteModel;
+    private ColorImagenModel    $imagenColorModel;
     private CaracteristicaModel $caractModel;
 
     public function __construct()
@@ -33,9 +37,11 @@ class Productos extends BaseController
         $this->imgModel         = new ProductoImagenModel();
         $this->marcaModel       = new MarcaModel();
         $this->fabricaModel     = new FabricaModel();
+        $this->lineaModel       = new LineaModel();
         $this->seccionModel     = new SeccionModel();
         $this->prodSeccionModel = new ProductoSeccionModel();
-        $this->colorModel       = new ColorModel();
+        $this->varianteModel    = new ColorVarianteModel();
+        $this->imagenColorModel = new ColorImagenModel();
         $this->caractModel      = new CaracteristicaModel();
     }
 
@@ -69,9 +75,10 @@ class Productos extends BaseController
             'imagenesActuales'       => [],
             'marcas'                 => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
             'fabricas'               => $this->fabricaModel->getActivas(),
+            'lineasPorFabrica'       => $this->lineaModel->getMapaActivasPorFabrica(),
             'secciones'              => $this->getSeccionesFormulario(),
             'seccionesActivas'       => [],
-            'coloresActuales'        => '',
+            'variantesColor'         => [],
             'caracteristicasActuales' => [],
         ]);
     }
@@ -95,6 +102,11 @@ class Productos extends BaseController
             return redirect()->back()->withInput()->with('errors', [$errorFabrica]);
         }
 
+        $variantes = $this->parsearVariantesColor(0);
+        if ($variantes['error']) {
+            return redirect()->back()->withInput()->with('errors', [$variantes['error']]);
+        }
+
         $nombre  = $this->request->getPost('nombre');
         $marcaId = (int) $this->request->getPost('marca_id');
 
@@ -106,6 +118,9 @@ class Productos extends BaseController
 
         $precioDolar = $this->request->getPost('precio_dolar');
         $precioDolar = ($precioDolar !== '' && $precioDolar !== null) ? (float) $precioDolar : null;
+
+        $precioInterno = $this->request->getPost('precio_interno');
+        $precioInterno = ($precioInterno !== '' && $precioInterno !== null) ? (float) $precioInterno : null;
 
         // Calcular precio en ARS si hay precio en USD y cotización configurada
         $precioTexto = $this->request->getPost('precio_texto') ?: null;
@@ -120,6 +135,7 @@ class Productos extends BaseController
             'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
+            'linea_id'          => $this->resolverLineaId($fabricaId, (int) $this->request->getPost('linea_id')),
             'codigo'            => $codigo,
             'nombre'            => $nombre,
             'slug'              => $slug,
@@ -129,6 +145,7 @@ class Productos extends BaseController
             'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
             'precio_dolar'      => $precioDolar,
+            'precio_interno'    => $precioInterno,
             'badge'             => $this->request->getPost('badge') ?? '',
             'icono'             => 'fas fa-box',
             'activo'            => $this->request->getPost('activo') ? 1 : 0,
@@ -144,7 +161,7 @@ class Productos extends BaseController
         ]);
 
         $this->prodSeccionModel->sincronizar((int) $id, $seccionIds);
-        $this->colorModel->sincronizarProducto((int) $id, $this->parseColores($this->request->getPost('colores') ?? ''));
+        $this->aplicarVariantesColor((int) $id, $variantes['filas']);
         $this->caractModel->sincronizarProducto((int) $id, $this->parseCaracteristicas($this->request->getPost('caracteristicas') ?? []));
 
         $esPrincipal = true;
@@ -164,6 +181,12 @@ class Productos extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
+        $variantesColor = $this->varianteModel->getByProducto($id);
+        foreach ($variantesColor as &$v) {
+            $v['galeria'] = $this->imagenColorModel->getByColor((int) $v['id']);
+        }
+        unset($v);
+
         return view('admin/productos/form', [
             'titulo'                 => 'Editar producto | CIR Admin',
             'producto'               => $producto,
@@ -173,9 +196,10 @@ class Productos extends BaseController
             'imagenesActuales'       => $this->imgModel->getByProducto($id),
             'marcas'                 => $this->marcaModel->where('activo', 1)->orderBy('nombre', 'ASC')->findAll(),
             'fabricas'               => $this->fabricaModel->getActivas(),
+            'lineasPorFabrica'       => $this->lineaModel->getMapaActivasPorFabrica(),
             'secciones'              => $this->getSeccionesFormulario(),
             'seccionesActivas'       => $this->prodSeccionModel->getSeccionIdsDeProducto($id),
-            'coloresActuales'        => implode(', ', array_column($this->colorModel->getByProducto($id), 'nombre')),
+            'variantesColor'         => $variantesColor,
             'caracteristicasActuales' => $this->caractModel->getByProducto($id),
         ]);
     }
@@ -212,6 +236,11 @@ class Productos extends BaseController
             return redirect()->back()->withInput()->with('errors', [$errorFabrica]);
         }
 
+        $variantes = $this->parsearVariantesColor($id);
+        if ($variantes['error']) {
+            return redirect()->back()->withInput()->with('errors', [$variantes['error']]);
+        }
+
         $nombre      = $this->request->getPost('nombre');
         $marcaId     = (int) $this->request->getPost('marca_id');
         $seccionIds  = array_map('intval', (array) ($this->request->getPost('secciones') ?? []));
@@ -219,6 +248,9 @@ class Productos extends BaseController
 
         $precioDolar = $this->request->getPost('precio_dolar');
         $precioDolar = ($precioDolar !== '' && $precioDolar !== null) ? (float) $precioDolar : null;
+
+        $precioInterno = $this->request->getPost('precio_interno');
+        $precioInterno = ($precioInterno !== '' && $precioInterno !== null) ? (float) $precioInterno : null;
 
         $precioTexto = $this->request->getPost('precio_texto') ?: null;
         if ($precioDolar !== null && $precioDolar > 0) {
@@ -232,6 +264,7 @@ class Productos extends BaseController
             'categoria_id'      => $categoriaId,
             'marca_id'          => $marcaId > 0 ? $marcaId : null,
             'fabrica_id'        => $fabricaId > 0 ? $fabricaId : null,
+            'linea_id'          => $this->resolverLineaId($fabricaId, (int) $this->request->getPost('linea_id')),
             'codigo'            => $codigoNuevo,
             'nombre'            => $nombre,
             'slug'              => $slug,
@@ -241,6 +274,7 @@ class Productos extends BaseController
             'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
             'precio_dolar'      => $precioDolar,
+            'precio_interno'    => $precioInterno,
             'badge'             => $this->request->getPost('badge') ?? '',
             'activo'            => $this->request->getPost('activo') ? 1 : 0,
             'destacado'         => $esDestacado ? 1 : 0,
@@ -254,7 +288,7 @@ class Productos extends BaseController
         ]);
 
         $this->prodSeccionModel->sincronizar($id, $seccionIds);
-        $this->colorModel->sincronizarProducto($id, $this->parseColores($this->request->getPost('colores') ?? ''));
+        $this->aplicarVariantesColor($id, $variantes['filas']);
         $this->caractModel->sincronizarProducto($id, $this->parseCaracteristicas($this->request->getPost('caracteristicas') ?? []));
 
         // Eliminar imágenes marcadas
@@ -339,6 +373,48 @@ class Productos extends BaseController
         return redirect()->to(base_url('admin/productos'))->with('success', $msg);
     }
 
+    public function toggleActivo(int $id)
+    {
+        $producto = $this->model->find($id);
+
+        if (!$producto) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $nuevoEstado = $producto['activo'] ? 0 : 1;
+        $this->model->update($id, ['activo' => $nuevoEstado]);
+
+        $msg = $nuevoEstado
+            ? "«{$producto['nombre']}» ahora está activo y visible en el sitio."
+            : "«{$producto['nombre']}» fue desactivado y ya no se muestra en el sitio.";
+
+        return redirect()->to(base_url('admin/productos'))->with('success', $msg);
+    }
+
+    public function ver(int $id)
+    {
+        $producto = $this->model->getByIdConDetalle($id);
+
+        if (!$producto) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $variantesColor = $this->varianteModel->getByProducto($id);
+        foreach ($variantesColor as &$v) {
+            $v['estilo']  = ColorVarianteModel::estiloSwatch($v);
+            $v['galeria'] = $this->imagenColorModel->getByColor((int) $v['id']);
+        }
+        unset($v);
+
+        return view('admin/productos/ver', [
+            'titulo'            => 'Ver: ' . $producto['nombre'] . ' | CIR Admin',
+            'producto'          => $producto,
+            'imagenesGenerales' => $this->imgModel->getByProducto($id),
+            'variantesColor'    => $variantesColor,
+            'caracteristicas'   => $this->caractModel->getByProducto($id),
+        ]);
+    }
+
     public function buscar()
     {
         $q    = trim($this->request->getGet('q') ?? '');
@@ -382,6 +458,21 @@ class Productos extends BaseController
         return 'Seleccioná la fábrica del mueble.';
     }
 
+    /** Solo persiste la línea si pertenece a la fábrica seleccionada; si no, la ignora (es opcional). */
+    private function resolverLineaId(int $fabricaId, int $lineaId): ?int
+    {
+        if ($fabricaId <= 0 || $lineaId <= 0) {
+            return null;
+        }
+
+        $linea = $this->lineaModel->find($lineaId);
+        if (!$linea || (int) $linea['fabrica_id'] !== $fabricaId) {
+            return null;
+        }
+
+        return $lineaId;
+    }
+
     private function calcularPrecioARS(float $precioDolar): ?string
     {
         $config     = new ConfiguracionModel();
@@ -422,10 +513,314 @@ class Productos extends BaseController
         return $sec && in_array((int) $sec['id'], $seccionIds, true);
     }
 
-    /** Convierte el input "Blanco, Gris, Negro" en un array de nombres de color. */
-    private function parseColores(string $valor): array
+    /**
+     * Parsea y valida las variantes de color enviadas como variantes[idx][campo].
+     * No escribe nada en base de datos ni mueve archivos: solo valida y arma las filas
+     * a persistir, para poder rechazar el guardado completo del producto si hay un error.
+     *
+     * @return array{error: ?string, filas: array}
+     */
+    private function parsearVariantesColor(int $productoId): array
     {
-        return array_filter(array_map('trim', explode(',', $valor)), fn($n) => $n !== '');
+        $post  = $this->request->getPost('variantes') ?? [];
+        $files = $this->request->getFiles()['variantes'] ?? [];
+
+        if (!is_array($post)) {
+            return ['error' => null, 'filas' => []];
+        }
+
+        $filas = [];
+        foreach ($post as $idx => $datos) {
+            if (!is_array($datos)) {
+                continue;
+            }
+
+            $nombre = trim((string) ($datos['nombre'] ?? ''));
+            $tipo   = in_array($datos['tipo'] ?? '', ['simple', 'combinado', 'textura'], true)
+                ? $datos['tipo']
+                : 'simple';
+
+            $archivo       = is_array($files[$idx] ?? null) ? ($files[$idx]['imagen'] ?? null) : null;
+            $archivoValido = null;
+            if ($archivo instanceof \CodeIgniter\HTTP\Files\UploadedFile
+                && $archivo->isValid() && !$archivo->hasMoved() && $archivo->getSize() > 0
+            ) {
+                $mimeOk = strpos($archivo->getClientMimeType(), 'image/') === 0;
+                $extOk  = in_array(strtolower($archivo->getExtension()), ['jpg', 'jpeg', 'png', 'webp'], true);
+                $sizeOk = $archivo->getSize() <= 3 * 1024 * 1024;
+                if (!$mimeOk || !$extOk || !$sizeOk) {
+                    return ['error' => 'La imagen de la variante de color debe ser JPG, PNG o WebP de hasta 3 MB.', 'filas' => []];
+                }
+                $archivoValido = $archivo;
+            }
+
+            $idExistente  = !empty($datos['id']) ? (int) $datos['id'] : null;
+            $imagenActual = null;
+            if ($idExistente && $productoId > 0) {
+                $existente = $this->varianteModel->find($idExistente);
+                if ($existente && (int) $existente['producto_id'] === $productoId) {
+                    $imagenActual = $existente['imagen_muestra'];
+                } else {
+                    $idExistente = null;
+                }
+            } else {
+                $idExistente = null;
+            }
+
+            $quitarImagen = !empty($datos['quitar_imagen']);
+
+            // Fila sobrante sin completar (agregada y dejada vacía): se ignora en silencio.
+            if ($nombre === '' && !$idExistente && !$archivoValido) {
+                continue;
+            }
+
+            $galeria = $this->parsearGaleriaColor($idExistente, $datos, is_array($files[$idx] ?? null) ? $files[$idx] : []);
+            if ($galeria['error']) {
+                return ['error' => "Galería de «" . ($nombre !== '' ? $nombre : 'color sin nombre') . "»: {$galeria['error']}", 'filas' => []];
+            }
+
+            if ($nombre === '') {
+                return ['error' => 'Cada color/variante necesita un nombre.', 'filas' => []];
+            }
+
+            $colorPrimario   = $this->normalizarHexColor($datos['color_primario'] ?? null);
+            $colorSecundario = $this->normalizarHexColor($datos['color_secundario'] ?? null);
+
+            if ($tipo !== 'textura' && $colorPrimario === null) {
+                return ['error' => "El color primario es obligatorio para la variante «{$nombre}».", 'filas' => []];
+            }
+            if ($tipo === 'combinado' && $colorSecundario === null) {
+                return ['error' => "El color secundario es obligatorio para la variante «{$nombre}» (combinación de dos colores).", 'filas' => []];
+            }
+            if ($tipo === 'textura' && !$archivoValido && ($quitarImagen || !$imagenActual)) {
+                return ['error' => "La imagen es obligatoria para la variante «{$nombre}» (tipo textura).", 'filas' => []];
+            }
+
+            $filas[] = [
+                'id'               => $idExistente,
+                'nombre'           => $nombre,
+                'tipo'             => $tipo,
+                'color_primario'   => $tipo === 'textura' ? null : $colorPrimario,
+                'color_secundario' => $tipo === 'combinado' ? $colorSecundario : null,
+                'orden'            => (int) ($datos['orden'] ?? 0),
+                'activo'           => !empty($datos['activo']) ? 1 : 0,
+                'archivo'          => $archivoValido,
+                'imagen_actual'    => $imagenActual,
+                'quitar_imagen'    => $quitarImagen,
+                'galeria'          => $galeria['datos'],
+            ];
+        }
+
+        return ['error' => null, 'filas' => $filas];
+    }
+
+    /**
+     * Parsea y valida la galería de imágenes propia de una variante de color:
+     * qué imágenes existentes se conservan (y en qué orden), cuál es la principal,
+     * su texto alternativo, y los archivos nuevos a subir. No escribe nada todavía.
+     *
+     * @return array{error: ?string, datos: array}
+     */
+    private function parsearGaleriaColor(?int $varianteId, array $datos, array $filesVariante): array
+    {
+        $existentesDb   = $varianteId ? $this->imagenColorModel->getByColor($varianteId) : [];
+        $existentesIds  = array_map('intval', array_column($existentesDb, 'id'));
+
+        $enviadosIds = array_map('intval', (array) ($datos['galeria_existente'] ?? []));
+        $mantenidos  = array_values(array_intersect($enviadosIds, $existentesIds));
+
+        $principalRaw = !empty($datos['galeria_principal']) ? (int) $datos['galeria_principal'] : null;
+        $principal    = ($principalRaw !== null && in_array($principalRaw, $existentesIds, true)) ? $principalRaw : null;
+
+        $altsExistentes = [];
+        foreach ((array) ($datos['galeria_alt'] ?? []) as $imgId => $alt) {
+            $altsExistentes[(int) $imgId] = trim((string) $alt);
+        }
+
+        $archivosNuevos = is_array($filesVariante['galeria_nueva'] ?? null) ? $filesVariante['galeria_nueva'] : [];
+        $altsNuevos     = (array) ($datos['galeria_nueva_alt'] ?? []);
+
+        $nuevas = [];
+        foreach ($archivosNuevos as $gi => $archivo) {
+            if (!$archivo instanceof \CodeIgniter\HTTP\Files\UploadedFile
+                || !$archivo->isValid() || $archivo->hasMoved() || $archivo->getSize() <= 0
+            ) {
+                continue;
+            }
+
+            $mimeOk = strpos($archivo->getClientMimeType(), 'image/') === 0;
+            $extOk  = in_array(strtolower($archivo->getExtension()), ['jpg', 'jpeg', 'png', 'webp'], true);
+            $sizeOk = $archivo->getSize() <= 3 * 1024 * 1024;
+            if (!$mimeOk || !$extOk || !$sizeOk) {
+                return ['error' => 'las imágenes deben ser JPG, PNG o WebP de hasta 3 MB.', 'datos' => []];
+            }
+
+            $nuevas[] = ['archivo' => $archivo, 'alt' => trim((string) ($altsNuevos[$gi] ?? ''))];
+        }
+
+        return [
+            'error' => null,
+            'datos' => [
+                'existentes'      => $mantenidos,
+                'principal'       => $principal,
+                'alt_existentes'  => $altsExistentes,
+                'nuevas'          => $nuevas,
+            ],
+        ];
+    }
+
+    /**
+     * Persiste las variantes de color ya validadas por parsearVariantesColor():
+     * borra las que el admin quitó (junto con su imagen), y crea/actualiza el resto.
+     * Las escrituras en base de datos van dentro de una transacción.
+     */
+    private function aplicarVariantesColor(int $productoId, array $filas): void
+    {
+        $idsEnviados  = array_filter(array_column($filas, 'id'));
+        $existentesDb = $this->varianteModel->getByProducto($productoId);
+        $idsAEliminar = array_diff(array_column($existentesDb, 'id'), $idsEnviados);
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        foreach ($idsAEliminar as $idEliminar) {
+            $fila = $this->varianteModel->find($idEliminar);
+
+            foreach ($this->imagenColorModel->getByColor($idEliminar) as $img) {
+                $this->borrarArchivoImagenVariante($img['imagen']);
+            }
+            $this->varianteModel->delete($idEliminar); // CASCADE borra las filas de producto_color_imagenes
+
+            if ($fila && !empty($fila['imagen_muestra'])) {
+                $this->borrarArchivoImagenVariante($fila['imagen_muestra']);
+            }
+        }
+
+        foreach ($filas as $fila) {
+            $rutaImagen = $fila['imagen_actual'];
+
+            if ($fila['archivo']) {
+                if ($rutaImagen) {
+                    $this->borrarArchivoImagenVariante($rutaImagen);
+                }
+                $rutaImagen = $this->subirImagenVariante($fila['archivo'], $productoId);
+            } elseif ($fila['quitar_imagen'] && $rutaImagen) {
+                $this->borrarArchivoImagenVariante($rutaImagen);
+                $rutaImagen = null;
+            }
+
+            $data = [
+                'producto_id'      => $productoId,
+                'nombre'           => $fila['nombre'],
+                'tipo'             => $fila['tipo'],
+                'color_primario'   => $fila['color_primario'],
+                'color_secundario' => $fila['color_secundario'],
+                'imagen_muestra'   => $rutaImagen,
+                'orden'            => $fila['orden'],
+                'activo'           => $fila['activo'],
+            ];
+
+            if ($fila['id']) {
+                $this->varianteModel->update($fila['id'], $data);
+                $varianteId = $fila['id'];
+            } else {
+                $varianteId = (int) $this->varianteModel->insert($data);
+            }
+
+            $this->sincronizarGaleriaColor($varianteId, $fila['galeria']);
+        }
+
+        $db->transComplete();
+    }
+
+    /**
+     * Persiste la galería de un color ya validada por parsearGaleriaColor(): borra las
+     * imágenes que ya no vienen en el submit (junto a su archivo), reordena y marca
+     * principal las que se conservan, sube las nuevas, y garantiza que siempre quede
+     * una imagen principal (la primera por orden) si el color tiene al menos una imagen.
+     */
+    private function sincronizarGaleriaColor(int $varianteId, array $galeria): void
+    {
+        $existentesDb = $this->imagenColorModel->getByColor($varianteId);
+        $mantenidos   = $galeria['existentes'];
+
+        foreach ($existentesDb as $img) {
+            if (!in_array((int) $img['id'], $mantenidos, true)) {
+                $this->borrarArchivoImagenVariante($img['imagen']);
+                $this->imagenColorModel->delete($img['id']);
+            }
+        }
+
+        $orden         = 0;
+        $huboPrincipal = false;
+        foreach ($mantenidos as $imgId) {
+            $esPrincipal = $galeria['principal'] === $imgId;
+            if ($esPrincipal) {
+                $huboPrincipal = true;
+            }
+            $this->imagenColorModel->update($imgId, [
+                'orden'             => $orden,
+                'es_principal'      => $esPrincipal ? 1 : 0,
+                'texto_alternativo' => $galeria['alt_existentes'][$imgId] ?? null,
+            ]);
+            $orden++;
+        }
+
+        foreach ($galeria['nuevas'] as $nueva) {
+            $ruta = $this->subirImagenGaleriaColor($nueva['archivo'], $varianteId);
+            $this->imagenColorModel->insert([
+                'producto_color_id' => $varianteId,
+                'imagen'            => $ruta,
+                'texto_alternativo' => $nueva['alt'] !== '' ? $nueva['alt'] : null,
+                'es_principal'      => 0,
+                'orden'             => $orden,
+                'activo'            => 1,
+            ]);
+            $orden++;
+        }
+
+        if (!$huboPrincipal) {
+            $primera = $this->imagenColorModel->getByColor($varianteId)[0] ?? null;
+            if ($primera) {
+                $this->imagenColorModel->update($primera['id'], ['es_principal' => 1]);
+            }
+        }
+    }
+
+    private function subirImagenGaleriaColor($file, int $varianteId): string
+    {
+        $uploadPath = FCPATH . 'assets/img/productos/';
+        $newName    = 'color_galeria_' . $varianteId . '_' . time() . '_' . mt_rand(100, 999) . '.' . $file->getExtension();
+        $file->move($uploadPath, $newName);
+
+        return 'assets/img/productos/' . $newName;
+    }
+
+    /** Valida que sea un color hexadecimal de 6 dígitos (el que emite <input type="color">); null si no. */
+    private function normalizarHexColor(?string $hex): ?string
+    {
+        $hex = trim((string) $hex);
+        if ($hex === '') {
+            return null;
+        }
+        return preg_match('/^#[0-9a-fA-F]{6}$/', $hex) ? strtolower($hex) : null;
+    }
+
+    private function subirImagenVariante($file, int $productoId): string
+    {
+        $uploadPath = FCPATH . 'assets/img/productos/';
+        $newName    = 'color_producto_' . $productoId . '_' . time() . '_' . mt_rand(100, 999) . '.' . $file->getExtension();
+        $file->move($uploadPath, $newName);
+
+        return 'assets/img/productos/' . $newName;
+    }
+
+    private function borrarArchivoImagenVariante(string $ruta): void
+    {
+        $filePath = FCPATH . $ruta;
+        if (is_file($filePath)) {
+            unlink($filePath);
+        }
     }
 
     /** Convierte los arrays paralelos caracteristicas[clave][]/[valor][] en filas ['clave'=>,'valor'=>]. */

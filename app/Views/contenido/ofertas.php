@@ -19,7 +19,8 @@
 
         <div class="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
             <?php foreach ($productosOferta as $p): ?>
-            <a href="<?= esc($p['catalog_url']) ?>"
+            <?php $urlProducto = base_url('producto/' . ($p['slug'] ?: $p['id'])); ?>
+            <a href="<?= esc($urlProducto) ?>"
                class="group bg-white border-[1.5px] border-[#ECEEF2] rounded-2xl overflow-hidden no-underline flex flex-col text-inherit transition-[transform,box-shadow,border-color] duration-[250ms] ease-out hover:-translate-y-[5px] hover:shadow-[0_14px_40px_rgba(0,0,0,0.09)] hover:border-rojo hover:text-inherit hover:no-underline">
                 <div class="relative h-[195px] bg-[#F1F3F6] overflow-hidden shrink-0 flex items-center justify-center">
                     <?php if (!empty($p['imagen_ruta'])): ?>

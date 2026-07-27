@@ -43,6 +43,18 @@
                 <div id="marcas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
             </div>
 
+            <!-- Fila 2b: chips de fábrica (generados por JS) -->
+            <div class="hidden items-center gap-2 flex-wrap" id="fabricas-filter-row">
+                <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-industry mr-1"></i>Fábrica</span>
+                <div id="fabricas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
+            </div>
+
+            <!-- Fila 2c: chips de línea, dependen de la fábrica elegida (generados por JS) -->
+            <div class="hidden items-center gap-2 flex-wrap" id="lineas-filter-row">
+                <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-stream mr-1"></i>Línea</span>
+                <div id="lineas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
+            </div>
+
             <!-- Fila 3: chips de etiqueta (generados por JS) -->
             <div class="hidden items-center gap-2 flex-wrap" id="badges-filter-row">
                 <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-star mr-1"></i>Etiqueta</span>
@@ -72,17 +84,21 @@
         <div class="grid grid-cols-3 gap-[1.3rem] max-[991px]:grid-cols-2 max-[575px]:grid-cols-1" id="productos-grid">
             <?php foreach ($current['productos'] as $producto): ?>
             <?php
-                $marcaNombre = $producto['marca'] ?? '';
-                $urlProducto = base_url('producto/' . ($producto['slug'] ?: $producto['id']));
+                $marcaNombre   = $producto['marca'] ?? '';
+                $fabricaNombre = $producto['fabrica'] ?? '';
+                $lineaNombre   = $producto['linea'] ?? '';
+                $urlProducto   = base_url('producto/' . ($producto['slug'] ?: $producto['id']));
             ?>
             <div class="producto-card relative bg-white rounded-2xl overflow-hidden flex flex-col shadow-[0_3px_16px_rgba(0,0,0,0.07)] border-[1.5px] border-[#f0f0f0] transition-all duration-[280ms] ease-out hover:-translate-y-[5px] hover:shadow-[0_16px_45px_rgba(0,0,0,0.13)]"
                  id="producto-<?= (int)$producto['id'] ?>"
-                 data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'] . ' ' . $marcaNombre)) ?>"
+                 data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'] . ' ' . $marcaNombre . ' ' . $fabricaNombre . ' ' . $lineaNombre)) ?>"
                  data-nombre="<?= esc($producto['nombre']) ?>"
                  data-precio="<?= esc($producto['precio']) ?>"
                  data-precio-num="<?= esc($producto['precio_num'] ?? '') ?>"
                  data-badge="<?= esc($producto['badge'] ?? '') ?>"
-                 data-marca="<?= esc($marcaNombre) ?>">
+                 data-marca="<?= esc($marcaNombre) ?>"
+                 data-fabrica="<?= esc($fabricaNombre) ?>"
+                 data-linea="<?= esc($lineaNombre) ?>">
                 <div class="bg-dark-2 flex items-center justify-center h-[180px] relative overflow-hidden">
                     <?php if (!empty($producto['imagen_url'])): ?>
                     <img src="<?= base_url(esc($producto['imagen_url'])) ?>"
@@ -151,8 +167,10 @@
     const infoEl   = document.getElementById('info-productos');
     const total    = grid.querySelectorAll('.producto-card').length;
 
-    let activaMarca = '';
-    let activaBadge = '';
+    let activaMarca   = '';
+    let activaFabrica = '';
+    let activaLinea   = '';
+    let activaBadge   = '';
     let activePrecioMin = 0;
     let activePrecioMax = 0;
     let precioFiltroActivo = false;
@@ -196,6 +214,78 @@
             wrap.appendChild(chip);
         });
     })();
+
+    /* ── Generar chips de fábrica ── */
+    const fabricasFilterRow = document.getElementById('fabricas-filter-row');
+    const fabricasChipsWrap = document.getElementById('fabricas-chips');
+
+    (function generarFabricas() {
+        const fabricas = new Set();
+        grid.querySelectorAll('.producto-card').forEach(function (c) {
+            if (c.dataset.fabrica) fabricas.add(c.dataset.fabrica);
+        });
+        if (fabricas.size === 0) return;
+
+        fabricasFilterRow.classList.remove('hidden');
+        fabricasFilterRow.classList.add('flex');
+        fabricas.forEach(function (f) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.dataset.valor = f;
+            chip.innerHTML = '<i class="fas fa-industry"></i> ' + f;
+            setChipEstado(chip, false);
+            chip.addEventListener('click', function () {
+                activaFabrica = activaFabrica === f ? '' : f;
+                fabricasChipsWrap.querySelectorAll('.cat-chip').forEach(function (c) {
+                    setChipEstado(c, c.dataset.valor === activaFabrica);
+                });
+                activaLinea = '';
+                generarLineas();
+                filtrar();
+            });
+            fabricasChipsWrap.appendChild(chip);
+        });
+    })();
+
+    /* ── Generar chips de línea: dependen de la fábrica activa ── */
+    const lineasFilterRow = document.getElementById('lineas-filter-row');
+    const lineasChipsWrap = document.getElementById('lineas-chips');
+
+    function generarLineas() {
+        lineasChipsWrap.innerHTML = '';
+
+        const lineas = new Set();
+        grid.querySelectorAll('.producto-card').forEach(function (c) {
+            if (!c.dataset.linea) return;
+            if (activaFabrica && c.dataset.fabrica !== activaFabrica) return;
+            lineas.add(c.dataset.linea);
+        });
+
+        if (!activaFabrica || lineas.size === 0) {
+            lineasFilterRow.classList.add('hidden');
+            lineasFilterRow.classList.remove('flex');
+            return;
+        }
+
+        lineasFilterRow.classList.remove('hidden');
+        lineasFilterRow.classList.add('flex');
+        lineas.forEach(function (l) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.dataset.valor = l;
+            chip.innerHTML = '<i class="fas fa-stream"></i> ' + l;
+            setChipEstado(chip, l === activaLinea);
+            chip.addEventListener('click', function () {
+                activaLinea = activaLinea === l ? '' : l;
+                lineasChipsWrap.querySelectorAll('.cat-chip').forEach(function (c) {
+                    setChipEstado(c, c.dataset.valor === activaLinea);
+                });
+                filtrar();
+            });
+            lineasChipsWrap.appendChild(chip);
+        });
+    }
+    generarLineas();
 
     /* ── Generar chips de badge ── */
     (function generarBadges() {
@@ -249,9 +339,11 @@
         let visible = 0;
 
         cards.forEach(function (card) {
-            const matchQ     = !q || card.dataset.busqueda.includes(q);
-            const matchMarca = !activaMarca || card.dataset.marca === activaMarca;
-            const matchBadge = !activaBadge || card.dataset.badge === activaBadge;
+            const matchQ       = !q || card.dataset.busqueda.includes(q);
+            const matchMarca   = !activaMarca || card.dataset.marca === activaMarca;
+            const matchFabrica = !activaFabrica || card.dataset.fabrica === activaFabrica;
+            const matchLinea   = !activaLinea || card.dataset.linea === activaLinea;
+            const matchBadge   = !activaBadge || card.dataset.badge === activaBadge;
 
             let matchPrecio = true;
             if (precioFiltroActivo) {
@@ -263,7 +355,7 @@
                 // Products with no numeric price (Consultar) always show through
             }
 
-            const match = matchQ && matchMarca && matchBadge && matchPrecio;
+            const match = matchQ && matchMarca && matchFabrica && matchLinea && matchBadge && matchPrecio;
             card.classList.toggle('hidden', !match);
             if (match) visible++;
         });
@@ -274,6 +366,8 @@
         const partes = [];
         if (q) partes.push(visible + ' de ' + total + ' productos');
         if (activaMarca) partes.push('marca: ' + activaMarca);
+        if (activaFabrica) partes.push('fábrica: ' + activaFabrica);
+        if (activaLinea) partes.push('línea: ' + activaLinea);
         if (activaBadge) partes.push('etiqueta: ' + activaBadge);
         if (precioFiltroActivo) {
             var rango = [];

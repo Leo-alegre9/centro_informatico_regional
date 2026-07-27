@@ -27,7 +27,8 @@
             <div class="flex gap-6 transition-transform duration-[450ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] will-change-transform" id="destTrack">
 
                 <?php foreach ($productosDestacados as $p): ?>
-                <a href="<?= esc($p['catalog_url']) ?>"
+                <?php $urlProducto = base_url('producto/' . ($p['slug'] ?: $p['id'])); ?>
+                <a href="<?= esc($urlProducto) ?>"
                    class="group w-[82vw] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] shrink-0 bg-dark-2 rounded-[18px] border-[1.5px] border-white/5 border-b-[3px] border-b-transparent overflow-hidden transition-[transform,box-shadow,border-color] duration-300 ease-out no-underline flex flex-col text-inherit hover:-translate-y-[6px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)] hover:border-b-rojo hover:text-inherit hover:no-underline">
                     <div class="relative h-[160px] sm:h-[190px] overflow-hidden bg-[#131b27] flex items-center justify-center shrink-0">
                         <?php if (!empty($p['imagen_ruta'])): ?>
@@ -132,6 +133,49 @@
     prevBtn.addEventListener('click', function () { current--; update(); });
     nextBtn.addEventListener('click', function () { current++; update(); });
     window.addEventListener('resize', function () { current = 0; buildDots(); update(); });
+
+    // Deslizamiento táctil (swipe) para pasar tarjetas desde el celular
+    (function addSwipeSupport() {
+        var startX = 0, startY = 0, deltaX = 0, deltaY = 0, tracking = false, swiped = false;
+
+        track.addEventListener('touchstart', function (e) {
+            if (e.touches.length !== 1) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            deltaX = 0;
+            deltaY = 0;
+            tracking = true;
+            swiped = false;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', function (e) {
+            if (!tracking) return;
+            deltaX = e.touches[0].clientX - startX;
+            deltaY = e.touches[0].clientY - startY;
+            if (!swiped && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                swiped = true;
+            }
+            if (swiped && e.cancelable) e.preventDefault();
+        }, { passive: false });
+
+        track.addEventListener('touchend', function () {
+            if (!tracking) return;
+            tracking = false;
+            if (swiped && Math.abs(deltaX) > 40) {
+                current += deltaX < 0 ? 1 : -1;
+                update();
+            }
+        });
+
+        // Evita que un swipe también dispare el click del link de la tarjeta
+        track.addEventListener('click', function (e) {
+            if (swiped) {
+                swiped = false;
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            }
+        }, true);
+    })();
 
     buildDots();
     update();

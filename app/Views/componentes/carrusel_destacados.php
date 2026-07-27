@@ -9,7 +9,8 @@
         <div class="overflow-hidden relative" id="destTrackWrap">
             <div class="flex gap-5 transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94)] will-change-transform" id="destTrack">
                 <?php foreach ($destacados as $dest): ?>
-                <div class="dest-card shrink-0 grow-0 w-[85%] sm:w-[calc(50%-0.65rem)] lg:w-[calc(25%-1rem)] bg-[#111a27] rounded-[14px] overflow-hidden border border-white/[0.06] flex flex-col transition-all duration-300 ease hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:border-[rgba(255,0,51,0.2)]">
+                <?php $urlProducto = base_url('producto/' . ($dest['slug'] ?: $dest['id'])); ?>
+                <a href="<?= esc($urlProducto) ?>" class="dest-card shrink-0 grow-0 w-[85%] sm:w-[calc(50%-0.65rem)] lg:w-[calc(25%-1rem)] bg-[#111a27] rounded-[14px] overflow-hidden border border-white/[0.06] flex flex-col text-inherit no-underline transition-all duration-300 ease hover:-translate-y-[5px] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] hover:border-[rgba(255,0,51,0.2)] hover:text-inherit hover:no-underline">
                     <div class="group h-40 bg-[#0d1520] flex items-center justify-center overflow-hidden shrink-0">
                         <?php if (!empty($dest['imagen_ruta'])): ?>
                             <img src="<?= base_url(esc($dest['imagen_ruta'])) ?>"
@@ -36,7 +37,7 @@
                             <?= !empty($dest['precio_texto']) ? esc($dest['precio_texto']) : 'Consultar precio' ?>
                         </div>
                     </div>
-                </div>
+                </a>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -101,6 +102,49 @@
     btnPrev.addEventListener('click', function () { goTo(current - 1); });
     btnNext.addEventListener('click', function () { goTo(current + 1); });
     window.addEventListener('resize', function () { goTo(0); });
+
+    // Deslizamiento táctil (swipe) para pasar tarjetas desde el celular
+    (function addSwipeSupport() {
+        var startX = 0, startY = 0, deltaX = 0, deltaY = 0, tracking = false, swiped = false;
+
+        track.addEventListener('touchstart', function (e) {
+            if (e.touches.length !== 1) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            deltaX = 0;
+            deltaY = 0;
+            tracking = true;
+            swiped = false;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', function (e) {
+            if (!tracking) return;
+            deltaX = e.touches[0].clientX - startX;
+            deltaY = e.touches[0].clientY - startY;
+            if (!swiped && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                swiped = true;
+            }
+            if (swiped && e.cancelable) e.preventDefault();
+        }, { passive: false });
+
+        track.addEventListener('touchend', function () {
+            if (!tracking) return;
+            tracking = false;
+            if (swiped && Math.abs(deltaX) > 40) {
+                goTo(current + (deltaX < 0 ? 1 : -1));
+            }
+        });
+
+        // Evita que un swipe también dispare el click del link de la tarjeta
+        track.addEventListener('click', function (e) {
+            if (swiped) {
+                swiped = false;
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            }
+        }, true);
+    })();
+
     goTo(0);
 })();
 </script>

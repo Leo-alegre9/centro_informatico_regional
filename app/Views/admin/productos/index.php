@@ -123,10 +123,24 @@
                     </td>
                     <td class="align-middle px-4 py-3">
                         <div class="flex gap-1 flex-wrap">
+                            <a href="<?= base_url("admin/productos/{$p['id']}/ver") ?>"
+                               class="inline-flex items-center border border-gray-300 text-gray-600 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-gray-100">
+                                <i class="fas fa-eye mr-1"></i>Ver
+                            </a>
                             <a href="<?= base_url("admin/productos/{$p['id']}/editar") ?>"
                                class="inline-flex items-center border border-blue-500 text-blue-500 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-blue-500 hover:text-white">
                                 <i class="fas fa-pen mr-1"></i>Editar
                             </a>
+                            <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/activo") ?>" class="inline">
+                                <button type="submit" class="inline-flex items-center border rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold cursor-pointer transition-colors <?= $p['activo'] ? 'border-amber-500 text-amber-600 bg-transparent hover:bg-amber-500 hover:text-white' : 'border-emerald-500 text-emerald-600 bg-transparent hover:bg-emerald-500 hover:text-white' ?>"
+                                        title="<?= $p['activo'] ? 'Desactivar producto (dejará de mostrarse en el sitio)' : 'Activar producto (volverá a mostrarse en el sitio)' ?>">
+                                    <?php if ($p['activo']): ?>
+                                        <i class="fas fa-toggle-on mr-1"></i>Desactivar
+                                    <?php else: ?>
+                                        <i class="fas fa-toggle-off mr-1"></i>Activar
+                                    <?php endif; ?>
+                                </button>
+                            </form>
                             <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/eliminar") ?>" class="inline">
                                 <button type="button" class="inline-flex items-center border border-red-500 text-red-500 bg-transparent rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold cursor-pointer transition-colors hover:bg-red-500 hover:text-white"
                                         onclick="confirmarEliminar(this, '<?= esc($p['nombre']) ?>')">

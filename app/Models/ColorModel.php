@@ -22,35 +22,54 @@ class ColorModel extends Model
     }
 
     /**
-     * Reemplaza completamente los colores de un producto a partir de una lista de nombres.
-     * Crea los colores que no existan todavía (comportamiento tipo "tags").
+     * Reemplaza completamente los colores de un producto a partir de una lista de pares
+     * ['nombre' => string, 'hex' => ?string]. Crea los colores que no existan todavía
+     * (comportamiento tipo "tags") y actualiza el hex si se indicó uno nuevo.
      */
-    public function sincronizarProducto(int $productoId, array $nombres): void
+    public function sincronizarProducto(int $productoId, array $colores): void
     {
         $db = $this->db;
         $db->table('producto_colores')->where('producto_id', $productoId)->delete();
 
-        $nombres = array_values(array_unique(array_filter(array_map('trim', $nombres), fn($n) => $n !== '')));
-        if (empty($nombres)) {
-            return;
-        }
+        $vistos = [];
+        $rows   = [];
+        foreach ($colores as $color) {
+            $nombre = trim((string) ($color['nombre'] ?? ''));
+            if ($nombre === '' || isset($vistos[mb_strtolower($nombre)])) {
+                continue;
+            }
+            $vistos[mb_strtolower($nombre)] = true;
 
-        $rows = [];
-        foreach ($nombres as $nombre) {
-            $colorId = $this->obtenerOCrearId($nombre);
+            $hex     = $this->normalizarHex($color['hex'] ?? null);
+            $colorId = $this->obtenerOCrearId($nombre, $hex);
             $rows[]  = ['producto_id' => $productoId, 'color_id' => $colorId];
         }
 
-        $db->table('producto_colores')->insertBatch($rows);
+        if (!empty($rows)) {
+            $db->table('producto_colores')->insertBatch($rows);
+        }
     }
 
-    private function obtenerOCrearId(string $nombre): int
+    private function obtenerOCrearId(string $nombre, ?string $hex): int
     {
         $existente = $this->where('nombre', $nombre)->first();
         if ($existente) {
+            if ($hex !== null && $hex !== $existente['hex']) {
+                $this->update($existente['id'], ['hex' => $hex]);
+            }
             return (int) $existente['id'];
         }
 
-        return (int) $this->insert(['nombre' => $nombre], true);
+        return (int) $this->insert(['nombre' => $nombre, 'hex' => $hex], true);
+    }
+
+    /** Valida que sea un color hexadecimal (#RGB o #RRGGBB); devuelve null si no es válido. */
+    private function normalizarHex(?string $hex): ?string
+    {
+        $hex = trim((string) $hex);
+        if ($hex === '') {
+            return null;
+        }
+        return preg_match('/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/', $hex) ? $hex : null;
     }
 }

@@ -320,3 +320,197 @@ php spark migrate
 ```
 
 Esto aplica las 3 migraciones y registra el historial automáticamente, sin necesidad de nada de lo anterior.
+
+---
+
+# Archivos modificados 26-07-26
+
+## Migraciones de base de datos (ejecutar `php spark migrate` en el servidor)
+
+- `app/Database/Migrations/2026-07-24-000001_CreateLineasTable.php` — crea tabla `lineas` (id, fabrica_id, nombre, slug, activo, timestamps; único `fabrica_id+slug`; FK `fabrica_id` → `fabricas.id` ON DELETE CASCADE).
+- `app/Database/Migrations/2026-07-24-000002_AddLineaIdToProductos.php` — agrega columna `linea_id` (INT unsigned, nullable, después de `fabrica_id`) a `productos` con FK hacia `lineas.id` (ON DELETE SET NULL).
+- `app/Database/Migrations/2026-07-24-000003_CreateProductoColorVariantesTable.php` — crea tabla `producto_color_variantes` (id, producto_id, nombre, tipo ENUM('simple','combinado','textura'), color_primario, color_secundario, imagen_muestra, orden, activo, timestamps; índice `producto_id+activo+orden`; FK `producto_id` → `productos.id` ON DELETE CASCADE).
+- `app/Database/Migrations/2026-07-24-000004_CreateProductoColorImagenesTable.php` — crea tabla `producto_color_imagenes` (id, producto_color_id, imagen, texto_alternativo, es_principal, orden, activo, timestamps; índice `producto_color_id+activo+orden`; FK `producto_color_id` → `producto_color_variantes.id` ON DELETE CASCADE).
+
+## Archivos nuevos
+
+### Controladores
+- `app/Controllers/Admin/Lineas.php`
+
+### Modelos
+- `app/Models/ColorImagenModel.php`
+- `app/Models/ColorVarianteModel.php`
+- `app/Models/LineaModel.php`
+
+### Vistas — administración
+- `app/Views/admin/lineas/form.php`
+- `app/Views/admin/lineas/index.php`
+
+### Assets / imágenes
+- `public/assets/img/productos/color_galeria_1_1784912822_622.webp`
+- `public/assets/img/productos/color_galeria_2_1784912822_686.png`
+- `public/assets/img/productos/producto_6_1784876280_191.jpg`
+- `public/assets/img/productos/producto_6_1784876280_244.jpg`
+- `public/assets/img/productos/producto_6_1784876280_467.jpg`
+- `public/assets/img/productos/producto_6_1784876280_539.jpg`
+- `public/assets/img/productos/producto_6_1784876280_666.jpg`
+- `public/assets/img/productos/producto_6_1784876280_847.jpg`
+- `public/assets/img/productos/producto_6_1784876280_894.jpg`
+- `public/assets/img/productos/color_galeria_3_1785080542_766.jpg`
+- `public/assets/img/productos/color_galeria_4_1785080542_882.jpg`
+- `public/assets/img/productos/producto_7_1785080612_918.png`
+
+## Archivos modificados
+
+- `app/Config/Routes.php`
+- `app/Controllers/Admin/Productos.php`
+- `app/Controllers/Catalogo.php`
+- `app/Controllers/Producto.php`
+- `app/Models/ColorModel.php`
+- `app/Models/ProductoModel.php`
+- `app/Views/admin/fabricas/index.php`
+- `app/Views/admin/productos/form.php`
+- `app/Views/contenido/catalogo_grid.php`
+- `app/Views/producto_detalle.php`
+
+## Archivos eliminados
+
+- `public/assets/img/productos/producto_2_1778560429.jpg`
+- `public/assets/img/productos/producto_3_1778562714_865.jpg`
+- `public/assets/img/productos/producto_4_1778712497_274.jpg`
+
+## SQL para phpMyAdmin
+
+```sql
+CREATE TABLE `lineas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fabrica_id` INT UNSIGNED NOT NULL,
+  `nombre` VARCHAR(150) NOT NULL,
+  `slug` VARCHAR(100) NOT NULL,
+  `activo` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lineas_fabrica_id_slug` (`fabrica_id`, `slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `lineas`
+  ADD CONSTRAINT `lineas_fabrica_id_foreign`
+  FOREIGN KEY (`fabrica_id`) REFERENCES `fabricas` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `productos`
+  ADD COLUMN `linea_id` INT UNSIGNED NULL DEFAULT NULL AFTER `fabrica_id`;
+
+ALTER TABLE `productos`
+  ADD CONSTRAINT `productos_linea_id_foreign`
+  FOREIGN KEY (`linea_id`) REFERENCES `lineas` (`id`) ON DELETE SET NULL;
+
+CREATE TABLE `producto_color_variantes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `producto_id` INT UNSIGNED NOT NULL,
+  `nombre` VARCHAR(150) NOT NULL,
+  `tipo` ENUM('simple','combinado','textura') NOT NULL DEFAULT 'simple',
+  `color_primario` VARCHAR(7) NULL DEFAULT NULL,
+  `color_secundario` VARCHAR(7) NULL DEFAULT NULL,
+  `imagen_muestra` VARCHAR(500) NULL DEFAULT NULL,
+  `orden` SMALLINT NOT NULL DEFAULT 0,
+  `activo` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `producto_color_variantes_producto_id_activo_orden` (`producto_id`, `activo`, `orden`),
+  CONSTRAINT `producto_color_variantes_producto_id_foreign` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `producto_color_imagenes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `producto_color_id` INT UNSIGNED NOT NULL,
+  `imagen` VARCHAR(500) NOT NULL,
+  `texto_alternativo` VARCHAR(200) NULL DEFAULT NULL,
+  `es_principal` TINYINT(1) NOT NULL DEFAULT 0,
+  `orden` SMALLINT NOT NULL DEFAULT 0,
+  `activo` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `producto_color_imagenes_producto_color_id_activo_orden` (`producto_color_id`, `activo`, `orden`),
+  CONSTRAINT `producto_color_imagenes_producto_color_id_foreign` FOREIGN KEY (`producto_color_id`) REFERENCES `producto_color_variantes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET @next_batch = (SELECT COALESCE(MAX(batch), 0) + 1 FROM `migrations`);
+
+INSERT INTO `migrations` (`version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+('2026-07-24-000001', 'App\\Database\\Migrations\\CreateLineasTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
+('2026-07-24-000002', 'App\\Database\\Migrations\\AddLineaIdToProductos', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
+('2026-07-24-000003', 'App\\Database\\Migrations\\CreateProductoColorVariantesTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
+('2026-07-24-000004', 'App\\Database\\Migrations\\CreateProductoColorImagenesTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch);
+```
+
+---
+
+# Cambios recientes
+
+- `app/Controllers/Home.php`
+- `app/Controllers/Producto.php`
+- `app/Controllers/Promociones.php`
+- `app/Views/componentes/carrusel_destacados.php`
+- `app/Views/contenido/destacados.php`
+- `app/Views/contenido/ofertas.php`
+- `app/Views/producto_detalle.php`
+- `app/Views/promociones.php`
+
+---
+
+# Ultimos cambimos del día
+
+## Migraciones de base de datos (ejecutar `php spark migrate` en el servidor)
+
+- `app/Database/Migrations/2026-07-26-000001_AddPrecioInternoToProductos.php`
+- `app/Database/Migrations/2026-07-26-000002_CreateNotasTable.php`
+
+## Archivos nuevos
+
+- `app/Controllers/Admin/Notas.php`
+- `app/Models/NotaModel.php`
+- `app/Views/admin/notas/index.php`
+- `app/Views/admin/productos/ver.php`
+- `public/assets/img/productos/producto_7_1785103483_439.jpg`
+- `public/assets/img/productos/producto_7_1785103483_699.jpg`
+- `public/assets/img/productos/producto_7_1785103484_113.jpg`
+- `public/assets/img/productos/producto_7_1785103484_345.png`
+
+## Archivos modificados
+
+- `app/Config/Routes.php`
+- `app/Controllers/Admin/Consultas.php`
+- `app/Controllers/Admin/Productos.php`
+- `app/Models/ProductoModel.php`
+- `app/Views/admin/consultas/index.php`
+- `app/Views/admin/layout.php`
+- `app/Views/admin/productos/form.php`
+- `app/Views/admin/productos/index.php`
+- `app/Views/componentes/carrusel_destacados.php`
+- `app/Views/contenido/destacados.php`
+
+## SQL para phpMyAdmin
+
+```sql
+ALTER TABLE `productos`
+  ADD COLUMN `precio_interno` DECIMAL(12,2) UNSIGNED NULL DEFAULT NULL AFTER `precio_dolar`;
+
+CREATE TABLE `notas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `autor` VARCHAR(100) NOT NULL,
+  `contenido` TEXT NOT NULL,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notas_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET @next_batch = (SELECT COALESCE(MAX(batch), 0) + 1 FROM `migrations`);
+
+INSERT INTO `migrations` (`version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+('2026-07-26-000001', 'App\\Database\\Migrations\\AddPrecioInternoToProductos', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
+('2026-07-26-000002', 'App\\Database\\Migrations\\CreateNotasTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch);
+```

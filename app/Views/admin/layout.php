@@ -41,7 +41,9 @@
         $isInventario     = strpos($currentUrl, 'admin/inventario') !== false;
         $isStock          = strpos($currentUrl, 'admin/stock') !== false;
         $isConfiguracion  = strpos($currentUrl, 'admin/configuracion') !== false;
-        $unreadCount      = (new \App\Models\ConsultaServicioModel())->getUnreadCount();
+        $isNotas          = strpos($currentUrl, 'admin/notas') !== false;
+        $unreadCount      = (new \App\Models\ConsultaServicioModel())->getUnreadCount()
+                           + (new \App\Models\ContactoMensajeModel())->countNoLeidos();
 
         $navLink = 'flex items-center px-[0.85rem] py-[0.62rem] rounded-[9px] text-white/65 no-underline text-[0.9rem] font-medium mb-0.5 transition-colors hover:bg-white/[0.07] hover:text-white';
         $navLinkActivo = 'flex items-center px-[0.85rem] py-[0.62rem] rounded-[9px] bg-rojo/15 text-white font-semibold no-underline text-[0.9rem] mb-0.5';
@@ -84,7 +86,7 @@
             <i class="fas fa-boxes <?= $navIcon ?> <?= $isStock ? 'text-rojo' : '' ?>"></i> Stock
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Servicio Técnico</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Atención al cliente</div>
 
         <a href="<?= base_url('admin/consultas') ?>" class="<?= $isConsultas ? $navLinkActivo : $navLink ?> justify-between">
             <span><i class="fas fa-headset <?= $navIcon ?> <?= $isConsultas ? 'text-rojo' : '' ?>"></i> Consultas</span>
@@ -93,6 +95,12 @@
                 <?= $unreadCount ?>
             </span>
             <?php endif; ?>
+        </a>
+
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Notas</div>
+
+        <a href="<?= base_url('admin/notas') ?>" class="<?= $isNotas ? $navLinkActivo : $navLink ?>">
+            <i class="fas fa-sticky-note <?= $navIcon ?> <?= $isNotas ? 'text-rojo' : '' ?>"></i> Notas del equipo
         </a>
 
         <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Configuración</div>

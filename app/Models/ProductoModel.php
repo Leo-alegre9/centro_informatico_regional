@@ -8,8 +8,8 @@ class ProductoModel extends Model
 {
     protected $table         = 'productos';
     protected $allowedFields = [
-        'categoria_id', 'marca_id', 'fabrica_id', 'codigo', 'nombre', 'slug', 'modelo', 'descripcion_corta',
-        'descripcion', 'url_fabricante', 'precio_texto', 'precio_numero', 'precio_dolar', 'badge', 'icono', 'activo', 'destacado', 'orden', 'ubicacion', 'stock',
+        'categoria_id', 'marca_id', 'fabrica_id', 'linea_id', 'codigo', 'nombre', 'slug', 'modelo', 'descripcion_corta',
+        'descripcion', 'url_fabricante', 'precio_texto', 'precio_numero', 'precio_dolar', 'precio_interno', 'badge', 'icono', 'activo', 'destacado', 'orden', 'ubicacion', 'stock',
         'ancho', 'alto', 'profundidad', 'unidad_medida', 'material',
     ];
     protected $useTimestamps = true;
@@ -54,9 +54,10 @@ class ProductoModel extends Model
     public function getBySlugOrId(string $valor): ?array
     {
         $producto = $this
-            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, categorias.nombre AS categoria_nombre')
+            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre')
             ->join('marcas', 'marcas.id = productos.marca_id', 'left')
             ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
             ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
             ->where('productos.activo', 1)
             ->where('productos.slug', $valor)
@@ -76,13 +77,33 @@ class ProductoModel extends Model
         return $producto ?: null;
     }
 
+    /**
+     * Busca un producto por id con sus nombres relacionados (marca/fábrica/línea/categoría),
+     * sin filtrar por activo. Uso exclusivo del panel admin (pantalla «Ver»).
+     */
+    public function getByIdConDetalle(int $id): ?array
+    {
+        $producto = $this
+            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
+            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+            ->where('productos.id', $id)
+            ->first();
+
+        return $producto ?: null;
+    }
+
     // ── Consultas sin secciones (backward compat) ─────────────────────────────
 
     public function getByCategoriaId(int $categoriaId): array
     {
         return $this
-            ->select('productos.*, marcas.nombre AS marca_nombre, marcas.logo_url AS marca_logo')
+            ->select('productos.*, marcas.nombre AS marca_nombre, marcas.logo_url AS marca_logo, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre')
             ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
             ->where('productos.categoria_id', $categoriaId)
             ->where('productos.activo', 1)
             ->orderBy('productos.orden', 'ASC')

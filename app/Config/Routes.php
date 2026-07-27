@@ -24,12 +24,20 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('productos/crear',           'Admin\Productos::guardar');
     $routes->get('productos/(:num)/editar',    'Admin\Productos::editar/$1');
     $routes->post('productos/(:num)/editar',   'Admin\Productos::actualizar/$1');
+    $routes->get('productos/(:num)/ver',       'Admin\Productos::ver/$1');
     $routes->post('productos/(:num)/eliminar',  'Admin\Productos::eliminar/$1');
     $routes->post('productos/(:num)/destacado', 'Admin\Productos::toggleDestacado/$1');
+    $routes->post('productos/(:num)/activo',    'Admin\Productos::toggleActivo/$1');
 
-    $routes->get('consultas',                          'Admin\Consultas::index');
-    $routes->post('consultas/(:num)/vista',            'Admin\Consultas::marcarVista/$1');
-    $routes->post('consultas/(:num)/resuelta',         'Admin\Consultas::marcarResuelta/$1');
+    $routes->get('consultas',                              'Admin\Consultas::index');
+    $routes->post('consultas/(:segment)/(:num)/vista',     'Admin\Consultas::marcarVista/$1/$2');
+    $routes->post('consultas/(:segment)/(:num)/resuelta',  'Admin\Consultas::marcarResuelta/$1/$2');
+    $routes->post('consultas/(:segment)/(:num)/eliminar',  'Admin\Consultas::eliminar/$1/$2');
+
+    // Notas
+    $routes->get('notas',                       'Admin\Notas::index');
+    $routes->post('notas/crear',                'Admin\Notas::guardar');
+    $routes->post('notas/(:num)/eliminar',      'Admin\Notas::eliminar/$1');
 
     // Categorías
     $routes->get('categorias',                         'Admin\Categorias::index');
@@ -62,6 +70,14 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('fabricas/(:num)/editar',               'Admin\Fabricas::editar/$1');
     $routes->post('fabricas/(:num)/editar',              'Admin\Fabricas::actualizar/$1');
     $routes->post('fabricas/(:num)/eliminar',            'Admin\Fabricas::eliminar/$1');
+
+    // Líneas (dependen de una fábrica)
+    $routes->get('fabricas/(:num)/lineas',                    'Admin\Lineas::index/$1');
+    $routes->get('fabricas/(:num)/lineas/crear',               'Admin\Lineas::crear/$1');
+    $routes->post('fabricas/(:num)/lineas/crear',              'Admin\Lineas::guardar/$1');
+    $routes->get('fabricas/(:num)/lineas/(:num)/editar',        'Admin\Lineas::editar/$1/$2');
+    $routes->post('fabricas/(:num)/lineas/(:num)/editar',       'Admin\Lineas::actualizar/$1/$2');
+    $routes->post('fabricas/(:num)/lineas/(:num)/eliminar',     'Admin\Lineas::eliminar/$1/$2');
 
     // Configuración de precios
     $routes->get('configuracion',                      'Admin\Configuracion::index');
