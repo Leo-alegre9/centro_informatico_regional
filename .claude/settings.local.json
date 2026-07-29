@@ -89,7 +89,10 @@
       "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT COUNT\\(*\\) FROM notas;\")",
       "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"SELECT COUNT\\(*\\) AS contacto_rows FROM contacto_mensajes WHERE nombre='Juan Test'; SELECT COUNT\\(*\\) AS servicio_rows FROM consultas_servicio WHERE nombre_cliente='Maria Test';\")",
       "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"UPDATE productos SET precio_interno=55000.50 WHERE id=7;\")",
-      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"UPDATE productos SET precio_interno=NULL WHERE id=7;\")"
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root cir2 -e \"UPDATE productos SET precio_interno=NULL WHERE id=7;\")",
+      "Bash(magick identify *)",
+      "Bash(nohup php spark serve --host localhost --port 8099)",
+      "Bash(echo \"PID:$!\")"
     ]
   }
 }

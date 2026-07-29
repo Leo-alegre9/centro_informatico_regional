@@ -514,3 +514,40 @@ INSERT INTO `migrations` (`version`, `class`, `group`, `namespace`, `time`, `bat
 ('2026-07-26-000001', 'App\\Database\\Migrations\\AddPrecioInternoToProductos', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
 ('2026-07-26-000002', 'App\\Database\\Migrations\\CreateNotasTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch);
 ```
+
+---
+
+# Archivos modificados - 28-07-26
+
+- `app/Views/admin/layout.php`
+- `app/Views/admin/login.php`
+- `app/Views/componentes/header.php`
+- `public/favicon.ico`
+
+## Archivos nuevos
+
+- `public/assets/img/CIR_favicon.png`
+
+---
+
+# Actualizaciones 29-07-2026
+
+## Migraciones de base de datos (ejecutar `php spark migrate` en el servidor)
+
+- `app/Database/Migrations/2026-07-29-000001_AddNombreIndexToProductos.php`
+
+## Archivos nuevos
+
+- `app/Views/componentes/paginador.php`
+
+## Archivos modificados
+
+- `app/Models/ProductoModel.php`
+- `app/Models/CategoriaModel.php`
+- `app/Controllers/Catalogo.php`
+- `app/Controllers/Admin/Productos.php`
+- `app/Views/catalogo_buscar.php`
+- `app/Views/catalogo_rubro.php`
+- `app/Views/contenido/catalogo_grid.php`
+- `app/Views/admin/productos/buscar.php`
+- `app/Views/admin/productos/ver.php`

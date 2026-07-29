@@ -25,6 +25,9 @@ class Catalogo extends BaseController
         $rubroMap        = $this->mapRubros($this->catModel->getRubros());
         $productosSeccion = $this->productoModel->getBySeccion('catalogo');
 
+        // Todos los productos activos, filtrables del lado del cliente por rubro/subrubro/marca/fábrica/línea.
+        $productosGrid = $this->mapearProductosGrid($this->productoModel->getFiltrablesPorCategorias());
+
         return view('catalogo_rubro', [
             'titulo'           => 'Catálogo | Centro Informático Regional',
             'breadcrumb'       => [
@@ -43,6 +46,9 @@ class Catalogo extends BaseController
             'destacados'       => [],
             'productosSeccion' => $productosSeccion,
             'tituloSeccion'    => 'Selección del catálogo',
+            'productosGrid'    => $productosGrid,
+            'tituloGrid'       => 'Todos los productos',
+            'subtituloGrid'    => 'Catálogo completo',
         ]);
     }
 
@@ -108,6 +114,9 @@ class Catalogo extends BaseController
         $descIds          = $this->catModel->getDescendantIds((int) $dbCat['id']);
         $productosSeccion = [];
         $tituloSeccion    = '';
+        $productosGrid    = [];
+        $tituloGrid       = 'Productos disponibles';
+        $subtituloGrid    = 'Disponible en local';
 
         if (!empty($children)) {
             // Tiene hijos → mostrar grilla de subrubros
@@ -117,6 +126,11 @@ class Catalogo extends BaseController
             $todosIds         = array_merge([(int) $dbCat['id']], $descIds);
             $productosSeccion = $this->productoModel->getPorSeccionEnDescendientes($todosIds, 'rubro', 12);
             $tituloSeccion    = 'Destacados en ' . $dbCat['nombre'];
+
+            // Todos los productos activos del rubro (todas sus subrubros), filtrables por subrubro/marca/fábrica/línea.
+            $productosGrid = $this->mapearProductosGrid($this->productoModel->getFiltrablesPorCategorias($todosIds));
+            $tituloGrid    = 'Todos los productos de ' . $dbCat['nombre'];
+            $subtituloGrid = 'Filtrá por subrubro, marca, fábrica o línea';
         } else {
             // Hoja → todos los productos activos de esta categoría (activo=1 es el control principal)
             $imgModel    = new ProductoImagenModel();
@@ -135,10 +149,14 @@ class Catalogo extends BaseController
                 }
             }
 
-            $current['productos'] = array_map(function ($p) use ($imgsByProd) {
+            // Rubro/subrubro de esta categoría hoja: constantes para todos los productos listados.
+            $nombresCat = $this->catModel->nombresRubroSubrubro((int) $dbCat['id'], $this->catModel->getCategoriaMap());
+
+            $current['productos'] = array_map(function ($p) use ($imgsByProd, $nombresCat) {
                 return [
                     'id'               => $p['id'],
                     'slug'             => $p['slug'] ?? '',
+                    'codigo'           => $p['codigo'] ?? '',
                     'nombre'           => $p['nombre'],
                     'descripcion'      => $p['descripcion_corta'] ?? '',
                     'descripcion_full' => $p['descripcion'] ?? $p['descripcion_corta'] ?? '',
@@ -149,10 +167,14 @@ class Catalogo extends BaseController
                     'marca'            => $p['marca_nombre'] ?? '',
                     'fabrica'          => $p['fabrica_nombre'] ?? '',
                     'linea'            => $p['linea_nombre'] ?? '',
+                    'rubro'            => $nombresCat['rubro'],
+                    'subrubro'         => $nombresCat['subrubro'],
                     'imagen_url'       => !empty($imgsByProd[$p['id']]) ? $imgsByProd[$p['id']][0]['ruta'] : null,
                     'imagenes'         => $imgsByProd[$p['id']] ?? [],
                 ];
             }, $dbProductos);
+
+            $productosGrid = $current['productos'];
 
             // Destacados del subrubro: productos de sección "subrubro" para mostrar en área especial
             $productosSeccion = $this->productoModel->getPorSeccionEnDescendientes(
@@ -182,6 +204,9 @@ class Catalogo extends BaseController
             'destacados'       => $destacados,
             'productosSeccion' => $productosSeccion,
             'tituloSeccion'    => $tituloSeccion,
+            'productosGrid'    => $productosGrid,
+            'tituloGrid'       => $tituloGrid,
+            'subtituloGrid'    => $subtituloGrid,
         ]);
     }
 
@@ -222,6 +247,7 @@ class Catalogo extends BaseController
             $out = array_map(fn($p) => [
                 'id'          => $p['id'],
                 'slug'        => $p['slug'] ?? '',
+                'codigo'      => $p['codigo'] ?? '',
                 'nombre'      => $p['nombre'],
                 'modelo'      => $p['modelo'] ?? '',
                 'precio'      => $p['precio_texto'],
@@ -230,22 +256,65 @@ class Catalogo extends BaseController
                 'icono'       => $p['icono'] ?? 'fas fa-box',
                 'descripcion' => $p['descripcion_corta'] ?? $p['descripcion'] ?? '',
                 'marca'       => $p['marca_nombre'] ?? '',
+                'fabrica'     => $p['fabrica_nombre'] ?? '',
+                'linea'       => $p['linea_nombre'] ?? '',
                 'categoria'   => $p['categoria_nombre'] ?? '',
             ], $resultados);
 
             return $this->response->setJSON(['resultados' => $out, 'total' => count($out)]);
         }
 
-        // ── Petición normal (formulario del header): renderizar vista ──
-        if ($q === '') {
+        // ── Petición normal (página de resultados con filtros combinables) ──
+        $marcaId   = (int) $this->request->getGet('marca');
+        $fabricaId = (int) $this->request->getGet('fabrica');
+        $lineaId   = (int) $this->request->getGet('linea');
+        $orden     = trim((string) $this->request->getGet('orden'));
+
+        // Acepta tanto rubro/subrubro (filtros de esta página) como rubro/sub/subsub
+        // (compatibilidad con el buscador rápido del header, que usa esos nombres).
+        $subrubro = trim((string) $this->request->getGet('subrubro'));
+        if ($subrubro === '') {
+            $subrubro = $sub;
+        }
+
+        $sinFiltros = $q === '' && $rubro === '' && $marcaId === 0 && $fabricaId === 0 && $lineaId === 0;
+        if ($sinFiltros) {
             return redirect()->to(base_url('catalogo'));
         }
 
-        $resultados = $this->productoModel->buscarGlobal($q);
+        $rubroCat    = null;
+        $subrubroCat = null;
+        $categoriaIds = [];
+
+        if ($rubro !== '') {
+            $rubroCat = $this->catModel->findBySlugPath($rubro);
+            if ($rubroCat) {
+                if ($subrubro !== '') {
+                    $subrubroCat = $this->catModel->findBySlugPath($rubro, $subrubro);
+                    $categoriaIds = $subrubroCat ? $this->catModel->getDescendantIds((int) $subrubroCat['id']) : [];
+                } else {
+                    $categoriaIds = $this->catModel->getDescendantIds((int) $rubroCat['id']);
+                }
+            }
+        }
+
+        $filtros = [
+            'q'             => $q,
+            'categoria_ids' => $categoriaIds,
+            'marca_id'      => $marcaId,
+            'fabrica_id'    => $fabricaId,
+            'linea_id'      => $lineaId,
+            'orden'         => $orden,
+        ];
+
+        $resultado    = $this->productoModel->buscarProductos($filtros, 24);
+        $productosRaw = $resultado['resultados'];
+        $pager        = $resultado['pager'];
 
         $productos = array_map(function ($p) {
             return [
                 'id'           => $p['id'],
+                'codigo'       => $p['codigo'] ?? '',
                 'nombre'       => $p['nombre'],
                 'modelo'       => $p['modelo'] ?? '',
                 'precio'       => $p['precio_texto'],
@@ -254,20 +323,119 @@ class Catalogo extends BaseController
                 'icono'        => $p['icono'] ?? 'fas fa-box',
                 'descripcion'  => $p['descripcion_corta'] ?? '',
                 'marca'        => $p['marca_nombre'] ?? '',
+                'fabrica'      => $p['fabrica_nombre'] ?? '',
+                'linea'        => $p['linea_nombre'] ?? '',
                 'categoria'    => $p['categoria_nombre'] ?? '',
                 'url_producto' => base_url('producto/' . ($p['slug'] ?: $p['id'])),
             ];
-        }, $resultados);
+        }, $productosRaw);
+
+        // Opciones de filtro dependientes: solo marcas/fábricas/líneas con productos en el contexto elegido.
+        $opciones          = $this->productoModel->obtenerOpcionesFiltros(['categoria_ids' => $categoriaIds, 'fabrica_id' => $fabricaId]);
+        $subrubrosOpciones = $rubroCat ? $this->catModel->getChildren((int) $rubroCat['id']) : [];
+
+        // Filtros activos como chips removibles: cada uno arma la URL sin ese parámetro.
+        $paramsActuales = array_filter([
+            'q'        => $q,
+            'rubro'    => $rubro,
+            'subrubro' => $subrubro,
+            'marca'    => $marcaId ?: '',
+            'fabrica'  => $fabricaId ?: '',
+            'linea'    => $lineaId ?: '',
+            'orden'    => $orden,
+        ], fn($v) => $v !== '' && $v !== 0);
+
+        $chips = [];
+        if ($q !== '') {
+            $chips[] = ['label' => '"' . $q . '"', 'quitar' => $this->quitarParam($paramsActuales, 'q')];
+        }
+        if ($rubroCat) {
+            $chips[] = ['label' => $rubroCat['nombre'], 'quitar' => $this->quitarParam($paramsActuales, ['rubro', 'subrubro'])];
+        }
+        if ($subrubroCat) {
+            $chips[] = ['label' => $subrubroCat['nombre'], 'quitar' => $this->quitarParam($paramsActuales, 'subrubro')];
+        }
+        if ($marcaId > 0) {
+            $marcaNombre = array_values(array_filter($opciones['marcas'], fn($m) => (int) $m['id'] === $marcaId))[0]['nombre'] ?? null;
+            $chips[] = ['label' => $marcaNombre ?? 'Marca', 'quitar' => $this->quitarParam($paramsActuales, 'marca')];
+        }
+        if ($fabricaId > 0) {
+            $fabricaNombre = array_values(array_filter($opciones['fabricas'], fn($f) => (int) $f['id'] === $fabricaId))[0]['nombre'] ?? null;
+            $chips[] = ['label' => $fabricaNombre ?? 'Fábrica', 'quitar' => $this->quitarParam($paramsActuales, 'fabrica')];
+        }
+        if ($lineaId > 0) {
+            $lineaNombre = array_values(array_filter($opciones['lineas'], fn($l) => (int) $l['id'] === $lineaId))[0]['nombre'] ?? null;
+            $chips[] = ['label' => $lineaNombre ?? 'Línea', 'quitar' => $this->quitarParam($paramsActuales, 'linea')];
+        }
 
         return view('catalogo_buscar', [
-            'titulo'    => 'Resultados para "' . esc($q) . '" | Centro Informático Regional',
-            'query'     => $q,
-            'productos' => $productos,
-            'total'     => count($productos),
+            'titulo'            => ($q !== '' ? 'Resultados para "' . esc($q) . '"' : 'Resultados de búsqueda') . ' | Centro Informático Regional',
+            'query'             => $q,
+            'productos'         => $productos,
+            'total'             => $pager->getTotal('catalogo'),
+            'paginaActual'      => $pager->getCurrentPage('catalogo'),
+            'totalPaginas'      => $pager->getPageCount('catalogo'),
+            'baseParams'        => $paramsActuales,
+            'filtros'           => [
+                'rubro' => $rubro, 'subrubro' => $subrubro, 'marca' => $marcaId ?: '',
+                'fabrica' => $fabricaId ?: '', 'linea' => $lineaId ?: '', 'orden' => $orden,
+            ],
+            'rubros'            => $this->catModel->getRubros(),
+            'subrubrosOpciones' => $subrubrosOpciones,
+            'marcasOpciones'    => $opciones['marcas'],
+            'fabricasOpciones'  => $opciones['fabricas'],
+            'lineasOpciones'    => $opciones['lineas'],
+            'chips'             => $chips,
         ]);
     }
 
+    /** Devuelve $params sin la(s) clave(s) indicadas, para armar el link "quitar filtro" de un chip. */
+    private function quitarParam(array $params, $claves): array
+    {
+        foreach ((array) $claves as $clave) {
+            unset($params[$clave]);
+        }
+        return $params;
+    }
+
     // ── Helpers privados ───────────────────────────────────────────────────────
+
+    /**
+     * Convierte filas de productos (con joins de marca/fábrica/línea/categoría ya
+     * resueltos) al formato que espera la grilla filtrable del catálogo, agregando
+     * el rubro/subrubro de cada uno. Se usa tanto para el catálogo general como
+     * para las páginas de rubro con subrubros, para no duplicar el mapeo.
+     */
+    private function mapearProductosGrid(array $rows): array
+    {
+        if (empty($rows)) {
+            return [];
+        }
+
+        $map = $this->catModel->getCategoriaMap();
+
+        return array_map(function ($p) use ($map) {
+            $nombres = $this->catModel->nombresRubroSubrubro((int) $p['categoria_id'], $map);
+
+            return [
+                'id'          => $p['id'],
+                'slug'        => $p['slug'] ?? '',
+                'codigo'      => $p['codigo'] ?? '',
+                'nombre'      => $p['nombre'],
+                'descripcion' => $p['descripcion_corta'] ?? '',
+                'precio'      => $p['precio_texto'],
+                'precio_num'  => $p['precio_numero'] ?? null,
+                'badge'       => $p['badge'],
+                'icono'       => $p['icono'],
+                'marca'       => $p['marca_nombre'] ?? '',
+                'fabrica'     => $p['fabrica_nombre'] ?? '',
+                'linea'       => $p['linea_nombre'] ?? '',
+                'rubro'       => $nombres['rubro'],
+                'subrubro'    => $nombres['subrubro'],
+                'imagen_url'  => $p['imagen_ruta'] ?? null,
+            ];
+        }, $rows);
+    }
 
     /** Convierte un array plano de rubros en mapa keyed por slug para las vistas. */
     private function mapRubros(array $rubros): array

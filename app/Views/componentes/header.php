@@ -2,6 +2,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $titulo ?? 'Centro Informático Regional' ?></title>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/CIR_favicon.png') ?>">
     <?php if (!empty($metaDescripcion)): ?>
     <meta name="description" content="<?= esc(mb_substr($metaDescripcion, 0, 300)) ?>">
     <?php endif; ?>

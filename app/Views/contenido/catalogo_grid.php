@@ -1,3 +1,11 @@
+<?php
+    // Reutilizable en 3 contextos: hoja de subrubro ($current['productos']), rubro completo
+    // y catálogo general (ambos vía $productosGrid). El filtrado es 100% client-side; los
+    // chips de Rubro/Subrubro se ocultan solos cuando el contexto ya tiene un solo valor.
+    $productosParaGrid = $productosGrid ?? $current['productos'] ?? [];
+    $tituloGridTexto    = $tituloGrid ?? 'Productos disponibles';
+    $subtituloGridTexto = $subtituloGrid ?? 'Disponible en local';
+?>
 <!-- ═══════════════════════════════════════════════
      GRILLA DE PRODUCTOS
 ═══════════════════════════════════════════════ -->
@@ -6,8 +14,8 @@
 
         <div class="flex items-end justify-between flex-wrap gap-4 mb-6">
             <div>
-                <span class="section-eyebrow">Disponible en local</span>
-                <h2 class="section-heading !mb-0">Productos disponibles</h2>
+                <span class="section-eyebrow"><?= esc($subtituloGridTexto) ?></span>
+                <h2 class="section-heading !mb-0"><?= esc($tituloGridTexto) ?></h2>
             </div>
             <a href="https://wa.me/5493704616482?text=Hola!%20Me%20interesa%20conocer%20los%20precios%20de%20<?= rawurlencode($current['nombre']) ?>"
                target="_blank" rel="noopener"
@@ -25,7 +33,7 @@
                     <input type="text"
                            id="buscador-productos"
                            class="w-full py-[0.65rem] px-[2.6rem] rounded-full text-[0.9rem] text-dark bg-[#f9fafb] outline-none border-[1.5px] border-[#e5e7eb] transition-all duration-200 placeholder:text-[#adb5bd] focus:border-rojo focus:shadow-[0_0_0_3px_rgba(255,0,51,0.08)] focus:bg-white"
-                           placeholder="Buscar por nombre, modelo...">
+                           placeholder="Buscar por código, nombre, marca...">
                     <button type="button" class="hidden absolute right-[0.9rem] top-1/2 -translate-y-1/2 bg-transparent border-none text-[#adb5bd] cursor-pointer text-[0.82rem] p-1 leading-none hover:text-rojo" id="clear-productos" title="Limpiar búsqueda">
                         <i class="fas fa-times"></i>
                     </button>
@@ -37,34 +45,50 @@
                 </select>
             </div>
 
-            <!-- Fila 2: chips de marca (generados por JS) -->
+            <!-- Fila de chips de Rubro (solo aparece si hay más de un rubro en el listado, p. ej. catálogo general) -->
+            <div class="hidden items-center gap-2 flex-wrap" id="rubro-filter-row">
+                <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-layer-group mr-1"></i>Rubro</span>
+                <div id="rubro-chips" class="flex flex-wrap gap-[0.4rem]"></div>
+            </div>
+
+            <!-- Fila de chips de Subrubro (solo aparece si hay más de un subrubro en el listado) -->
+            <div class="hidden items-center gap-2 flex-wrap" id="subrubro-filter-row">
+                <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-sitemap mr-1"></i>Subrubro</span>
+                <div id="subrubro-chips" class="flex flex-wrap gap-[0.4rem]"></div>
+            </div>
+
+            <!-- Fila: chips de marca (generados por JS) -->
             <div class="hidden items-center gap-2 flex-wrap" id="marcas-filter-row">
                 <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-tag mr-1"></i>Marca</span>
                 <div id="marcas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
             </div>
 
-            <!-- Fila 2b: chips de fábrica (generados por JS) -->
+            <!-- Fila: chips de fábrica (generados por JS) -->
             <div class="hidden items-center gap-2 flex-wrap" id="fabricas-filter-row">
                 <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-industry mr-1"></i>Fábrica</span>
                 <div id="fabricas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
             </div>
 
-            <!-- Fila 2c: chips de línea, dependen de la fábrica elegida (generados por JS) -->
+            <!-- Fila: chips de línea, dependen de la fábrica elegida (generados por JS) -->
             <div class="hidden items-center gap-2 flex-wrap" id="lineas-filter-row">
                 <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-stream mr-1"></i>Línea</span>
                 <div id="lineas-chips" class="flex flex-wrap gap-[0.4rem]"></div>
             </div>
 
-            <!-- Fila 3: chips de etiqueta (generados por JS) -->
+            <!-- Fila: chips de etiqueta (generados por JS) -->
             <div class="hidden items-center gap-2 flex-wrap" id="badges-filter-row">
                 <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-star mr-1"></i>Etiqueta</span>
                 <div id="badges-chips" class="flex flex-wrap gap-[0.4rem]"></div>
             </div>
 
-            <!-- Fila de precio -->
-            <div class="flex items-center gap-3 flex-wrap" id="precio-filter-row">
-                <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-dollar-sign mr-1"></i>Precio</span>
+            <!-- Fila de precio: botones de rango (calculados según los precios cargados en esta sección) + rango manual -->
+            <div class="hidden flex-col gap-[0.6rem]" id="precio-filter-row">
+                <div class="flex items-center gap-2 flex-wrap" id="precio-chips-row">
+                    <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0"><i class="fas fa-dollar-sign mr-1"></i>Precio</span>
+                    <div id="precio-chips" class="flex flex-wrap gap-[0.4rem]"></div>
+                </div>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[0.73rem] font-bold text-[#9CA3AF] uppercase tracking-[0.6px] whitespace-nowrap shrink-0 invisible md:visible"><i class="fas fa-dollar-sign mr-1"></i>Precio</span>
                     <input type="number" id="precio-min" class="py-[0.45rem] px-[0.7rem] border-[1.5px] border-[#e5e7eb] rounded-[9px] text-[0.85rem] text-[#374151] bg-[#f9fafb] w-[110px] outline-none transition-colors duration-200 focus:border-rojo" placeholder="Mínimo" min="0">
                     <span class="text-[#9CA3AF] text-[0.8rem]">—</span>
                     <input type="number" id="precio-max" class="py-[0.45rem] px-[0.7rem] border-[1.5px] border-[#e5e7eb] rounded-[9px] text-[0.85rem] text-[#374151] bg-[#f9fafb] w-[110px] outline-none transition-colors duration-200 focus:border-rojo" placeholder="Máximo" min="0">
@@ -78,27 +102,37 @@
             </div>
 
             <!-- Info de resultados -->
-            <div class="text-[0.82rem] text-gris min-h-[1.1em]" id="info-productos"></div>
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="text-[0.82rem] text-gris min-h-[1.1em]" id="info-productos"></div>
+                <button type="button" id="limpiar-todo-productos" class="hidden inline-flex items-center gap-[5px] text-[0.78rem] font-semibold text-gris border-[1.5px] border-[#e5e7eb] bg-white px-3 py-[0.3rem] rounded-full cursor-pointer transition-colors duration-150 hover:border-rojo hover:text-rojo">
+                    <i class="fas fa-times"></i> Limpiar filtros
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-cols-3 gap-[1.3rem] max-[991px]:grid-cols-2 max-[575px]:grid-cols-1" id="productos-grid">
-            <?php foreach ($current['productos'] as $producto): ?>
+            <?php foreach ($productosParaGrid as $producto): ?>
             <?php
-                $marcaNombre   = $producto['marca'] ?? '';
-                $fabricaNombre = $producto['fabrica'] ?? '';
-                $lineaNombre   = $producto['linea'] ?? '';
-                $urlProducto   = base_url('producto/' . ($producto['slug'] ?: $producto['id']));
+                $marcaNombre    = $producto['marca'] ?? '';
+                $fabricaNombre  = $producto['fabrica'] ?? '';
+                $lineaNombre    = $producto['linea'] ?? '';
+                $rubroNombre    = $producto['rubro'] ?? '';
+                $subrubroNombre = $producto['subrubro'] ?? '';
+                $categoriaLabel = $subrubroNombre !== '' ? $subrubroNombre : $rubroNombre;
+                $urlProducto    = base_url('producto/' . ($producto['slug'] ?: $producto['id']));
             ?>
             <div class="producto-card relative bg-white rounded-2xl overflow-hidden flex flex-col shadow-[0_3px_16px_rgba(0,0,0,0.07)] border-[1.5px] border-[#f0f0f0] transition-all duration-[280ms] ease-out hover:-translate-y-[5px] hover:shadow-[0_16px_45px_rgba(0,0,0,0.13)]"
                  id="producto-<?= (int)$producto['id'] ?>"
-                 data-busqueda="<?= esc(strtolower($producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'] . ' ' . $marcaNombre . ' ' . $fabricaNombre . ' ' . $lineaNombre)) ?>"
+                 data-busqueda="<?= esc(strtolower(($producto['codigo'] ?? '') . ' ' . $producto['nombre'] . ' ' . $producto['descripcion'] . ' ' . $producto['badge'] . ' ' . $marcaNombre . ' ' . $fabricaNombre . ' ' . $lineaNombre . ' ' . $rubroNombre . ' ' . $subrubroNombre)) ?>"
                  data-nombre="<?= esc($producto['nombre']) ?>"
                  data-precio="<?= esc($producto['precio']) ?>"
                  data-precio-num="<?= esc($producto['precio_num'] ?? '') ?>"
                  data-badge="<?= esc($producto['badge'] ?? '') ?>"
                  data-marca="<?= esc($marcaNombre) ?>"
                  data-fabrica="<?= esc($fabricaNombre) ?>"
-                 data-linea="<?= esc($lineaNombre) ?>">
+                 data-linea="<?= esc($lineaNombre) ?>"
+                 data-rubro="<?= esc($rubroNombre) ?>"
+                 data-subrubro="<?= esc($subrubroNombre) ?>">
                 <div class="bg-dark-2 flex items-center justify-center h-[180px] relative overflow-hidden">
                     <?php if (!empty($producto['imagen_url'])): ?>
                     <img src="<?= base_url(esc($producto['imagen_url'])) ?>"
@@ -110,6 +144,11 @@
                     <?php endif; ?>
                     <?php if (!empty($producto['badge'])): ?>
                     <span class="absolute top-[11px] right-[11px] bg-rojo text-white text-[0.7rem] font-bold px-[10px] py-1 rounded-full tracking-[0.4px] whitespace-nowrap"><?= esc($producto['badge']) ?></span>
+                    <?php endif; ?>
+                    <?php if ($categoriaLabel !== ''): ?>
+                    <span class="absolute bottom-2 left-2 bg-black/[0.55] text-white text-[0.65rem] font-semibold px-2 py-[3px] rounded-[4px] backdrop-blur-[4px] whitespace-nowrap max-w-[calc(100%-16px)] overflow-hidden text-ellipsis">
+                        <i class="fas fa-folder mr-1 opacity-70"></i><?= esc($categoriaLabel) ?>
+                    </span>
                     <?php endif; ?>
                 </div>
                 <div class="px-[1.4rem] pt-[1.35rem] pb-[1.4rem] flex-1 flex flex-col">
@@ -145,7 +184,7 @@
 
             <div class="hidden text-center py-12 px-4 col-span-full" id="sin-resultados-productos">
                 <i class="fas fa-box-open text-[2.5rem] text-[#dee2e6] mb-4 block"></i>
-                <p class="text-gris text-[0.95rem] m-0">No se encontraron productos para <strong class="text-rojo" id="termino-productos"></strong></p>
+                <p class="text-gris text-[0.95rem] m-0">No se encontraron productos con los filtros seleccionados<span id="termino-productos-wrap"> para <strong class="text-rojo" id="termino-productos"></strong></span></p>
             </div>
         </div>
 
@@ -163,17 +202,13 @@
     const ordenSel = document.getElementById('cat-orden');
     const grid     = document.getElementById('productos-grid');
     const noRes    = document.getElementById('sin-resultados-productos');
+    const termWrap = document.getElementById('termino-productos-wrap');
     const termSpan = document.getElementById('termino-productos');
     const infoEl   = document.getElementById('info-productos');
+    const limpiarBtn = document.getElementById('limpiar-todo-productos');
     const total    = grid.querySelectorAll('.producto-card').length;
 
-    let activaMarca   = '';
-    let activaFabrica = '';
-    let activaLinea   = '';
-    let activaBadge   = '';
-    let activePrecioMin = 0;
-    let activePrecioMax = 0;
-    let precioFiltroActivo = false;
+    const ETIQUETAS = { rubro: 'rubro', subrubro: 'subrubro', marca: 'marca', fabrica: 'fábrica', linea: 'línea', badge: 'etiqueta' };
 
     const CHIP_BASE     = ['cat-chip', 'inline-flex', 'items-center', 'gap-[5px]', 'px-3', 'py-[0.3rem]', 'rounded-full', 'text-[0.78rem]', 'font-semibold', 'cursor-pointer', 'border-[1.5px]', 'transition-colors', 'duration-[180ms]', 'select-none', 'whitespace-nowrap'];
     const CHIP_INACTIVE = ['border-[#e5e7eb]', 'bg-white', 'text-[#6B7280]', 'hover:border-rojo', 'hover:text-rojo', 'hover:bg-rojo/[0.04]'];
@@ -186,135 +221,82 @@
         if (icon) icon.classList.toggle('opacity-[0.85]', activo);
     }
 
-    /* ── Generar chips de marca ── */
-    (function generarMarcas() {
-        const marcas = new Set();
+    /* ── Dimensiones de filtro (chips), con dependencias entre ellas ──
+       rubro → subrubro → {marca, fabrica} → linea; badge depende de rubro/subrubro.
+       Un chip se oculta solo si su universo de valores tiene 0 o 1 opción (no aporta filtrar). */
+    const dims = {};
+
+    function registrarDimension(key, opts) {
+        const row  = document.getElementById(opts.rowId);
+        const wrap = document.getElementById(opts.wrapId);
+        if (!row || !wrap) return;
+        dims[key] = { activo: '', row: row, wrap: wrap, dataAttr: opts.dataAttr, icon: opts.icon, dependsOn: opts.dependsOn || [] };
+    }
+
+    registrarDimension('rubro',    { rowId: 'rubro-filter-row',    wrapId: 'rubro-chips',    dataAttr: 'rubro',    icon: 'fas fa-layer-group' });
+    registrarDimension('subrubro', { rowId: 'subrubro-filter-row', wrapId: 'subrubro-chips', dataAttr: 'subrubro', icon: 'fas fa-sitemap',  dependsOn: ['rubro'] });
+    registrarDimension('marca',    { rowId: 'marcas-filter-row',   wrapId: 'marcas-chips',   dataAttr: 'marca',    icon: 'fas fa-tag',      dependsOn: ['rubro', 'subrubro'] });
+    registrarDimension('fabrica',  { rowId: 'fabricas-filter-row', wrapId: 'fabricas-chips', dataAttr: 'fabrica',  icon: 'fas fa-industry', dependsOn: ['rubro', 'subrubro'] });
+    registrarDimension('linea',    { rowId: 'lineas-filter-row',   wrapId: 'lineas-chips',   dataAttr: 'linea',    icon: 'fas fa-stream',   dependsOn: ['rubro', 'subrubro', 'fabrica'] });
+    registrarDimension('badge',    { rowId: 'badges-filter-row',   wrapId: 'badges-chips',   dataAttr: 'badge',    icon: 'fas fa-star',     dependsOn: ['rubro', 'subrubro'] });
+
+    function valoresDisponibles(key) {
+        const d = dims[key];
+        const set = new Set();
         grid.querySelectorAll('.producto-card').forEach(function (c) {
-            if (c.dataset.marca) marcas.add(c.dataset.marca);
+            const v = c.dataset[d.dataAttr];
+            if (!v) return;
+            for (let i = 0; i < d.dependsOn.length; i++) {
+                const p = dims[d.dependsOn[i]];
+                if (p && p.activo && c.dataset[p.dataAttr] !== p.activo) return;
+            }
+            set.add(v);
         });
-        if (marcas.size === 0) return;
+        return set;
+    }
 
-        const row    = document.getElementById('marcas-filter-row');
-        const wrap   = document.getElementById('marcas-chips');
-        row.classList.remove('hidden');
-        row.classList.add('flex');
-        marcas.forEach(function (m) {
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.dataset.valor = m;
-            chip.innerHTML = '<i class="fas fa-tag"></i> ' + m;
-            setChipEstado(chip, false);
-            chip.addEventListener('click', function () {
-                activaMarca = activaMarca === m ? '' : m;
-                wrap.querySelectorAll('.cat-chip').forEach(function (c) {
-                    setChipEstado(c, c.dataset.valor === activaMarca);
-                });
-                filtrar();
-            });
-            wrap.appendChild(chip);
-        });
-    })();
+    function renderChips(key) {
+        const d = dims[key];
+        if (!d) return;
+        d.wrap.innerHTML = '';
+        const valores = Array.from(valoresDisponibles(key)).sort(function (a, b) { return a.localeCompare(b, 'es'); });
 
-    /* ── Generar chips de fábrica ── */
-    const fabricasFilterRow = document.getElementById('fabricas-filter-row');
-    const fabricasChipsWrap = document.getElementById('fabricas-chips');
-
-    (function generarFabricas() {
-        const fabricas = new Set();
-        grid.querySelectorAll('.producto-card').forEach(function (c) {
-            if (c.dataset.fabrica) fabricas.add(c.dataset.fabrica);
-        });
-        if (fabricas.size === 0) return;
-
-        fabricasFilterRow.classList.remove('hidden');
-        fabricasFilterRow.classList.add('flex');
-        fabricas.forEach(function (f) {
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.dataset.valor = f;
-            chip.innerHTML = '<i class="fas fa-industry"></i> ' + f;
-            setChipEstado(chip, false);
-            chip.addEventListener('click', function () {
-                activaFabrica = activaFabrica === f ? '' : f;
-                fabricasChipsWrap.querySelectorAll('.cat-chip').forEach(function (c) {
-                    setChipEstado(c, c.dataset.valor === activaFabrica);
-                });
-                activaLinea = '';
-                generarLineas();
-                filtrar();
-            });
-            fabricasChipsWrap.appendChild(chip);
-        });
-    })();
-
-    /* ── Generar chips de línea: dependen de la fábrica activa ── */
-    const lineasFilterRow = document.getElementById('lineas-filter-row');
-    const lineasChipsWrap = document.getElementById('lineas-chips');
-
-    function generarLineas() {
-        lineasChipsWrap.innerHTML = '';
-
-        const lineas = new Set();
-        grid.querySelectorAll('.producto-card').forEach(function (c) {
-            if (!c.dataset.linea) return;
-            if (activaFabrica && c.dataset.fabrica !== activaFabrica) return;
-            lineas.add(c.dataset.linea);
-        });
-
-        if (!activaFabrica || lineas.size === 0) {
-            lineasFilterRow.classList.add('hidden');
-            lineasFilterRow.classList.remove('flex');
+        if (valores.length <= 1) {
+            d.activo = '';
+            d.row.classList.add('hidden');
+            d.row.classList.remove('flex');
             return;
         }
 
-        lineasFilterRow.classList.remove('hidden');
-        lineasFilterRow.classList.add('flex');
-        lineas.forEach(function (l) {
+        d.row.classList.remove('hidden');
+        d.row.classList.add('flex');
+        valores.forEach(function (v) {
             const chip = document.createElement('button');
             chip.type = 'button';
-            chip.dataset.valor = l;
-            chip.innerHTML = '<i class="fas fa-stream"></i> ' + l;
-            setChipEstado(chip, l === activaLinea);
+            chip.dataset.valor = v;
+            chip.innerHTML = '<i class="' + d.icon + '"></i> ' + v;
+            setChipEstado(chip, v === d.activo);
             chip.addEventListener('click', function () {
-                activaLinea = activaLinea === l ? '' : l;
-                lineasChipsWrap.querySelectorAll('.cat-chip').forEach(function (c) {
-                    setChipEstado(c, c.dataset.valor === activaLinea);
-                });
+                d.activo = d.activo === v ? '' : v;
+                Array.from(d.wrap.children).forEach(function (c) { setChipEstado(c, c.dataset.valor === d.activo); });
+                resetDependientes(key);
                 filtrar();
             });
-            lineasChipsWrap.appendChild(chip);
+            d.wrap.appendChild(chip);
         });
     }
-    generarLineas();
 
-    /* ── Generar chips de badge ── */
-    (function generarBadges() {
-        const badges = new Set();
-        grid.querySelectorAll('.producto-card').forEach(function (c) {
-            if (c.dataset.badge) badges.add(c.dataset.badge);
+    function resetDependientes(key) {
+        Object.keys(dims).forEach(function (k) {
+            if (dims[k].dependsOn.indexOf(key) !== -1) {
+                dims[k].activo = '';
+                renderChips(k);
+                resetDependientes(k);
+            }
         });
-        if (badges.size === 0) return;
+    }
 
-        const row  = document.getElementById('badges-filter-row');
-        const wrap = document.getElementById('badges-chips');
-        row.classList.remove('hidden');
-        row.classList.add('flex');
-        badges.forEach(function (b) {
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.dataset.valor = b;
-            chip.innerHTML = '<i class="fas fa-star"></i> ' + b;
-            setChipEstado(chip, false);
-            chip.addEventListener('click', function () {
-                activaBadge = activaBadge === b ? '' : b;
-                wrap.querySelectorAll('.cat-chip').forEach(function (c) {
-                    setChipEstado(c, c.dataset.valor === activaBadge);
-                });
-                filtrar();
-            });
-            wrap.appendChild(chip);
-        });
-    })();
+    Object.keys(dims).forEach(renderChips);
 
     /* ── Ordenamiento ── */
     function ordenarCards() {
@@ -330,6 +312,11 @@
         grid.appendChild(noRes);
     }
 
+    let activePrecioMin = 0;
+    let activePrecioMax = 0;
+    let precioFiltroActivo = false;
+    let precioChipActivo = -1;
+
     /* ── Filtrar ── */
     function filtrar() {
         const q = input.value.trim().toLowerCase();
@@ -339,36 +326,40 @@
         let visible = 0;
 
         cards.forEach(function (card) {
-            const matchQ       = !q || card.dataset.busqueda.includes(q);
-            const matchMarca   = !activaMarca || card.dataset.marca === activaMarca;
-            const matchFabrica = !activaFabrica || card.dataset.fabrica === activaFabrica;
-            const matchLinea   = !activaLinea || card.dataset.linea === activaLinea;
-            const matchBadge   = !activaBadge || card.dataset.badge === activaBadge;
+            let match = !q || card.dataset.busqueda.includes(q);
 
-            let matchPrecio = true;
-            if (precioFiltroActivo) {
-                const precioNum = parseFloat(card.dataset.precioNum);
-                if (!isNaN(precioNum) && precioNum > 0) {
-                    if (activePrecioMin > 0 && precioNum < activePrecioMin) matchPrecio = false;
-                    if (activePrecioMax > 0 && precioNum > activePrecioMax) matchPrecio = false;
+            if (match) {
+                for (const key in dims) {
+                    const d = dims[key];
+                    if (d.activo && card.dataset[d.dataAttr] !== d.activo) { match = false; break; }
                 }
-                // Products with no numeric price (Consultar) always show through
             }
 
-            const match = matchQ && matchMarca && matchFabrica && matchLinea && matchBadge && matchPrecio;
+            if (match && precioFiltroActivo) {
+                const precioNum = parseFloat(card.dataset.precioNum);
+                if (!isNaN(precioNum) && precioNum > 0) {
+                    if (activePrecioMin > 0 && precioNum < activePrecioMin) match = false;
+                    if (activePrecioMax > 0 && precioNum > activePrecioMax) match = false;
+                }
+                // Productos sin precio numérico (Consultar precio) siempre pasan el filtro de precio
+            }
+
             card.classList.toggle('hidden', !match);
             if (match) visible++;
         });
 
+        const hayFiltroActivo = q || precioFiltroActivo || Object.keys(dims).some(function (k) { return dims[k].activo; });
+
+        termWrap.style.display = q ? 'inline' : 'none';
         noRes.style.display = visible === 0 ? 'block' : 'none';
         termSpan.textContent = '"' + input.value.trim() + '"';
+        limpiarBtn.classList.toggle('hidden', !hayFiltroActivo);
 
         const partes = [];
-        if (q) partes.push(visible + ' de ' + total + ' productos');
-        if (activaMarca) partes.push('marca: ' + activaMarca);
-        if (activaFabrica) partes.push('fábrica: ' + activaFabrica);
-        if (activaLinea) partes.push('línea: ' + activaLinea);
-        if (activaBadge) partes.push('etiqueta: ' + activaBadge);
+        if (hayFiltroActivo) partes.push(visible + ' de ' + total + ' productos');
+        Object.keys(dims).forEach(function (key) {
+            if (dims[key].activo) partes.push(ETIQUETAS[key] + ': ' + dims[key].activo);
+        });
         if (precioFiltroActivo) {
             var rango = [];
             if (activePrecioMin > 0) rango.push('desde $' + activePrecioMin.toLocaleString('es'));
@@ -387,10 +378,123 @@
     ordenSel.addEventListener('change', ordenarCards);
 
     /* ── Price filter ── */
-    const precioMinInput  = document.getElementById('precio-min');
-    const precioMaxInput  = document.getElementById('precio-max');
-    const precioApplyBtn  = document.getElementById('precio-apply');
-    const precioClearBtn  = document.getElementById('precio-clear');
+    const precioMinInput   = document.getElementById('precio-min');
+    const precioMaxInput   = document.getElementById('precio-max');
+    const precioApplyBtn   = document.getElementById('precio-apply');
+    const precioClearBtn   = document.getElementById('precio-clear');
+    const precioFilterRow  = document.getElementById('precio-filter-row');
+    const precioChipsRow   = document.getElementById('precio-chips-row');
+    const precioChipsWrap  = document.getElementById('precio-chips');
+
+    function formatearPrecio(v) {
+        return '$' + Math.round(v).toLocaleString('es-AR');
+    }
+
+    /** Redondea a un número "lindo" (múltiplo de una potencia de 10 acorde a su magnitud) para que los botones de rango queden prolijos. */
+    function redondearLindo(valor) {
+        if (valor <= 0) return 0;
+        const magnitud = Math.pow(10, Math.floor(Math.log10(valor)));
+        const paso = magnitud >= 1000 ? magnitud / 2 : Math.max(magnitud, 1);
+        return Math.floor(valor / paso) * paso;
+    }
+
+    function limpiarChipsPrecio() {
+        precioChipActivo = -1;
+        Array.from(precioChipsWrap.children).forEach(function (c) { setChipEstado(c, false); });
+    }
+
+    /**
+     * Genera botones de rango de precio a partir de los precios realmente cargados
+     * en esta sección (cuartiles reales, no rangos fijos), para que cada botón
+     * tenga productos y se adapte al rubro/subrubro en el que se está navegando.
+     * Se calcula una sola vez al cargar la página, sobre el conjunto de productos
+     * de esta sección.
+     */
+    function generarBotonesPrecio() {
+        if (!precioFilterRow || !precioChipsRow || !precioChipsWrap) return;
+
+        const precios = [];
+        grid.querySelectorAll('.producto-card').forEach(function (c) {
+            const v = parseFloat(c.dataset.precioNum);
+            if (!isNaN(v) && v > 0) precios.push(v);
+        });
+
+        if (precios.length === 0) {
+            precioFilterRow.classList.add('hidden');
+            precioFilterRow.classList.remove('flex');
+            return;
+        }
+
+        precioFilterRow.classList.remove('hidden');
+        precioFilterRow.classList.add('flex');
+        precioChipsWrap.innerHTML = '';
+
+        if (precios.length < 4) {
+            precioChipsRow.classList.add('hidden');
+            return;
+        }
+
+        precios.sort(function (a, b) { return a - b; });
+
+        function percentil(p) {
+            const idx = Math.min(precios.length - 1, Math.floor(p * (precios.length - 1)));
+            return precios[idx];
+        }
+
+        const min = precios[0];
+        const max = precios[precios.length - 1];
+        const cortes = Array.from(new Set([percentil(0.25), percentil(0.5), percentil(0.75)].map(function (v) { return redondearLindo(v); })))
+            .filter(function (v) { return v > min && v < max; })
+            .sort(function (a, b) { return a - b; });
+
+        if (cortes.length === 0) {
+            precioChipsRow.classList.add('hidden');
+            return;
+        }
+
+        precioChipsRow.classList.remove('hidden');
+
+        const tramos = [];
+        let anterior = null;
+        cortes.forEach(function (corte) {
+            tramos.push({
+                min:   anterior,
+                max:   corte,
+                label: anterior === null ? 'Hasta ' + formatearPrecio(corte) : formatearPrecio(anterior) + ' - ' + formatearPrecio(corte),
+            });
+            anterior = corte;
+        });
+        tramos.push({ min: anterior, max: null, label: 'Más de ' + formatearPrecio(anterior) });
+
+        tramos.forEach(function (tramo, idx) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.innerHTML = '<i class="fas fa-dollar-sign"></i> ' + tramo.label;
+            setChipEstado(chip, false);
+            chip.addEventListener('click', function () {
+                if (precioChipActivo === idx) {
+                    limpiarChipsPrecio();
+                    activePrecioMin = 0;
+                    activePrecioMax = 0;
+                    precioFiltroActivo = false;
+                    precioMinInput.value = '';
+                    precioMaxInput.value = '';
+                    precioClearBtn.style.display = 'none';
+                } else {
+                    precioChipActivo = idx;
+                    Array.from(precioChipsWrap.children).forEach(function (c, i) { setChipEstado(c, i === idx); });
+                    activePrecioMin = tramo.min || 0;
+                    activePrecioMax = tramo.max || 0;
+                    precioFiltroActivo = true;
+                    precioMinInput.value = tramo.min || '';
+                    precioMaxInput.value = tramo.max || '';
+                    precioClearBtn.style.display = 'inline-flex';
+                }
+                filtrar();
+            });
+            precioChipsWrap.appendChild(chip);
+        });
+    }
 
     if (precioApplyBtn) {
         precioApplyBtn.addEventListener('click', function () {
@@ -399,6 +503,7 @@
             activePrecioMin = minVal;
             activePrecioMax = maxVal;
             precioFiltroActivo = (minVal > 0 || maxVal > 0);
+            limpiarChipsPrecio();
             precioClearBtn.style.display = precioFiltroActivo ? 'inline-flex' : 'none';
             filtrar();
         });
@@ -411,6 +516,7 @@
             activePrecioMin = 0;
             activePrecioMax = 0;
             precioFiltroActivo = false;
+            limpiarChipsPrecio();
             precioClearBtn.style.display = 'none';
             filtrar();
         });
@@ -423,6 +529,24 @@
             });
         });
     }
+
+    /* ── Limpiar todos los filtros de una vez ── */
+    limpiarBtn.addEventListener('click', function () {
+        input.value = '';
+        Object.keys(dims).forEach(function (k) { dims[k].activo = ''; });
+        activePrecioMin = 0;
+        activePrecioMax = 0;
+        precioFiltroActivo = false;
+        if (precioMinInput) precioMinInput.value = '';
+        if (precioMaxInput) precioMaxInput.value = '';
+        if (precioClearBtn) precioClearBtn.style.display = 'none';
+        limpiarChipsPrecio();
+        Object.keys(dims).forEach(renderChips);
+        filtrar();
+    });
+
+    generarBotonesPrecio();
+    filtrar();
 })();
 
 /* ── Resaltar producto si se llega desde búsqueda (#producto-X) ── */

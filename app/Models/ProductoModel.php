@@ -169,9 +169,11 @@ class ProductoModel extends Model
         }
         $q = trim($q);
         $builder = $this
-            ->select('productos.*, pi.ruta AS imagen_ruta, marcas.nombre AS marca_nombre, categorias.nombre AS categoria_nombre')
+            ->select('productos.*, pi.ruta AS imagen_ruta, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre')
             ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left')
             ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
             ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
             ->where('productos.activo', 1);
 
@@ -181,10 +183,13 @@ class ProductoModel extends Model
 
         return $builder
             ->groupStart()
-                ->like('productos.nombre', $q)
+                ->like('productos.codigo', $q)
+                ->orLike('productos.nombre', $q)
                 ->orLike('productos.modelo', $q)
                 ->orLike('productos.descripcion_corta', $q)
                 ->orLike('marcas.nombre', $q)
+                ->orLike('fabricas.nombre', $q)
+                ->orLike('lineas.nombre', $q)
             ->groupEnd()
             ->orderBy('productos.orden', 'ASC')
             ->orderBy('productos.nombre', 'ASC')
@@ -198,53 +203,26 @@ class ProductoModel extends Model
             return [];
         }
         return $this
-            ->select('productos.*, pi.ruta AS imagen_ruta, marcas.nombre AS marca_nombre, categorias.nombre AS categoria_nombre')
+            ->select('productos.*, pi.ruta AS imagen_ruta, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre')
             ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left')
             ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
             ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
             ->where('productos.activo', 1)
             ->groupStart()
-                ->like('productos.nombre', $q)
+                ->like('productos.codigo', $q)
+                ->orLike('productos.nombre', $q)
                 ->orLike('productos.modelo', $q)
                 ->orLike('productos.descripcion_corta', $q)
                 ->orLike('marcas.nombre', $q)
+                ->orLike('fabricas.nombre', $q)
+                ->orLike('lineas.nombre', $q)
             ->groupEnd()
             ->orderBy('productos.orden', 'ASC')
             ->orderBy('productos.nombre', 'ASC')
             ->limit($limit)
             ->findAll();
-    }
-
-    public function buscarAdmin(string $q, string $tipo = 'todos'): array
-    {
-        if ($q === '') {
-            return [];
-        }
-
-        $builder = $this
-            ->select('productos.*, marcas.nombre AS marca_nombre, categorias.nombre AS categoria_nombre, pi.ruta AS imagen_ruta')
-            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
-            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
-            ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left');
-
-        switch ($tipo) {
-            case 'codigo':
-                $builder->like('productos.codigo', $q);
-                break;
-            case 'nombre':
-                $builder->like('productos.nombre', $q);
-                break;
-            default:
-                $builder->groupStart()
-                    ->like('productos.codigo', $q)
-                    ->orLike('productos.nombre', $q)
-                    ->orLike('productos.modelo', $q)
-                    ->orLike('marcas.nombre', $q)
-                    ->orLike('productos.descripcion_corta', $q)
-                ->groupEnd();
-        }
-
-        return $builder->orderBy('productos.nombre', 'ASC')->findAll();
     }
 
     public function buscarStock(string $q = ''): array
@@ -291,6 +269,213 @@ class ProductoModel extends Model
         }
 
         return $builder->findAll();
+    }
+
+    // ── Búsqueda y filtrado centralizados ─────────────────────────────────────
+
+    /**
+     * Arma la consulta base combinando texto libre + filtros estructurados
+     * (categoría/marca/fábrica/línea/estado/stock). Reutilizada tanto por el
+     * catálogo público como por el buscador del admin, para no duplicar la
+     * lógica de joins y condiciones en cada controlador.
+     *
+     * Filtros soportados: q, categoria_ids (array), marca_id, fabrica_id,
+     * linea_id, activo ('0'|'1'|''), stock ('con'|'sin'|'').
+     */
+    private function construirConsultaFiltros(array $filtros, bool $soloActivos): self
+    {
+        $this
+            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre, pi.ruta AS imagen_ruta')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
+            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+            ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left');
+
+        if ($soloActivos) {
+            $this->where('productos.activo', 1);
+        } elseif (($filtros['activo'] ?? '') !== '') {
+            $this->where('productos.activo', (int) $filtros['activo']);
+        }
+
+        if (!empty($filtros['categoria_ids'])) {
+            $this->whereIn('productos.categoria_id', $filtros['categoria_ids']);
+        }
+        if (!empty($filtros['marca_id'])) {
+            $this->where('productos.marca_id', (int) $filtros['marca_id']);
+        }
+        if (!empty($filtros['fabrica_id'])) {
+            $this->where('productos.fabrica_id', (int) $filtros['fabrica_id']);
+        }
+        if (!empty($filtros['linea_id'])) {
+            $this->where('productos.linea_id', (int) $filtros['linea_id']);
+        }
+
+        if (($filtros['stock'] ?? '') === 'con') {
+            $this->where('productos.stock >', 0);
+        } elseif (($filtros['stock'] ?? '') === 'sin') {
+            $this->where('productos.stock', 0);
+        }
+
+        $q = trim((string) ($filtros['q'] ?? ''));
+        if ($q !== '') {
+            $tipo = $filtros['tipo'] ?? 'todos';
+            if ($tipo === 'codigo') {
+                $this->like('productos.codigo', $q);
+            } elseif ($tipo === 'nombre') {
+                $this->like('productos.nombre', $q);
+            } else {
+                $this->groupStart()
+                    ->like('productos.codigo', $q)
+                    ->orLike('productos.nombre', $q)
+                    ->orLike('productos.modelo', $q)
+                    ->orLike('marcas.nombre', $q)
+                    ->orLike('fabricas.nombre', $q)
+                    ->orLike('lineas.nombre', $q)
+                    ->orLike('categorias.nombre', $q)
+                    ->orLike('productos.descripcion_corta', $q)
+                    ->orLike('productos.descripcion', $q)
+                ->groupEnd();
+            }
+        }
+
+        return $this;
+    }
+
+    private function aplicarOrden(self $builder, string $orden): void
+    {
+        switch ($orden) {
+            case 'az':
+                $builder->orderBy('productos.nombre', 'ASC');
+                break;
+            case 'za':
+                $builder->orderBy('productos.nombre', 'DESC');
+                break;
+            case 'precio_asc':
+                $builder->orderBy('productos.precio_numero', 'ASC');
+                break;
+            case 'precio_desc':
+                $builder->orderBy('productos.precio_numero', 'DESC');
+                break;
+            default:
+                $builder->orderBy('productos.destacado', 'DESC')
+                    ->orderBy('productos.orden', 'ASC')
+                    ->orderBy('productos.nombre', 'ASC');
+        }
+    }
+
+    /**
+     * Búsqueda + filtros combinados para el catálogo público, paginada.
+     * Solo devuelve productos activos.
+     *
+     * @return array{resultados: array, pager: \CodeIgniter\Pager\Pager}
+     */
+    public function buscarProductos(array $filtros, int $porPagina = 24): array
+    {
+        $this->construirConsultaFiltros($filtros, true);
+        $this->aplicarOrden($this, (string) ($filtros['orden'] ?? ''));
+
+        $resultados = $this->paginate($porPagina, 'catalogo');
+
+        return ['resultados' => $resultados, 'pager' => $this->pager];
+    }
+
+    /**
+     * Búsqueda + filtros combinados para el panel de administración, paginada.
+     * A diferencia de buscarProductos(), puede incluir productos inactivos
+     * (filtro "estado") y filtrar por stock.
+     *
+     * @return array{resultados: array, pager: \CodeIgniter\Pager\Pager}
+     */
+    public function buscarProductosAdmin(array $filtros, int $porPagina = 30): array
+    {
+        $this->construirConsultaFiltros($filtros, false);
+        $this->orderBy('productos.nombre', 'ASC');
+
+        $resultados = $this->paginate($porPagina, 'admin_productos');
+
+        return ['resultados' => $resultados, 'pager' => $this->pager];
+    }
+
+    /**
+     * Devuelve las marcas, fábricas y líneas que efectivamente tienen productos
+     * dentro del contexto dado (categorías/fábrica seleccionadas), para poblar
+     * selects de filtro sin mostrar opciones vacías. No usa $this para no
+     * pisar el estado de otras consultas encadenadas del modelo.
+     */
+    public function obtenerOpcionesFiltros(array $filtros, bool $soloActivos = true): array
+    {
+        $categoriaIds = $filtros['categoria_ids'] ?? [];
+        $fabricaId    = (int) ($filtros['fabrica_id'] ?? 0);
+        $db           = \Config\Database::connect();
+
+        $marcas = $db->table('productos')
+            ->select('marcas.id, marcas.nombre')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'inner')
+            ->distinct();
+        if ($soloActivos) {
+            $marcas->where('productos.activo', 1);
+        }
+        if (!empty($categoriaIds)) {
+            $marcas->whereIn('productos.categoria_id', $categoriaIds);
+        }
+        $marcas = $marcas->orderBy('marcas.nombre', 'ASC')->get()->getResultArray();
+
+        $fabricas = $db->table('productos')
+            ->select('fabricas.id, fabricas.nombre')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'inner')
+            ->distinct();
+        if ($soloActivos) {
+            $fabricas->where('productos.activo', 1);
+        }
+        if (!empty($categoriaIds)) {
+            $fabricas->whereIn('productos.categoria_id', $categoriaIds);
+        }
+        $fabricas = $fabricas->orderBy('fabricas.nombre', 'ASC')->get()->getResultArray();
+
+        $lineas = $db->table('productos')
+            ->select('lineas.id, lineas.nombre')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'inner')
+            ->distinct();
+        if ($soloActivos) {
+            $lineas->where('productos.activo', 1);
+        }
+        if (!empty($categoriaIds)) {
+            $lineas->whereIn('productos.categoria_id', $categoriaIds);
+        }
+        if ($fabricaId > 0) {
+            $lineas->where('productos.fabrica_id', $fabricaId);
+        }
+        $lineas = $lineas->orderBy('lineas.nombre', 'ASC')->get()->getResultArray();
+
+        return ['marcas' => $marcas, 'fabricas' => $fabricas, 'lineas' => $lineas];
+    }
+
+    /**
+     * Productos activos filtrables del lado del cliente (chips de marca/fábrica/línea/
+     * rubro/subrubro en JS, sin recargar la página). Sin paginar, igual que el resto de
+     * las consultas de catálogo por categoría: pensado para catálogos de tamaño moderado.
+     * Si $catIds está vacío, devuelve todos los productos activos (catálogo general).
+     */
+    public function getFiltrablesPorCategorias(array $catIds = []): array
+    {
+        $builder = $this
+            ->select('productos.*, marcas.nombre AS marca_nombre, fabricas.nombre AS fabrica_nombre, lineas.nombre AS linea_nombre, categorias.nombre AS categoria_nombre, pi.ruta AS imagen_ruta')
+            ->join('marcas', 'marcas.id = productos.marca_id', 'left')
+            ->join('fabricas', 'fabricas.id = productos.fabrica_id', 'left')
+            ->join('lineas', 'lineas.id = productos.linea_id', 'left')
+            ->join('categorias', 'categorias.id = productos.categoria_id', 'left')
+            ->join('producto_imagenes pi', 'pi.producto_id = productos.id AND pi.es_principal = 1', 'left')
+            ->where('productos.activo', 1);
+
+        if (!empty($catIds)) {
+            $builder->whereIn('productos.categoria_id', $catIds);
+        }
+
+        return $builder
+            ->orderBy('productos.orden', 'ASC')
+            ->orderBy('productos.nombre', 'ASC')
+            ->findAll();
     }
 
     public function getRelacionados(int $catId, int $excluirId, int $limit = 4): array

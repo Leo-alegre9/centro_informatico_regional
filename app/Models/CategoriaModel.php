@@ -214,4 +214,31 @@ class CategoriaModel extends Model
 
         return $path;
     }
+
+    /**
+     * Resuelve los nombres de rubro (nivel 1) y subrubro (nivel 2) ancestros de una
+     * categoría hoja, a partir del mapa ya cargado con getCategoriaMap(). Usado para
+     * mostrar/filtrar por Rubro y Subrubro sin repetir la lógica de recorrido del
+     * árbol en cada controlador (admin y catálogo público).
+     */
+    public function nombresRubroSubrubro(int $categoriaId, array $map): array
+    {
+        $cat = $map[$categoriaId] ?? null;
+        if (!$cat) {
+            return ['rubro' => '', 'subrubro' => ''];
+        }
+
+        if ((int) $cat['nivel'] === 1) {
+            return ['rubro' => $cat['nombre'], 'subrubro' => ''];
+        }
+
+        if ((int) $cat['nivel'] === 2) {
+            $parent = $map[$cat['parent_id']] ?? null;
+            return ['rubro' => $parent['nombre'] ?? '', 'subrubro' => $cat['nombre']];
+        }
+
+        $parent = $map[$cat['parent_id']] ?? null;
+        $grand  = $parent ? ($map[$parent['parent_id']] ?? null) : null;
+        return ['rubro' => $grand['nombre'] ?? '', 'subrubro' => $parent['nombre'] ?? ''];
+    }
 }

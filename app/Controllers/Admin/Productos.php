@@ -144,6 +144,7 @@ class Productos extends BaseController
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
+            'precio_numero'     => $this->extraerPrecioNumerico($precioTexto),
             'precio_dolar'      => $precioDolar,
             'precio_interno'    => $precioInterno,
             'badge'             => $this->request->getPost('badge') ?? '',
@@ -273,6 +274,7 @@ class Productos extends BaseController
             'descripcion'       => $this->request->getPost('descripcion') ?: null,
             'url_fabricante'    => $this->request->getPost('url_fabricante') ?: null,
             'precio_texto'      => $precioTexto ?: 'Consultar precio',
+            'precio_numero'     => $this->extraerPrecioNumerico($precioTexto),
             'precio_dolar'      => $precioDolar,
             'precio_interno'    => $precioInterno,
             'badge'             => $this->request->getPost('badge') ?? '',
@@ -406,9 +408,13 @@ class Productos extends BaseController
         }
         unset($v);
 
+        $nombres = $this->catModel->nombresRubroSubrubro((int) $producto['categoria_id'], $this->catModel->getCategoriaMap());
+
         return view('admin/productos/ver', [
             'titulo'            => 'Ver: ' . $producto['nombre'] . ' | CIR Admin',
             'producto'          => $producto,
+            'rubroNombre'       => $nombres['rubro'],
+            'subrubroNombre'    => $nombres['subrubro'],
             'imagenesGenerales' => $this->imgModel->getByProducto($id),
             'variantesColor'    => $variantesColor,
             'caracteristicas'   => $this->caractModel->getByProducto($id),
@@ -417,24 +423,95 @@ class Productos extends BaseController
 
     public function buscar()
     {
-        $q    = trim($this->request->getGet('q') ?? '');
-        $tipo = $this->request->getGet('tipo') ?? 'todos';
+        $q         = trim((string) $this->request->getGet('q'));
+        $tipo      = $this->request->getGet('tipo') ?? 'todos';
+        $rubroSlug = trim((string) $this->request->getGet('rubro'));
+        $subSlug   = trim((string) $this->request->getGet('subrubro'));
+        $marcaId   = (int) $this->request->getGet('marca');
+        $fabricaId = (int) $this->request->getGet('fabrica');
+        $lineaId   = (int) $this->request->getGet('linea');
+        $estado    = $this->request->getGet('estado') ?? '';
+        $stock     = $this->request->getGet('stock') ?? '';
 
-        $resultados = [];
-        if ($q !== '') {
-            $resultados = $this->model->buscarAdmin($q, $tipo);
+        $hayFiltros = $q !== '' || $rubroSlug !== '' || $marcaId > 0 || $fabricaId > 0 || $lineaId > 0 || $estado !== '' || $stock !== '';
+
+        $resultados   = [];
+        $pager        = null;
+        $categoriaIds = [];
+        $rubroCat     = null;
+        $subrubrosDelRubro = [];
+
+        if ($rubroSlug !== '') {
+            $rubroCat = $this->catModel->findBySlugPath($rubroSlug);
+            if ($rubroCat) {
+                $subrubrosDelRubro = $this->catModel->getChildren((int) $rubroCat['id']);
+                if ($subSlug !== '') {
+                    $subCat       = $this->catModel->findBySlugPath($rubroSlug, $subSlug);
+                    $categoriaIds = $subCat ? $this->catModel->getDescendantIds((int) $subCat['id']) : [];
+                } else {
+                    $categoriaIds = $this->catModel->getDescendantIds((int) $rubroCat['id']);
+                }
+            }
+        }
+
+        if ($hayFiltros) {
+            $filtros = [
+                'q'             => $q,
+                'tipo'          => $tipo,
+                'categoria_ids' => $categoriaIds,
+                'marca_id'      => $marcaId,
+                'fabrica_id'    => $fabricaId,
+                'linea_id'      => $lineaId,
+                'activo'        => $estado,
+                'stock'         => $stock,
+            ];
+
+            $resultado  = $this->model->buscarProductosAdmin($filtros, 30);
+            $resultados = $resultado['resultados'];
+            $pager      = $resultado['pager'];
+
             $map = $this->catModel->getCategoriaMap();
             foreach ($resultados as &$p) {
                 $p['categoria_path'] = $this->catModel->getPathForId((int) $p['categoria_id'], $map);
+                $nombres              = $this->catModel->nombresRubroSubrubro((int) $p['categoria_id'], $map);
+                $p['rubro_nombre']    = $nombres['rubro'];
+                $p['subrubro_nombre'] = $nombres['subrubro'];
             }
             unset($p);
         }
 
+        $opciones = $this->model->obtenerOpcionesFiltros(['categoria_ids' => $categoriaIds, 'fabrica_id' => $fabricaId], false);
+
+        $paramsActuales = array_filter([
+            'q'        => $q,
+            'tipo'     => $tipo !== 'todos' ? $tipo : '',
+            'rubro'    => $rubroSlug,
+            'subrubro' => $subSlug,
+            'marca'    => $marcaId ?: '',
+            'fabrica'  => $fabricaId ?: '',
+            'linea'    => $lineaId ?: '',
+            'estado'   => $estado,
+            'stock'    => $stock,
+        ], fn($v) => $v !== '' && $v !== 0);
+
         return view('admin/productos/buscar', [
-            'titulo'     => 'Buscar Producto | CIR Admin',
-            'resultados' => $resultados,
-            'q'          => $q,
-            'tipo'       => $tipo,
+            'titulo'            => 'Buscar Producto | CIR Admin',
+            'resultados'        => $resultados,
+            'total'             => $pager ? $pager->getTotal('admin_productos') : 0,
+            'paginaActual'      => $pager ? $pager->getCurrentPage('admin_productos') : 1,
+            'totalPaginas'      => $pager ? $pager->getPageCount('admin_productos') : 1,
+            'baseParams'        => $paramsActuales,
+            'q'                 => $q,
+            'tipo'              => $tipo,
+            'filtros'           => [
+                'rubro' => $rubroSlug, 'subrubro' => $subSlug, 'marca' => $marcaId ?: '',
+                'fabrica' => $fabricaId ?: '', 'linea' => $lineaId ?: '', 'estado' => $estado, 'stock' => $stock,
+            ],
+            'rubros'            => $this->catModel->getRubros(),
+            'subrubrosOpciones' => $subrubrosDelRubro,
+            'marcasOpciones'    => $opciones['marcas'],
+            'fabricasOpciones'  => $opciones['fabricas'],
+            'lineasOpciones'    => $opciones['lineas'],
         ]);
     }
 
@@ -471,6 +548,24 @@ class Productos extends BaseController
         }
 
         return $lineaId;
+    }
+
+    /**
+     * Extrae el valor numérico de un precio_texto en formato argentino ($12.345,67 o $12.345)
+     * para poblar precio_numero, usado por el filtro de ordenamiento por precio del catálogo.
+     * Devuelve null si el texto no contiene un número (p. ej. "Consultar precio").
+     */
+    private function extraerPrecioNumerico(?string $texto): ?float
+    {
+        if (!$texto || !preg_match('/([0-9]{1,3}(?:\.[0-9]{3})*|[0-9]+)(,[0-9]+)?/', $texto, $m)) {
+            return null;
+        }
+
+        $entero  = str_replace('.', '', $m[1]);
+        $decimal = isset($m[2]) ? str_replace(',', '.', $m[2]) : '';
+        $valor   = $entero . $decimal;
+
+        return is_numeric($valor) ? (float) $valor : null;
     }
 
     private function calcularPrecioARS(float $precioDolar): ?string

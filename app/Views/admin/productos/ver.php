@@ -113,6 +113,16 @@
                 <span class="text-dark font-semibold"><?= esc($producto['modelo'] ?: '—') ?></span>
             </div>
             <div class="flex items-center justify-between px-5 py-3 text-[0.88rem]">
+                <span class="text-gray-400 font-semibold">Rubro</span>
+                <span class="text-dark font-semibold"><?= esc($rubroNombre ?: '—') ?></span>
+            </div>
+            <?php if (!empty($subrubroNombre)): ?>
+            <div class="flex items-center justify-between px-5 py-3 text-[0.88rem]">
+                <span class="text-gray-400 font-semibold">Subrubro</span>
+                <span class="text-dark font-semibold"><?= esc($subrubroNombre) ?></span>
+            </div>
+            <?php endif; ?>
+            <div class="flex items-center justify-between px-5 py-3 text-[0.88rem]">
                 <span class="text-gray-400 font-semibold">Categoría</span>
                 <span class="text-dark font-semibold"><?= esc($producto['categoria_nombre'] ?? '—') ?></span>
             </div>
@@ -185,6 +195,23 @@
                 </div>
                 <?php endforeach; ?>
             </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($producto['created_at']) || !empty($producto['updated_at'])): ?>
+        <div class="bg-white border border-gray-200 rounded-[14px] divide-y divide-gray-100 overflow-hidden">
+            <?php if (!empty($producto['created_at'])): ?>
+            <div class="flex items-center justify-between px-5 py-3 text-[0.86rem]">
+                <span class="text-gray-400 font-semibold">Fecha de creación</span>
+                <span class="text-dark font-semibold"><?= esc(date('d/m/Y H:i', strtotime($producto['created_at']))) ?></span>
+            </div>
+            <?php endif; ?>
+            <?php if (!empty($producto['updated_at'])): ?>
+            <div class="flex items-center justify-between px-5 py-3 text-[0.86rem]">
+                <span class="text-gray-400 font-semibold">Última actualización</span>
+                <span class="text-dark font-semibold"><?= esc(date('d/m/Y H:i', strtotime($producto['updated_at']))) ?></span>
+            </div>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
 
