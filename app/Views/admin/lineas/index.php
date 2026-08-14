@@ -2,8 +2,8 @@
 <?= $this->section('contenido') ?>
 
 <?php
-$badgeActivo   = 'bg-emerald-500/10 text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold';
-$badgeInactivo = 'bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold';
+$badgeActivo   = 'bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold';
+$badgeInactivo = 'bg-red-500/10 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold';
 $btnAccionBase = 'inline-flex items-center justify-center rounded-[7px] px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold transition-colors border';
 $btnSecondary  = $btnAccionBase . ' border-gray-300 text-gray-600 bg-white hover:bg-gray-100';
 $btnDanger     = $btnAccionBase . ' border-red-400 text-red-600 bg-white hover:bg-red-50';
@@ -32,28 +32,28 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
 </div>
 
 <?php if (!empty($lineas)): ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="overflow-x-auto">
         <table class="w-full text-[0.88rem] border-collapse">
             <thead>
                 <tr>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Slug</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Estado</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-[0.5px] border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Nombre</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Slug</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Estado</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($lineas as $linea): ?>
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="align-middle px-4 py-3"><strong class="text-dark"><?= esc($linea['nombre']) ?></strong></td>
-                    <td class="align-middle px-4 py-3"><code class="text-[0.78rem] text-gray-700"><?= esc($linea['slug']) ?></code></td>
-                    <td class="align-middle px-4 py-3">
+                <tr class="border-b border-gray-50 hover:bg-gray-50/60 transition-colors">
+                    <td class="align-middle px-5 py-4"><strong class="text-dark"><?= esc($linea['nombre']) ?></strong></td>
+                    <td class="align-middle px-5 py-4"><code class="text-[0.78rem] text-gray-700"><?= esc($linea['slug']) ?></code></td>
+                    <td class="align-middle px-5 py-4">
                         <span class="<?= $linea['activo'] ? $badgeActivo : $badgeInactivo ?>">
                             <?= $linea['activo'] ? 'Activa' : 'Inactiva' ?>
                         </span>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <div class="flex items-center gap-1">
                             <a href="<?= base_url("admin/fabricas/{$fabrica['id']}/lineas/{$linea['id']}/editar") ?>"
                                class="<?= $btnSecondary ?>">
@@ -76,7 +76,7 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
     </div>
 </div>
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="text-center py-16 px-8 text-gray-400">
         <i class="fas fa-stream text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">Esta fábrica todavía no tiene líneas</h5>

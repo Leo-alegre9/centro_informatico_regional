@@ -2,8 +2,8 @@
 <?= $this->section('contenido') ?>
 
 <?php
-$badgeActivo   = 'bg-emerald-500/10 text-emerald-600 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold';
-$badgeInactivo = 'bg-red-500/10 text-red-600 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold';
+$badgeActivo   = 'bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold';
+$badgeInactivo = 'bg-red-500/10 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold';
 $btnAccionBase = 'inline-flex items-center justify-center rounded-[6px] px-[0.6rem] py-[0.25rem] text-[0.75rem] font-semibold transition-colors border';
 $btnSecondary  = $btnAccionBase . ' border-gray-300 text-gray-600 bg-white hover:bg-gray-100';
 $btnWarning    = $btnAccionBase . ' border-amber-400 text-amber-600 bg-white hover:bg-amber-50';
@@ -32,7 +32,7 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
 <?php if (!empty($tree)): ?>
 
 <?php foreach ($tree as $rubro): ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden mb-5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]" id="rubro-<?= $rubro['id'] ?>">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden mb-5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]" id="rubro-<?= $rubro['id'] ?>">
 
     <!-- ── Cabecera del rubro (nivel 1) ── -->
     <div class="flex items-center gap-3 px-5 py-[0.9rem] bg-gray-50 border-b border-gray-200 cursor-pointer select-none hover:bg-gray-100"
@@ -41,7 +41,7 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
             <i class="<?= esc($rubro['icono'] ?: 'fas fa-folder') ?>"></i>
         </div>
         <div class="font-bold text-base text-dark flex-1"><?= esc($rubro['nombre']) ?></div>
-        <span class="bg-rojo/10 text-rojo px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold"><?= count($rubro['children']) ?> categorías</span>
+        <span class="bg-rojo/10 text-rojo px-2.5 py-1 rounded-full text-xs font-semibold"><?= count($rubro['children']) ?> categorías</span>
         <div class="flex gap-[0.4rem]" onclick="event.stopPropagation()">
             <span class="<?= $rubro['activo'] ? $badgeActivo : $badgeInactivo ?>">
                 <?= $rubro['activo'] ? 'Activo' : 'Inactivo' ?>
@@ -165,7 +165,7 @@ $btnRojo       = 'bg-rojo hover:bg-rojo-dark text-white px-5 py-[0.55rem] rounde
 <?php endforeach; ?>
 
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden mb-5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden mb-5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
     <div class="text-center py-16 px-8 text-gray-400">
         <i class="fas fa-sitemap text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">No hay categorías aún</h5>

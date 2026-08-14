@@ -17,21 +17,21 @@
 </div>
 
 <?php if (!empty($productos)): ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="overflow-x-auto">
         <table class="w-full text-[0.88rem] border-collapse">
             <thead>
                 <tr>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">#</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Código</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Categoría</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Precio</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Badge</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Activo</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Secciones</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left" title="Carrusel destacado (catálogo)"><i class="fas fa-star text-amber-500"></i></th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">#</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Código</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Categoría</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Nombre</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Precio</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Badge</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Activo</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Secciones</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left" title="Carrusel destacado (catálogo)"><i class="fas fa-star text-amber-500"></i></th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody id="tablaBody">
@@ -54,21 +54,21 @@
                         'carrusel_promo' => 'bg-pink-500/10 text-pink-700',
                     ];
                 ?>
-                <tr class="border-t border-gray-100 hover:bg-gray-50" data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge']) . ' ' . esc($p['codigo'] ?? '')) ?>">
-                    <td class="align-middle px-4 py-3 text-gray-400 text-[0.8rem]"><?= $i + 1 ?></td>
-                    <td class="align-middle px-4 py-3">
+                <tr class="border-t border-gray-50 hover:bg-gray-50/60 transition-colors" data-busqueda="<?= strtolower(esc($p['nombre']) . ' ' . esc($p['categoria_path'] ?? '') . ' ' . esc($p['badge']) . ' ' . esc($p['codigo'] ?? '')) ?>">
+                    <td class="align-middle px-5 py-4 text-gray-400 text-[0.8rem]"><?= $i + 1 ?></td>
+                    <td class="align-middle px-5 py-4">
                         <?php if (!empty($p['codigo'])): ?>
-                            <span class="bg-indigo-500/10 text-indigo-600 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-bold font-mono">
+                            <span class="bg-indigo-500/10 text-indigo-600 px-2.5 py-1 rounded-full text-xs font-bold font-mono">
                                 <?= esc($p['codigo']) ?>
                             </span>
                         <?php else: ?>
                             <span class="text-gray-300 text-[0.8rem]">—</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
-                        <span class="bg-gray-100 text-gray-500 px-[0.55rem] py-[0.15rem] rounded-full text-xs font-semibold"><?= esc($p['categoria_path'] ?? '—') ?></span>
+                    <td class="align-middle px-5 py-4">
+                        <span class="bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full text-xs font-semibold"><?= esc($p['categoria_path'] ?? '—') ?></span>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <div class="font-semibold text-dark"><?= esc($p['nombre']) ?></div>
                         <?php if (!empty($p['descripcion_corta'])): ?>
                         <div class="text-[0.78rem] text-gray-400 mt-0.5">
@@ -76,8 +76,8 @@
                         </div>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3 text-[0.85rem]"><?= esc($p['precio_texto']) ?></td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4 text-[0.85rem]"><?= esc($p['precio_texto']) ?></td>
+                    <td class="align-middle px-5 py-4">
                         <?php if ($p['badge']): ?>
                             <span class="bg-rojo/[0.08] text-rojo px-[0.5rem] py-[0.15rem] rounded-full text-xs font-semibold">
                                 <?= esc($p['badge']) ?>
@@ -86,14 +86,14 @@
                             <span class="text-gray-300">—</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <?php if ($p['activo']): ?>
-                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Sí</span>
+                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Sí</span>
                         <?php else: ?>
-                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>No</span>
+                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>No</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <?php if (!empty($p['secciones_slugs'])): ?>
                         <div class="flex flex-wrap gap-[3px] min-w-[120px]">
                             <?php foreach ($p['secciones_slugs'] as $slug): ?>
@@ -109,7 +109,7 @@
                             <span class="text-gray-300 text-[0.8rem]">Sin secciones</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <form method="POST" action="<?= base_url("admin/productos/{$p['id']}/destacado") ?>" class="inline">
                             <button type="submit" class="bg-transparent border-none cursor-pointer px-[0.4rem] py-[0.2rem] rounded-md text-base leading-none transition-colors hover:bg-amber-500/[0.12]"
                                     title="<?= $p['destacado'] ? 'Quitar de destacados' : 'Marcar como destacado' ?>">
@@ -121,7 +121,7 @@
                             </button>
                         </form>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <div class="flex gap-1 flex-wrap">
                             <a href="<?= base_url("admin/productos/{$p['id']}/ver") ?>"
                                class="inline-flex items-center border border-gray-300 text-gray-600 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-gray-100">
@@ -157,7 +157,7 @@
 </div>
 
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="text-center px-8 py-16 text-gray-400">
         <i class="fas fa-box-open text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">No hay productos cargados</h5>

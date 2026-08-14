@@ -16,12 +16,12 @@
         </a>
         <h2 class="text-[1.4rem] font-bold text-dark m-0"><i class="fas fa-eye mr-2 text-rojo text-[1.1rem]"></i><?= esc($producto['nombre']) ?></h2>
         <?php if ($producto['activo']): ?>
-            <span class="bg-emerald-500/10 text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Activo</span>
+            <span class="bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Activo</span>
         <?php else: ?>
-            <span class="bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>Inactivo</span>
+            <span class="bg-red-500/10 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>Inactivo</span>
         <?php endif; ?>
         <?php if ($producto['destacado']): ?>
-            <span class="bg-violet-500/10 text-violet-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-star mr-1"></i>Destacado</span>
+            <span class="bg-violet-500/10 text-violet-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-star mr-1"></i>Destacado</span>
         <?php endif; ?>
     </div>
     <a href="<?= base_url("admin/productos/{$producto['id']}/editar") ?>" class="bg-rojo text-white border-none px-5 py-[0.55rem] rounded-full text-sm font-semibold no-underline inline-flex items-center gap-[0.4rem] transition-colors hover:bg-rojo-dark hover:text-white">
@@ -32,7 +32,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
     <!-- ── GALERÍA ── -->
-    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+    <div class="bg-white border border-gray-100 rounded-2xl p-5">
         <div class="relative w-full aspect-square bg-gray-50 rounded-xl border border-gray-200 overflow-hidden flex items-center justify-center" id="pdMainWrap">
             <img id="pdMainImg"
                  src="<?= $imgPrincipal ? base_url(esc($imgPrincipal['ruta'])) : '' ?>"
@@ -93,7 +93,7 @@
             <div class="text-[0.78rem] text-amber-700/80 mt-1">Este valor nunca se muestra al cliente en el sitio público.</div>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-[14px] divide-y divide-gray-100 overflow-hidden">
+        <div class="bg-white border border-gray-100 rounded-2xl divide-y divide-gray-100 overflow-hidden">
             <div class="flex items-center justify-between px-5 py-3 text-[0.88rem]">
                 <span class="text-gray-400 font-semibold">Precio público</span>
                 <span class="text-dark font-semibold"><?= esc($producto['precio_texto'] ?: 'Consultar precio') ?></span>
@@ -173,7 +173,7 @@
         </div>
 
         <?php if (!empty($producto['descripcion_corta']) || !empty($producto['descripcion'])): ?>
-        <div class="bg-white border border-gray-200 rounded-[14px] px-5 py-4">
+        <div class="bg-white border border-gray-100 rounded-2xl px-5 py-4">
             <div class="text-[0.7rem] font-bold uppercase tracking-[1px] text-gray-400 mb-2">Descripción</div>
             <?php if (!empty($producto['descripcion_corta'])): ?>
                 <p class="text-[0.88rem] text-gray-700 font-semibold mb-2"><?= esc($producto['descripcion_corta']) ?></p>
@@ -185,7 +185,7 @@
         <?php endif; ?>
 
         <?php if (!empty($caracteristicas)): ?>
-        <div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden">
+        <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden">
             <div class="text-[0.7rem] font-bold uppercase tracking-[1px] text-gray-400 px-5 pt-4 mb-1">Características</div>
             <div class="divide-y divide-gray-100">
                 <?php foreach ($caracteristicas as $car): ?>
@@ -199,7 +199,7 @@
         <?php endif; ?>
 
         <?php if (!empty($producto['created_at']) || !empty($producto['updated_at'])): ?>
-        <div class="bg-white border border-gray-200 rounded-[14px] divide-y divide-gray-100 overflow-hidden">
+        <div class="bg-white border border-gray-100 rounded-2xl divide-y divide-gray-100 overflow-hidden">
             <?php if (!empty($producto['created_at'])): ?>
             <div class="flex items-center justify-between px-5 py-3 text-[0.86rem]">
                 <span class="text-gray-400 font-semibold">Fecha de creación</span>

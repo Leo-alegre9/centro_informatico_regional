@@ -17,18 +17,12 @@
 <aside id="adminSidebar"
        class="fixed top-0 left-0 h-screen w-[260px] bg-dark flex flex-col shrink-0 z-[1040]
               -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
-    <div class="px-5 pt-6 pb-5 border-b border-white/[0.07] flex items-center">
-        <div class="w-[42px] h-[42px] inline-flex items-center justify-center mr-2.5 shrink-0">
-            <img src="<?= base_url('assets/img/CIR_sinfondo.png') ?>" alt="CIR" class="w-full h-full object-contain">
-        </div>
-        <div>
-            <div class="text-white text-[0.95rem] font-bold leading-tight">CIR Admin</div>
-            <span class="text-white/40 text-[0.72rem] block">Centro Informático Regional</span>
-        </div>
+    <div class="px-6 pt-7 pb-6 border-b border-white/[0.07] flex items-center justify-center">
+        <img src="<?= base_url('assets/img/isologo_cir.png') ?>" alt="Centro Informático Regional" class="w-full max-w-[140px] sm:max-w-[160px] h-auto object-contain mx-auto">
     </div>
 
-    <nav class="flex-1 overflow-y-auto px-3 py-4">
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Principal</div>
+    <nav class="flex-1 overflow-y-auto px-3 py-5">
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-2 pb-1.5 mt-1">Principal</div>
 
         <?php
         $currentUrl   = current_url();
@@ -43,11 +37,12 @@
         $isStock          = strpos($currentUrl, 'admin/stock') !== false;
         $isConfiguracion  = strpos($currentUrl, 'admin/configuracion') !== false;
         $isNotas          = strpos($currentUrl, 'admin/notas') !== false;
+        $isPresupuestos   = strpos($currentUrl, 'admin/presupuestos') !== false;
         $unreadCount      = (new \App\Models\ConsultaServicioModel())->getUnreadCount()
                            + (new \App\Models\ContactoMensajeModel())->countNoLeidos();
 
-        $navLink = 'flex items-center px-[0.85rem] py-[0.62rem] rounded-[9px] text-white/65 no-underline text-[0.9rem] font-medium mb-0.5 transition-colors hover:bg-white/[0.07] hover:text-white';
-        $navLinkActivo = 'flex items-center px-[0.85rem] py-[0.62rem] rounded-[9px] bg-rojo/15 text-white font-semibold no-underline text-[0.9rem] mb-0.5';
+        $navLink = 'flex items-center px-[0.85rem] py-[0.68rem] rounded-[9px] text-white/65 no-underline text-[0.9rem] font-medium mb-1 transition-colors hover:bg-white/[0.07] hover:text-white';
+        $navLinkActivo = 'flex items-center px-[0.85rem] py-[0.68rem] rounded-[9px] bg-rojo/15 text-white font-semibold no-underline text-[0.9rem] mb-1';
         $navIcon = 'w-5 mr-[0.7rem] text-center text-[0.95rem]';
         ?>
 
@@ -55,7 +50,13 @@
             <i class="fas fa-tachometer-alt <?= $navIcon ?> <?= $isDashboard ? 'text-rojo' : '' ?>"></i> Dashboard
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Catálogo</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Comercial</div>
+
+        <a href="<?= base_url('admin/presupuestos') ?>" class="<?= $isPresupuestos ? $navLinkActivo : $navLink ?>">
+            <i class="fas fa-file-invoice-dollar <?= $navIcon ?> <?= $isPresupuestos ? 'text-rojo' : '' ?>"></i> Presupuestos
+        </a>
+
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Catálogo</div>
 
         <a href="<?= base_url('admin/productos') ?>" class="<?= $isProductos ? $navLinkActivo : $navLink ?>">
             <i class="fas fa-box <?= $navIcon ?> <?= $isProductos ? 'text-rojo' : '' ?>"></i> Productos
@@ -77,7 +78,7 @@
             <i class="fas fa-industry <?= $navIcon ?> <?= $isFabricas ? 'text-rojo' : '' ?>"></i> Fábricas
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Inventario</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Inventario</div>
 
         <a href="<?= base_url('admin/inventario') ?>" class="<?= $isInventario ? $navLinkActivo : $navLink ?>">
             <i class="fas fa-warehouse <?= $navIcon ?> <?= $isInventario ? 'text-rojo' : '' ?>"></i> Ubicaciones
@@ -87,7 +88,7 @@
             <i class="fas fa-boxes <?= $navIcon ?> <?= $isStock ? 'text-rojo' : '' ?>"></i> Stock
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Atención al cliente</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Atención al cliente</div>
 
         <a href="<?= base_url('admin/consultas') ?>" class="<?= $isConsultas ? $navLinkActivo : $navLink ?> justify-between">
             <span><i class="fas fa-headset <?= $navIcon ?> <?= $isConsultas ? 'text-rojo' : '' ?>"></i> Consultas</span>
@@ -98,27 +99,27 @@
             <?php endif; ?>
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Notas</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Notas</div>
 
         <a href="<?= base_url('admin/notas') ?>" class="<?= $isNotas ? $navLinkActivo : $navLink ?>">
             <i class="fas fa-sticky-note <?= $navIcon ?> <?= $isNotas ? 'text-rojo' : '' ?>"></i> Notas del equipo
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Configuración</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Configuración</div>
 
         <a href="<?= base_url('admin/configuracion') ?>" class="<?= $isConfiguracion ? $navLinkActivo : $navLink ?>">
             <i class="fas fa-sliders <?= $navIcon ?> <?= $isConfiguracion ? 'text-rojo' : '' ?>"></i> Precios y cotización
         </a>
 
-        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-3 pb-1 mt-2">Sitio</div>
+        <div class="text-white/30 text-[0.68rem] font-bold tracking-wider uppercase px-2 pt-4 pb-1.5 mt-2">Sitio</div>
 
-        <a href="<?= base_url() ?>" target="_blank" class="flex items-center px-[0.85rem] py-[0.62rem] rounded-[9px] text-white/50 no-underline text-[0.85rem] font-medium mb-0.5 transition-colors hover:text-white/80">
+        <a href="<?= base_url() ?>" target="_blank" class="flex items-center px-[0.85rem] py-[0.68rem] rounded-[9px] text-white/50 no-underline text-[0.85rem] font-medium mb-1 transition-colors hover:text-white/80">
             <i class="fas fa-external-link-alt <?= $navIcon ?>"></i> Ver sitio
         </a>
     </nav>
 
-    <div class="px-3 py-4 border-t border-white/[0.07]">
-        <div class="flex items-center px-[0.85rem] py-[0.6rem] rounded-[9px] bg-white/5 mb-2">
+    <div class="px-3 py-5 border-t border-white/[0.07]">
+        <div class="flex items-center px-[0.85rem] py-[0.7rem] rounded-[10px] bg-white/5 mb-2.5">
             <div class="w-9 h-9 bg-rojo rounded-full flex items-center justify-center text-[0.9rem] font-bold text-white shrink-0 mr-[0.65rem]">
                 <?= strtoupper(substr(session()->get('admin_nombre') ?? 'A', 0, 1)) ?>
             </div>
@@ -128,7 +129,7 @@
             </div>
         </div>
         <a href="<?= base_url('admin/logout') ?>"
-           class="flex items-center px-[0.85rem] py-2 text-red-400/80 no-underline text-[0.85rem] rounded-[9px] transition-colors hover:bg-rojo/[0.12] hover:text-[#ff6b6b]">
+           class="flex items-center px-[0.85rem] py-2.5 text-red-400/80 no-underline text-[0.85rem] rounded-[9px] transition-colors hover:bg-rojo/[0.12] hover:text-[#ff6b6b]">
             <i class="fas fa-sign-out-alt mr-[0.6rem]"></i> Cerrar sesión
         </a>
     </div>
@@ -137,21 +138,26 @@
 <!-- CONTENIDO PRINCIPAL -->
 <div id="mainContent" class="flex-1 flex flex-col min-w-0 ml-0 lg:ml-[260px] transition-[margin-left] duration-300 ease-in-out">
     <!-- TOPBAR -->
-    <header class="bg-white border-b border-gray-200 px-6 py-[0.85rem] flex items-center justify-between sticky top-0 z-[1030]">
+    <header class="bg-white border-b border-gray-100 px-7 py-4 flex items-center justify-between sticky top-0 z-[1030]">
         <div class="flex items-center gap-4">
             <button class="block lg:hidden bg-transparent border-0 cursor-pointer p-[0.3rem] text-gray-700 text-xl leading-none" id="sidebarToggle" title="Menú">
                 <i class="fas fa-bars"></i>
             </button>
             <h1 class="text-base font-semibold text-gray-900 m-0"><?= esc($titulo ?? 'Panel Admin') ?></h1>
         </div>
-        <div class="flex items-center gap-3 text-gray-500 text-[0.88rem]">
-            <span><i class="fas fa-user-circle mr-1"></i><?= esc(session()->get('admin_nombre') ?? 'Admin') ?></span>
-            <span class="bg-rojo/[0.08] text-rojo px-[0.7rem] py-1 rounded-full text-[0.82rem] font-semibold">Admin</span>
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-rojo/10 text-rojo flex items-center justify-center text-[0.85rem] font-bold shrink-0">
+                <?= strtoupper(substr(session()->get('admin_nombre') ?? 'A', 0, 1)) ?>
+            </div>
+            <div class="leading-tight hidden sm:block">
+                <div class="text-[0.85rem] font-semibold text-dark"><?= esc(session()->get('admin_nombre') ?? 'Admin') ?></div>
+                <div class="text-[0.72rem] text-gray-400">Administrador</div>
+            </div>
         </div>
     </header>
 
     <!-- MAIN -->
-    <main class="p-7 flex-1">
+    <main class="p-6 sm:p-8 flex-1">
         <?= $this->renderSection('contenido') ?>
     </main>
 </div>

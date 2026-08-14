@@ -32,7 +32,7 @@ $inputCls = 'border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6re
 
     <!-- ── Columna izquierda: formulario ── -->
     <div class="w-full lg:w-5/12">
-        <div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+        <div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
             <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100">
                 <i class="fas fa-dollar-sign mr-1"></i>Cotización y ganancia
             </div>
@@ -114,7 +114,7 @@ $inputCls = 'border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py-[0.6re
 
     <!-- ── Columna derecha: tabla de productos afectados ── -->
     <div class="w-full lg:w-7/12">
-        <div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+        <div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
             <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100">
                 <i class="fas fa-box mr-1"></i>
                 Productos con precio en dólares

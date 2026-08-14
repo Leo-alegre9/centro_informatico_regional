@@ -23,7 +23,7 @@ $inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py
 </div>
 <?php endif; ?>
 
-<div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[620px]">
+<div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[620px]">
     <form action="<?= esc($accion) ?>" method="POST">
         <?= csrf_field() ?>
 

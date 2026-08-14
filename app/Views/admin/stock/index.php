@@ -20,7 +20,7 @@
 <?php endif; ?>
 
 <!-- Buscador -->
-<div class="bg-white border border-gray-200 rounded-[14px] px-8 py-7 shadow-[0_1px_4px_rgba(0,0,0,0.05)] mb-6">
+<div class="bg-white border border-gray-100 rounded-2xl px-8 py-7 shadow-[0_1px_4px_rgba(0,0,0,0.05)] mb-6">
     <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4 pb-2 border-b border-gray-100"><i class="fas fa-search mr-1"></i>Buscar producto</div>
     <form method="GET" action="<?= base_url('admin/stock') ?>">
         <div class="flex gap-[0.6rem]">
@@ -49,7 +49,7 @@
 
 <!-- Resultados -->
 <?php if ($q === ''): ?>
-    <div class="bg-white border border-gray-200 rounded-[14px] shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
         <div class="text-center py-12 px-4 text-gray-400">
             <i class="fas fa-search text-[2.5rem] block mb-3 text-gray-300"></i>
             <p class="text-[0.9rem] m-0">Ingresá un término de búsqueda para consultar el stock de un producto.</p>
@@ -57,7 +57,7 @@
     </div>
 
 <?php elseif (empty($productos)): ?>
-    <div class="bg-white border border-gray-200 rounded-[14px] shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
         <div class="text-center py-12 px-4 text-gray-400">
             <i class="fas fa-box-open text-[2.5rem] block mb-3 text-gray-300"></i>
             <p class="text-[0.9rem] m-0">No se encontraron productos para <strong class="text-dark">"<?= esc($q) ?>"</strong>.</p>
@@ -65,7 +65,7 @@
     </div>
 
 <?php else: ?>
-    <div class="bg-white border border-gray-200 rounded-[14px] shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.05)] overflow-hidden">
         <div class="flex items-center justify-between px-[1.1rem] py-[0.9rem] border-b border-gray-200 bg-gray-50">
             <span class="text-[0.82rem] font-semibold text-gray-500">Resultados para <strong class="text-dark">"<?= esc($q) ?>"</strong></span>
             <span class="bg-rojo/10 text-rojo text-xs font-bold px-2 py-0.5 rounded-full"><?= count($productos) ?> producto<?= count($productos) !== 1 ? 's' : '' ?></span>

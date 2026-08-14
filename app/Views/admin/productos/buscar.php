@@ -20,7 +20,7 @@
 ?>
 
 <!-- Formulario de búsqueda -->
-<div class="bg-white border border-gray-200 rounded-[14px] px-6 pt-6 pb-5 mb-6 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl px-6 pt-6 pb-5 mb-6 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <form method="GET" action="<?= base_url('admin/productos/buscar') ?>" id="formBuscar">
         <input type="hidden" name="tipo" id="tipoHidden" value="<?= esc($tipo) ?>">
 
@@ -170,48 +170,48 @@
 </div>
 
 <?php if (!empty($resultados)): ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="overflow-x-auto">
         <table class="w-full text-[0.88rem] border-collapse">
             <thead>
                 <tr>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Código</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Nombre del producto</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Rubro / Subrubro</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Marca</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Fábrica / Línea</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Precio</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Stock</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Estado</th>
-                    <th class="bg-gray-50 text-gray-700 font-bold text-[0.78rem] uppercase tracking-wide border-b-2 border-gray-200 px-4 py-[0.85rem] whitespace-nowrap text-left">Acciones</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Código</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Nombre del producto</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Rubro / Subrubro</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Marca</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Fábrica / Línea</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Precio</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Stock</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Estado</th>
+                    <th class="bg-gray-50/70 text-gray-500 font-bold text-[0.72rem] uppercase tracking-wider border-b border-gray-100 px-5 py-3.5 whitespace-nowrap text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($resultados as $p): ?>
-                <tr class="border-t border-gray-100 hover:bg-gray-50">
-                    <td class="align-middle px-4 py-3">
+                <tr class="border-t border-gray-50 hover:bg-gray-50/60 transition-colors">
+                    <td class="align-middle px-5 py-4">
                         <?php if (!empty($p['codigo'])): ?>
-                            <span class="bg-indigo-500/10 text-indigo-600 px-[0.55rem] py-[0.15rem] rounded-full text-[0.78rem] font-bold font-mono"><?= esc($p['codigo']) ?></span>
+                            <span class="bg-indigo-500/10 text-indigo-600 px-2.5 py-1 rounded-full text-[0.78rem] font-bold font-mono"><?= esc($p['codigo']) ?></span>
                         <?php else: ?>
                             <span class="text-gray-300 text-[0.8rem]">—</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <div class="font-semibold text-dark"><?= esc($p['nombre']) ?></div>
                         <?php if (!empty($p['descripcion_corta'])): ?>
                             <div class="text-[0.78rem] text-gray-400 mt-0.5"><?= esc(mb_substr($p['descripcion_corta'], 0, 70)) ?>...</div>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3 text-[0.85rem]">
+                    <td class="align-middle px-5 py-4 text-[0.85rem]">
                         <div><?= esc($p['rubro_nombre'] ?: 'Sin asignar') ?></div>
                         <?php if (!empty($p['subrubro_nombre'])): ?>
                             <div class="text-gray-400 text-[0.78rem]"><?= esc($p['subrubro_nombre']) ?></div>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3 text-[0.85rem]">
+                    <td class="align-middle px-5 py-4 text-[0.85rem]">
                         <?= !empty($p['marca_nombre']) ? esc($p['marca_nombre']) : '<span class="text-gray-300">Sin asignar</span>' ?>
                     </td>
-                    <td class="align-middle px-4 py-3 text-[0.85rem]">
+                    <td class="align-middle px-5 py-4 text-[0.85rem]">
                         <?php if (!empty($p['fabrica_nombre'])): ?>
                             <div class="font-semibold"><?= esc($p['fabrica_nombre']) ?></div>
                         <?php endif; ?>
@@ -222,20 +222,20 @@
                             <span class="text-gray-300">Sin asignar</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3 text-[0.85rem]"><?= esc($p['precio_texto'] ?? '—') ?></td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4 text-[0.85rem]"><?= esc($p['precio_texto'] ?? '—') ?></td>
+                    <td class="align-middle px-5 py-4">
                         <span class="font-bold <?= (int)($p['stock'] ?? 0) > 0 ? 'text-emerald-600' : 'text-gray-400' ?>">
                             <?= (int)($p['stock'] ?? 0) ?>
                         </span>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <?php if ($p['activo']): ?>
-                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Activo</span>
+                            <span class="inline-flex items-center bg-emerald-500/[0.12] text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-check mr-1"></i>Activo</span>
                         <?php else: ?>
-                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-[0.6rem] py-[0.2rem] rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>Inactivo</span>
+                            <span class="inline-flex items-center bg-red-500/10 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold"><i class="fas fa-times mr-1"></i>Inactivo</span>
                         <?php endif; ?>
                     </td>
-                    <td class="align-middle px-4 py-3">
+                    <td class="align-middle px-5 py-4">
                         <div class="flex gap-1 flex-wrap">
                             <a href="<?= base_url("admin/productos/{$p['id']}/ver") ?>"
                                class="inline-flex items-center border border-gray-300 text-gray-600 rounded-md px-[0.7rem] py-[0.3rem] text-[0.78rem] font-semibold no-underline transition-colors hover:bg-gray-100">
@@ -257,7 +257,7 @@
 <?= $this->include('componentes/paginador') ?>
 
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="text-center px-8 py-16 text-gray-400">
         <i class="fas fa-search text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">Sin resultados</h5>
@@ -267,7 +267,7 @@
 <?php endif; ?>
 
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="text-center px-8 py-16 text-gray-400">
         <i class="fas fa-search text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">Ingresá un término o elegí un filtro para buscar</h5>

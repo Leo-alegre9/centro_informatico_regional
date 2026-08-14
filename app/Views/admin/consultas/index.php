@@ -3,7 +3,7 @@
 
 <!-- Stats -->
 <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
-    <div class="bg-white border border-gray-200 rounded-[14px] px-6 py-5 flex items-center gap-4">
+    <div class="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-blue-500/10 text-blue-500">
             <i class="fas fa-inbox"></i>
         </div>
@@ -12,7 +12,7 @@
             <div class="text-[0.78rem] text-gray-500 font-medium mt-0.5">Total consultas</div>
         </div>
     </div>
-    <div class="bg-white border border-gray-200 rounded-[14px] px-6 py-5 flex items-center gap-4">
+    <div class="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-orange-500/10 text-orange-500">
             <i class="fas fa-bell"></i>
         </div>
@@ -21,7 +21,7 @@
             <div class="text-[0.78rem] text-gray-500 font-medium mt-0.5">Sin leer</div>
         </div>
     </div>
-    <div class="bg-white border border-gray-200 rounded-[14px] px-6 py-5 flex items-center gap-4">
+    <div class="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-emerald-500/10 text-emerald-500">
             <i class="fas fa-calendar-day"></i>
         </div>
@@ -30,7 +30,7 @@
             <div class="text-[0.78rem] text-gray-500 font-medium mt-0.5">Hoy</div>
         </div>
     </div>
-    <div class="bg-white border border-gray-200 rounded-[14px] px-6 py-5 flex items-center gap-4">
+    <div class="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-rojo/10 text-rojo">
             <i class="fas fa-calendar-week"></i>
         </div>
@@ -85,7 +85,7 @@
 </form>
 
 <!-- Tabla -->
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden">
     <?php if (empty($consultas)): ?>
     <div class="text-center py-14 px-4 text-gray-400">
         <i class="fas fa-inbox text-[2.8rem] mb-4 block text-gray-300"></i>

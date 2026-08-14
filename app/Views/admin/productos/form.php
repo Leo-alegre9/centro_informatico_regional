@@ -19,7 +19,7 @@
 </div>
 <?php endif; ?>
 
-<div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[820px]">
+<div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[820px]">
     <form action="<?= esc($accion) ?>" method="POST" enctype="multipart/form-data">
 
         <!-- Campo oculto con el ID de la categoría seleccionada -->

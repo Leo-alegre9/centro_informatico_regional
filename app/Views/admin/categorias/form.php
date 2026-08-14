@@ -32,7 +32,7 @@ $nivelActual     = old('nivel', $categoria['nivel'] ?? '');
 $parentIdActual  = old('parent_id', $categoria['parent_id'] ?? '');
 ?>
 
-<div class="bg-white border border-gray-200 rounded-[14px] p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[700px]">
+<div class="bg-white border border-gray-100 rounded-2xl p-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)] max-w-[700px]">
     <form action="<?= esc($accion) ?>" method="POST">
         <?= csrf_field() ?>
 

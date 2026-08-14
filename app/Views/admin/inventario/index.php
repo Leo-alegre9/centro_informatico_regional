@@ -11,7 +11,7 @@ $inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py
 </div>
 
 <!-- Formulario de búsqueda -->
-<div class="bg-white border border-gray-200 rounded-[14px] p-7 shadow-[0_1px_4px_rgba(0,0,0,0.05)] mb-7">
+<div class="bg-white border border-gray-100 rounded-2xl p-7 shadow-[0_1px_4px_rgba(0,0,0,0.05)] mb-7">
     <form method="GET" action="<?= base_url('admin/inventario') ?>">
         <div class="flex flex-wrap gap-4 items-end">
             <div class="w-full md:w-1/3">
@@ -51,7 +51,7 @@ $inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py
 </div>
 
 <!-- Resultados -->
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <?php if (!$buscando): ?>
         <div class="text-center py-16 px-8">
             <i class="fas fa-warehouse text-5xl text-gray-200 mb-4 block"></i>
@@ -125,7 +125,7 @@ $inputCls = 'w-full border-[1.5px] border-gray-200 rounded-[9px] px-[0.95rem] py
                             </span>
                         </td>
                         <td class="px-[1.2rem] py-[0.85rem] align-middle">
-                            <span class="inline-flex items-center gap-1 px-[0.6rem] py-[0.2rem] rounded-full text-[0.73rem] font-bold <?= $p['activo'] ? 'bg-emerald-500/10 text-emerald-800' : 'bg-gray-400/15 text-gray-500' ?>">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.73rem] font-bold <?= $p['activo'] ? 'bg-emerald-500/10 text-emerald-800' : 'bg-gray-400/15 text-gray-500' ?>">
                                 <i class="fas fa-circle text-[0.5rem]"></i>
                                 <?= $p['activo'] ? 'Activo' : 'Inactivo' ?>
                             </span>

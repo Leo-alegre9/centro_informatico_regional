@@ -82,7 +82,24 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     // Configuración de precios
     $routes->get('configuracion',                      'Admin\Configuracion::index');
     $routes->post('configuracion/guardar',             'Admin\Configuracion::guardar');
+
+    // Presupuestos
+    $routes->get('presupuestos',                        'Admin\Presupuestos::index');
+    $routes->get('presupuestos/buscar-productos',       'Admin\Presupuestos::buscarProductosJson');
+    $routes->get('presupuestos/crear',                  'Admin\Presupuestos::crear');
+    $routes->post('presupuestos/crear',                 'Admin\Presupuestos::guardar');
+    $routes->get('presupuestos/(:num)/editar',          'Admin\Presupuestos::editar/$1');
+    $routes->post('presupuestos/(:num)/editar',         'Admin\Presupuestos::actualizar/$1');
+    $routes->get('presupuestos/(:num)/ver',             'Admin\Presupuestos::ver/$1');
+    $routes->get('presupuestos/(:num)/pdf',             'Admin\Presupuestos::pdf/$1');
+    $routes->post('presupuestos/(:num)/estado',         'Admin\Presupuestos::cambiarEstado/$1');
+    $routes->post('presupuestos/(:num)/eliminar',       'Admin\Presupuestos::eliminar/$1');
 });
+
+// Presupuesto — página pública, detalle de producto y PDF (solo con número + token válidos, sin login)
+$routes->get('presupuesto/(:segment)/(:segment)/pdf', 'PresupuestoPublico::pdf/$1/$2');
+$routes->get('presupuesto/(:segment)/(:segment)/producto/(:num)', 'PresupuestoPublico::producto/$1/$2/$3');
+$routes->get('presupuesto/(:segment)/(:segment)', 'PresupuestoPublico::ver/$1/$2');
 
 $routes->get('promociones', 'Promociones::index');
 

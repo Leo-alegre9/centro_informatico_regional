@@ -551,3 +551,184 @@ INSERT INTO `migrations` (`version`, `class`, `group`, `namespace`, `time`, `bat
 - `app/Views/contenido/catalogo_grid.php`
 - `app/Views/admin/productos/buscar.php`
 - `app/Views/admin/productos/ver.php`
+
+---
+
+# Cambios - 13-08-2026
+
+Módulo de presupuestos/listados (público + admin), PDF de presupuesto y actualización de logos en el sitio.
+
+## Migraciones de base de datos (ejecutar `php spark migrate` en el servidor)
+
+- `app/Database/Migrations/2026-08-13-000001_CreatePresupuestosTable.php` — crea las tablas `presupuestos` y `presupuesto_detalles`.
+- `app/Database/Migrations/2026-08-13-000002_AddTipoToPresupuestos.php` — agrega columna `tipo` ENUM('presupuesto','listado') a `presupuestos`, después de `token`.
+
+## Archivos nuevos
+
+### Controladores
+- `app/Controllers/Admin/Presupuestos.php`
+- `app/Controllers/PresupuestoPublico.php`
+
+### Modelos
+- `app/Models/PresupuestoModel.php`
+- `app/Models/PresupuestoDetalleModel.php`
+
+### Librerías / helpers
+- `app/Libraries/PresupuestoPdf.php` — arma el PDF del presupuesto (Dompdf) compartido entre el panel admin y la vista pública.
+- `app/Helpers/whatsapp_helper.php`
+
+### Vistas — administración
+- `app/Views/admin/presupuestos/index.php`
+- `app/Views/admin/presupuestos/form.php`
+- `app/Views/admin/presupuestos/ver.php`
+- `app/Views/admin/presupuestos/pdf.php`
+
+### Vistas — públicas / componentes
+- `app/Views/presupuesto_publico.php`
+- `app/Views/presupuesto_producto.php`
+- `app/Views/componentes/base_presupuesto.php`
+- `app/Views/componentes/presupuesto_footer.php`
+
+### Assets / imágenes
+- `public/assets/img/logo_cir_nuevo.png` — logo nuevo sin fondo blanco, usado en el header/footer del presupuesto público, el detalle de producto del presupuesto y el PDF.
+- `public/assets/img/isologo_cir.png` — isologo (solo ícono, sin fondo) usado en el sidebar del panel admin.
+
+## Archivos modificados
+
+- `app/Config/Routes.php` — rutas del módulo de presupuestos (admin + público).
+- `app/Views/admin/layout.php` — logo del sidebar reemplazado por `isologo_cir.png`, tamaño responsivo (`max-w-[140px] sm:max-w-[160px]`).
+- `app/Views/admin/categorias/form.php`
+- `app/Views/admin/categorias/index.php`
+- `app/Views/admin/configuracion/index.php`
+- `app/Views/admin/consultas/index.php`
+- `app/Views/admin/dashboard.php`
+- `app/Views/admin/fabricas/form.php`
+- `app/Views/admin/fabricas/index.php`
+- `app/Views/admin/inventario/index.php`
+- `app/Views/admin/lineas/form.php`
+- `app/Views/admin/lineas/index.php`
+- `app/Views/admin/login.php`
+- `app/Views/admin/marcas/form.php`
+- `app/Views/admin/marcas/index.php`
+- `app/Views/admin/notas/index.php`
+- `app/Views/admin/productos/buscar.php`
+- `app/Views/admin/productos/form.php`
+- `app/Views/admin/productos/index.php`
+- `app/Views/admin/productos/ver.php`
+- `app/Views/admin/stock/index.php`
+- `composer.json` — dependencia agregada (`dompdf/dompdf`, usada por `PresupuestoPdf.php`).
+- `composer.lock`
+
+No hubo archivos eliminados en esta tanda.
+
+## SQL para phpMyAdmin
+
+Pegá y ejecutá los siguientes bloques en la pestaña **SQL** de phpMyAdmin, en este orden (la tabla `presupuestos` tiene que existir antes de poder agregarle la columna `tipo`, y antes de crear la FK de `presupuesto_detalles`).
+
+```sql
+-- Migración 2026-08-13-000001_CreatePresupuestosTable
+CREATE TABLE `presupuestos` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `numero` VARCHAR(20) NULL DEFAULT NULL,
+  `token` VARCHAR(40) NULL DEFAULT NULL,
+  `admin_user_id` INT UNSIGNED NULL DEFAULT NULL,
+  `cliente_nombre` VARCHAR(150) NOT NULL,
+  `cliente_telefono` VARCHAR(30) NOT NULL,
+  `cliente_email` VARCHAR(150) NULL DEFAULT NULL,
+  `cliente_documento` VARCHAR(30) NULL DEFAULT NULL,
+  `fecha` DATE NOT NULL,
+  `valido_hasta` DATE NULL DEFAULT NULL,
+  `subtotal` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `descuento_tipo` ENUM('monto','porcentaje') NOT NULL DEFAULT 'monto',
+  `descuento_valor` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `descuento_monto` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `total` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `observaciones` TEXT NULL DEFAULT NULL,
+  `condiciones` TEXT NULL DEFAULT NULL,
+  `estado` ENUM('borrador','generado','enviado','aceptado','rechazado') NOT NULL DEFAULT 'borrador',
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `presupuestos_numero` (`numero`),
+  UNIQUE KEY `presupuestos_token` (`token`),
+  KEY `presupuestos_admin_user_id` (`admin_user_id`),
+  KEY `presupuestos_estado` (`estado`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `presupuestos`
+  ADD CONSTRAINT `presupuestos_admin_user_id_foreign`
+  FOREIGN KEY (`admin_user_id`) REFERENCES `admin_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+CREATE TABLE `presupuesto_detalles` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `presupuesto_id` INT UNSIGNED NOT NULL,
+  `producto_id` INT UNSIGNED NULL DEFAULT NULL,
+  `producto_nombre` VARCHAR(200) NOT NULL,
+  `producto_codigo` VARCHAR(50) NULL DEFAULT NULL,
+  `precio_unitario` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `cantidad` INT UNSIGNED NOT NULL DEFAULT 1,
+  `subtotal` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `orden` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `presupuesto_detalles_presupuesto_id` (`presupuesto_id`),
+  KEY `presupuesto_detalles_producto_id` (`producto_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `presupuesto_detalles`
+  ADD CONSTRAINT `presupuesto_detalles_presupuesto_id_foreign`
+  FOREIGN KEY (`presupuesto_id`) REFERENCES `presupuestos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `presupuesto_detalles`
+  ADD CONSTRAINT `presupuesto_detalles_producto_id_foreign`
+  FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- Migración 2026-08-13-000002_AddTipoToPresupuestos
+ALTER TABLE `presupuestos`
+  ADD COLUMN `tipo` ENUM('presupuesto','listado') NOT NULL DEFAULT 'presupuesto' AFTER `token`;
+```
+
+Después, insertá el historial de las 2 migraciones (esto solo le dice a CodeIgniter "esto ya se aplicó"; no toca ninguna tabla de datos):
+
+```sql
+SET @next_batch = (SELECT COALESCE(MAX(batch), 0) + 1 FROM `migrations`);
+
+INSERT INTO `migrations` (`version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+('2026-08-13-000001', 'App\\Database\\Migrations\\CreatePresupuestosTable', 'default', 'App', UNIX_TIMESTAMP(), @next_batch),
+('2026-08-13-000002', 'App\\Database\\Migrations\\AddTipoToPresupuestos', 'default', 'App', UNIX_TIMESTAMP(), @next_batch);
+```
+
+Verificación:
+
+```sql
+SELECT * FROM `migrations` ORDER BY `id` DESC LIMIT 5;
+DESCRIBE `presupuestos`;
+DESCRIBE `presupuesto_detalles`;
+```
+
+Confirmá que `presupuestos` tenga la columna `tipo` y que ambas tablas existan con sus FKs (`presupuestos.admin_user_id` → `admin_users.id`, `presupuesto_detalles.presupuesto_id` → `presupuestos.id`, `presupuesto_detalles.producto_id` → `productos.id`).
+
+---
+
+# Cambios - 14-08-2026
+
+Fix del PDF de presupuesto (`Class "Dompdf\Options" not found`) y precarga del precio interno del producto al agregarlo a un presupuesto/listado.
+
+## ⚠️ Atención especial — esto es lo que corrige el error del PDF
+
+El error `Class "Dompdf\Options" not found` **no es un bug de código**: `dompdf/dompdf` se agregó a `composer.json`/`composer.lock` el 13-08-2026 (ver sección anterior), pero la carpeta `vendor/` está en `.gitignore` (no se versiona) y en Hostinger no se corrió `composer install` después de ese cambio, así que el paquete nunca llegó al servidor.
+
+**Para solucionarlo en producción**, sin necesidad de tocar código:
+
+- **Si tenés acceso SSH en Hostinger:** corré `composer install --no-dev` (o `composer update dompdf/dompdf`) parado en la raíz del proyecto en el servidor.
+- **Si no tenés SSH:** subí por FTP/administrador de archivos las carpetas nuevas `vendor/dompdf/`, `vendor/php-font-lib/` y `vendor/php-svg-lib/` (están en tu entorno local, recién instaladas), y sobrescribí `vendor/autoload.php` junto con todo `vendor/composer/` por las versiones locales actuales — son los archivos que Composer regeneró al instalar la dependencia.
+
+Ninguno de estos archivos forma parte de este listado de "archivos nuevos/modificados" porque `vendor/` no se versiona en git.
+
+## Archivos modificados
+
+- `app/Controllers/Admin/Presupuestos.php` — el buscador de productos del presupuesto (`buscarProductosJson`) ahora devuelve también `precio_interno`, y `precioInicial()` lo prioriza por sobre el precio público (`precio_numero`/`precio_texto`) al precargar el precio de un producto agregado a un presupuesto o listado. Si el producto no tiene precio interno cargado, sigue cayendo al precio público como antes.
+- `app/Views/admin/presupuestos/form.php` — muestra una etiqueta "interno" (con candado) junto al precio en el buscador y en la fila del ítem cuando el precio precargado viene del precio interno del producto, para que quede claro antes de guardar/enviar el presupuesto que ese precio no es el público. El precio sigue siendo editable a mano en todos los casos.
+
+No hubo archivos nuevos ni eliminados en esta tanda.

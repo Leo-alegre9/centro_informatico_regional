@@ -16,7 +16,7 @@
 <?php endif; ?>
 
 <!-- Formulario nueva nota -->
-<div class="bg-white border border-gray-200 rounded-[14px] p-5 mb-6">
+<div class="bg-white border border-gray-100 rounded-2xl p-5 mb-6">
     <div class="text-[0.72rem] font-bold uppercase tracking-[0.9px] text-gray-400 mb-4"><i class="fas fa-pen mr-1"></i>Nueva nota</div>
     <form method="POST" action="<?= base_url('admin/notas/crear') ?>">
         <?= csrf_field() ?>
@@ -45,7 +45,7 @@
 <?php if (!empty($notas)): ?>
 <div class="flex flex-col gap-3">
     <?php foreach ($notas as $nota): ?>
-    <div class="bg-white border border-gray-200 rounded-[14px] px-5 py-4 flex items-start justify-between gap-4">
+    <div class="bg-white border border-gray-100 rounded-2xl px-5 py-4 flex items-start justify-between gap-4">
         <div class="flex items-start gap-3 min-w-0">
             <div class="w-9 h-9 bg-rojo/10 text-rojo rounded-full flex items-center justify-center text-[0.85rem] font-bold shrink-0">
                 <?= esc(mb_strtoupper(mb_substr($nota['autor'], 0, 1))) ?>
@@ -71,7 +71,7 @@
     <?php endforeach; ?>
 </div>
 <?php else: ?>
-<div class="bg-white border border-gray-200 rounded-[14px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+<div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
     <div class="text-center px-8 py-16 text-gray-400">
         <i class="fas fa-sticky-note text-5xl mb-4 block text-gray-300"></i>
         <h5 class="text-gray-700 font-semibold mb-2">Todavía no hay notas</h5>
