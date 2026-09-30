@@ -28,7 +28,7 @@ $intro = $esListado
                  class="w-40 sm:w-52 h-auto object-contain mx-auto mb-5">
 
             <span class="section-eyebrow !mb-2 block">Propuesta comercial</span>
-            <h1 class="text-[1.5rem] sm:text-[1.9rem] font-extrabold text-dark-2 leading-[1.3] mb-2">
+            <h1 class="text-[1.5rem] sm:text-[1.9rem] font-extrabold text-dark-2 leading-[1.3] mb-2 text-balance">
                 <?= esc($tituloPrincipal) ?>
             </h1>
             <p class="text-gris text-[0.98rem] sm:text-[1.02rem] font-medium mb-5">
